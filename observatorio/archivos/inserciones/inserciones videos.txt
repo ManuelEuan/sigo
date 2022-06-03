@@ -1,0 +1,111 @@
+INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (34, 1, 'https://www.youtube.com/watch?v=S2S0aPGn32I', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34', 0, 0, 2, 0);
+
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (35, 1, 'https://www.youtube.com/watch?v=Ft09PjjyQA4', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34', 0, 0, 2, 0);
+    
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (36, 2, 'https://www.youtube.com/watch?v=SvrcxK7pPJA', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34', 0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (37, 2, 'https://www.youtube.com/watch?v=O24AipZ-buQg', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34', 0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (38, 3, 'https://www.youtube.com/watch?v=2gsIG01KAB8', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0,0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (39, 3, 'https://www.youtube.com/watch?v=Kc71KZG87X4', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0,0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (40, 4, 'https://www.youtube.com/watch?v=GC3JBVMEpjw', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0,0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (41, 4, 'https://www.youtube.com/watch?v=dCYBUoJt6HE', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0,0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (42, 5, 'https://www.youtube.com/watch?v=Bs3RLRF5akk', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (43, 5, 'https://www.youtube.com/watch?v=z4vMB5bl1qI', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (44, 6, 'https://www.youtube.com/watch?v=KBerL7UePnA', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (45, 6, 'https://www.youtube.com/watch?v=Rb9gLpdb2nc', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (46, 7, 'https://www.youtube.com/watch?v=ZqXJgA_12HY', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (47, 7, 'https://www.youtube.com/watch?v=O_7rxSLXljA', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (48, 8, 'https://www.youtube.com/watch?v=IDk8MOe0O3o', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (49, 8, 'https://www.youtube.com/watch?v=IMmcGbfgHFo', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (50, 9, 'https://www.youtube.com/watch?v=IMmcGbfgHFo', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (51, 9, 'https://www.youtube.com/watch?v=I-VXXjClnoQ', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (52, 10, 'https://www.youtube.com/watch?v=2S6tDYus-bE', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (53, 10, 'https://www.youtube.com/watch?v=hbCoKCY-xK8', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (54, 11, 'https://www.youtube.com/watch?v=bg_hWxv3Irc', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (55, 11, 'https://www.youtube.com/watch?v=LELpXQ57z7w', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (56, 12, 'https://www.youtube.com/watch?v=LELpXQ57z7w', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (57, 12, 'https://www.youtube.com/watch?v=13fEf19a1WI', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (58, 13, 'https://www.youtube.com/watch?v=YMjd6cgzKrE', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (59, 13, 'https://www.youtube.com/watch?v=mJXA2CCfqg0', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    INSERT INTO public."EvidenciaPag"(
+	"iIdEvidencia", "iIdComponente", "vEvidencia", "vTipo", "dFechaSubida", "dFechaRevision", "iFotoInicio", "iOrdenFoto", "iIdUsuarioSube", "iIdUsuarioRevisa")
+	VALUES (60, 14, 'https://www.youtube.com/watch?v=mJXA2CCfqg0', 'Video', '2019-08-19 22:25:34', '2019-08-19 22:25:34',0, 0, 2, 0);
+
+    

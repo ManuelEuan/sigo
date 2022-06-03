@@ -1,0 +1,19 @@
+---------------------primera seccion del sitio-----------------------------------------
+-faltan los logos del sitio
+-redireccionar los sitios de interes (faltan logos)
+-acomodar el tamaño de las letras en los sliders
+-compromisos, documentos y noticias necesita la informacion real (que es el observatorio de compromisos)
+--------------------------segunda seccion de la pagina del observatorio--------------------------
+
+-------------------------tercera seccion del sitio-----------------------------------------
+-pendiente la descarga de la ficha tecnica,debido a que es una consulta de el campo “vFeNotarial” de la tabla CompromisoPag, que no se donde se guarda ese archivo,
+por el momento se va vacio.
+-Hay que cambiar en el proyecto, las rutas de las carpetas a las imagenes y documentos, debido a que la carpeta difiere en el servidor
+
+---bug------
+-bug al recargar la pagina, con el active del tab de los listados de los compromisos
+-reparar la descripcion de que si es mas larga, se sale del espacio permitido
+-Hacer que funcione el menu de abajo, del footer
+
+
+
