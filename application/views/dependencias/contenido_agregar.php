@@ -37,7 +37,45 @@
                             Este campo no puede estar vacio.
                         </div>                     
                     </div>
-                </div><br>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <label for="">Área responsable</label>
+                        <div class="row">
+                            <div class="col-11">
+                                <input class="form-control" type="text" id="areaResposable" name="areaResposable" placeholder="Ingresar el Área Responsable">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" style="background: none; border: thick;" id="agregarArea" name="agregarArea" onclick="guardarArea();"><i class="mdi mdi-plus-circle" style="font-size: 20px; color: #37BCD5;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered display" style="width:100%" id="grid">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50px">ID</th>
+                                                        <th style="text-align: -webkit-center;">Nombre</th>
+                                                        <th width="150px">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="datosArea">
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="col-12 text-center">
                         <button class="btn waves-effect waves-light btn-info" type="submit">Guardar</button>
@@ -46,6 +84,7 @@
             </form>
             <script>
                 // Example starter JavaScript for disabling form submissions if there are invalid fields
+
                 (function() {
                     'use strict';
                     window.addEventListener('load', function() {
@@ -73,9 +112,32 @@
         $(".select2").select2();
     });
 
+    var areaReponsableArray = []
+    var contador = 0;
+    var myArea = {};
+
+    function guardarArea(){
+        if($('#areaResposable').val() != ''){
+            var id = areaReponsableArray.length + 1
+            var nombreArea = $('#areaResposable').val()
+            myArea.nombre = nombreArea
+            myArea.id = id
+            var tbody = '<tr class="rowArea'+id+'"><td>'+id+'</td> <td> <input class="form-control" id="TnombreArea" name="TnombreArea[]" type="hidden" placeholder="Ingresar el Área Responsable" value="'+nombreArea+'"> '+nombreArea+'<td><button class="remover" type="button" onclick="remover('+id+');"><i class="mdi mdi-close-circle"></i></button></td></tr>'
+            $('#datosArea').append(tbody)
+            $('#areaResposable').val('')
+
+            areaReponsableArray.push(myArea);
+            myArea = {}
+        }
+    }
+
+    function remover(id){
+        areaReponsableArray = areaReponsableArray.filter(obj => obj.id != id)
+        $(".rowArea"+id).remove();
+    }
+
     function guardarDependencia(f,e){
         e.preventDefault();
-
         $.ajax({         
             type: "POST",
             url: "<?=base_url()?>C_dependencias/insert", //Nombre del controlador
@@ -89,6 +151,7 @@
               } else {
                 alerta('Error al guardar','error');
               }
+              console.log(resp)
 
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {

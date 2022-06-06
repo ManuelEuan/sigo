@@ -14,6 +14,7 @@ class C_pat extends CI_Controller
         $this->load->model('M_seguridad', 'mseg');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
+        $this->load->library('session');
 
         //Parametros para la conexion al sistema de finanzas
         $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
@@ -257,6 +258,8 @@ class C_pat extends CI_Controller
         $dependencia = $this->pat->getDependenciaById($_SESSION[PREFIJO.'_iddependencia']);
         $data3['vDependencia']  = $dependencia[0]->vDependencia;
         $data3['montoFinal']    = $this->sumaMonto();
+        $data3['catalogosPOA']  = $this->getCatalogoPOA(false);
+
         $seg = new Class_seguridad();
         $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
         $this->load->view('PAT/crear_actividad', $data3);
@@ -486,7 +489,8 @@ class C_pat extends CI_Controller
             $data = array(
                 'vActividad'        => $this->input->post('NombAct',true),
                 'vNombreActividad'  => $this->input->post('vNombreActividad',true),
-                'vObjetivo'         => $this->input->post('objGeneral',true),
+                //Simbolo %
+                'vObjetivo'         => $this->input->post('objGeneral',false),
                 'vDescripcion'      => strip_tags($_POST['descripcion']),
                 'vResponsable'      => $this->input->post('vResponsable',true),
                 'vCargo'            => $this->input->post('vCargo',true),
@@ -1886,9 +1890,34 @@ class C_pat extends CI_Controller
         }
     }
 
-    function actualizarValoresPOA(){
-        $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
-        echo var_dump($catalogosPOA);
+    function getCatalogoPOAAvances($print = true) {
+        $url    = $this->urlFinanzas.'proyectos/listado';
+        unset($_SESSION["catalogoPOA"]);
+
+        try{
+            $ch = curl_init($url);
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: Basic '. base64_encode("$this->userFinanzas:$this->passFinanzas")
+            );
+
+            $headers = array();
+            $headers[] = 'Cache-Control: no-cache';
+            $headers[] = 'Content-Type: application/json; charset= utf-8';
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->authFinanzas);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            
+            echo $result;
+
+            $this->session->catalogoPOA = $result;
+            return "Operación Exitosa";
+        }catch(Exception $ex){
+            print_r($ex);
+        }
     }
 
     /**

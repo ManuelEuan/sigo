@@ -67,6 +67,12 @@ class M_dependencias extends CI_Model
 		return $this->db->update('Dependencia',$data);
 	}
 
+	public function eliminarAreas($id){
+		$this->db->where('iIdDependencia', $id);
+		$this->db->delete('AreaResponsable');
+		return true;
+	}
+
 	public function get_ejes($iIdDependencia)
 	{
 		$this->db->select('d.iIdEje, p.vEje');
@@ -75,6 +81,20 @@ class M_dependencias extends CI_Model
 		$this->db->where('d.iIdDependencia',$iIdDependencia);
 
 		return $this->db->get();
+	}
+
+	public function get_areas_responsables($iIdDependencia){
+		$this->db->select();
+		$this->db->from('AreaResponsable');
+		$this->db->where('iIdDependencia', $iIdDependencia);
+
+		return $this->db->get();
+	}
+
+	public function delete_area($id){
+		$this->db->where('iIdAreaResponsable', $id);
+		$this->db->delete('AreaResponsable');
+		return true;
 	}
 }
 

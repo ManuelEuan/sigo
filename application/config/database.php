@@ -75,13 +75,13 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '20.114.113.83',
+	/*'hostname' => '20.114.113.83',
 	'username' => 'sissigo',
-	'password' => '659q7I0wu0wd2021',
+	'password' => '659q7I0wu0wd2021',*/
 
-	//'hostname' => 'localhost',
-	//'username' => 'postgres',
-	//'password' => 'root',
+	'hostname' => 'localhost',
+	'username' => 'postgres',
+	'password' => 'TunChe.43',
 
 	'database' => 'sigoqueretaroprodclon',
 
