@@ -248,8 +248,7 @@ class M_pat extends CI_Model
 		$query = $this->db->get();
 		$resultado = $query->result();
 		return $resultado;
-	}
-	
+	}	
 
 	public function agregarDetAct($data)
 	{

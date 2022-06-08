@@ -331,37 +331,19 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 <div class="content">
 
                     <div class="row">
-                        <div class="col-md-2" style="text-align: -webkit-right;">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                             <label for="icluyeMIR">Incluye MIR</label>
+                        </div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
                             <input type="checkbox" id="icluyeMIR" name="icluyeMIR">
                         </div>
-
-                        <div class="col-md-2"></div>
-
-                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
-                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
-                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" >
-                        </div>
-
-                        <div class="col-md-6">
-                                <div class="col-md-12">
-                                    <select class="form-control" name="idActividad" id="idActividad">
-                                        <option value="">--Seleccione--</option>
-                                    </select>
-                                </div>
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-                <div class="content">
-                    <div class="row">
 
                         <div class="col-md-2" style="text-align: -webkit-right;">
                             <label for="ProgramaPresupuestario" id="txtNivelMIR" name="txtNivelMIR">Nivel de MIR</label>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                                 <div class="col-md-12">
                                     <select class="form-control" name="idNivelMIR" id="idNivelMIR">
                                         <option value="">--Seleccione--</option>
@@ -370,13 +352,43 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                         <?php } ?>
                                     </select>
                                 </div>
+                        </div>                 
+                    </div>
+
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
                         </div>
 
-                        <div class="col-md-2" style="text-align: -webkit-right;">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
+                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" >
+                        </div>
+
+                        <div class="col-md-8">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idActividad" id="idActividad">
+                                        <option value="">--Seleccione--</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+
+                        <div class="col-md-2 col-md-2 mb-2" style="text-align: -webkit-right;">
                             <label for="ProgramaPresupuestario">Programa Presupuestario</label>
                         </div>
 
                         <div class="col-md-2">
+                        
+                        </div>
+
+                        <div class="col-md-8">
                                 <div class="col-md-12">
                                     <select class="form-control" name="ProgramaPresupuestario" id="ProgramaPresupuestario">
                                         <option value="">--Seleccione--</option>
@@ -386,12 +398,21 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                     </select>
                                 </div>
                         </div>
+                    </div>
 
+                </div>
+
+                <div class="content">
+                    <div class="row">
                         <div class="col-md-2" style="text-align: -webkit-right;">
                             <label for="resumenNarrativo" id="txtResumenNarrativo" name="txtResumenNarrativo">Resumen Narrativo</label>
                         </div>
 
                         <div class="col-md-2">
+                        
+                        </div>
+
+                        <div class="col-md-8">
                                 <div class="col-md-12">
                                     <select class="form-control" name="resumenNarrativo" id="resumenNarrativo">
                                         <option value="">--Seleccione--</option>
@@ -401,10 +422,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                     </select>
                                 </div>
                         </div>
-
                     </div>
-
                 </div>
+                <br>
 
                 <div class="content">
                     <div class="row">

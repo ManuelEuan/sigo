@@ -80,13 +80,13 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 <div class="form-row">
                     <div class="col-md-2 mb-2">
                         <label for="checkProyectoPrioritario">Proyecto Prioritario </label>
-                        <input type="checkbox" id="checkProyectoPrioritario" name="checkProyectoPrioritario" value="Si_ProyectoPrioritario">
+                        <input type="checkbox" id="checkProyectoPrioritario" name="checkProyectoPrioritario" <?php if($consulta[0]->iIdProyectoPrioritario > 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null ) echo 'checked' ?>>
                     </div>
                     <div class="col-md-10">
                         <select class="custom-select select-lectura" name="selectProyectoPrioritario" id="selectProyectoPrioritario">
                             <option value="">--Seleccione--</option>
                             <?php foreach($proyectoPrioritario as $p){?>
-                            <option value="<?= $p->iIdProyectoPrioritario?>"><?= $p->vProyectoPrioritario ?></option>
+                            <option value="<?= $p->iIdProyectoPrioritario?>"<?php if($consulta[0]->iIdProyectoPrioritario == $p->iIdProyectoPrioritario) echo 'selected' ?> ><?= $p->vProyectoPrioritario ?></option>
                             <?php }?>
                         </select>
                     </div>
@@ -344,37 +344,20 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 <div class="content">
 
                     <div class="row">
-                        <div class="col-md-2" style="text-align: -webkit-right;">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                             <label for="icluyeMIR">Incluye MIR</label>
+                            
+                        </div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
                             <input type="checkbox" id="icluyeMIR" name="icluyeMIR" <?php if($consulta[0]->iIncluyeMIR == 1) echo 'checked' ?>>
                         </div>
 
-                        <div class="col-md-2"></div>
-
                         <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
-                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
-                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" <?php if($consulta[0]->iAglomeraMIR == 1) echo 'checked' ?>>
-                        </div>
-
-                        <div class="col-md-6">
-                                <div class="col-md-12">
-                                    <select class="form-control" name="idActividad" id="idActividad">
-                                        <option value="">--Seleccione--</option>
-                                    </select>
-                                </div>
-                        </div>
-                    </div>
-
-                </div>
-                <br>
-                <div class="content">
-                    <div class="row">
-
-                        <div class="col-md-2" style="text-align: -webkit-right;">
                             <label for="ProgramaPresupuestario" id="txtNivelMIR" name="txtNivelMIR">Nivel de MIR</label>
                         </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-6">
                                 <div class="col-md-12">
                                     <select class="form-control" name="idNivelMIR" id="idNivelMIR">
                                         <option value="">--Seleccione--</option>
@@ -383,13 +366,43 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                         <?php } ?>
                                     </select>
                                 </div>
+                        </div> 
+                    </div>
+
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+                        
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
                         </div>
 
-                        <div class="col-md-2" style="text-align: -webkit-right;">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
+                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" <?php if($consulta[0]->iAglomeraMIR == 1) echo 'checked' ?>>
+                        </div>
+
+                        <div class="col-md-8">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idActividad" id="idActividad">
+                                        <option value="">--Seleccione--</option>
+                                    </select>
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                             <label for="ProgramaPresupuestario">Programa Presupuestario</label>
                         </div>
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                        </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-8 mb-2">
                                 <div class="col-md-12">
                                     <select class="form-control" name="ProgramaPresupuestario" id="ProgramaPresupuestario">
                                         <option value="">--Seleccione--</option>
@@ -400,11 +413,19 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                 </div>
                         </div>
 
-                        <div class="col-md-2" style="text-align: -webkit-right;">
+                    </div>
+
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                             <label for="resumenNarrativo" id="txtResumenNarrativo" name="txtResumenNarrativo">Resumen Narrativo</label>
                         </div>
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                        </div>
 
-                        <div class="col-md-2">
+                        <div class="col-md-8 mb-2">
                                 <div class="col-md-12">
                                     <select class="form-control" name="resumenNarrativo" id="resumenNarrativo">
                                         <option value="">--Seleccione--</option>
@@ -414,9 +435,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                     </select>
                                 </div>
                         </div>
-
                     </div>
-
                 </div>
 
                 <div class="content">
@@ -512,10 +531,16 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         <?php } ?>
 
         $('#selectProyectoPrioritario').hide();
-        <?php if($consulta[0]->iODS != 0){ ?>
+        <?php if($consulta[0]->iODS != 0 || $consulta[0]->iODS != '' || $consulta[0]->iODS != null){ ?>
             $('#selectODS').show();
         <?php }else{ ?>
             $('#selectODS').hide();
+        <?php } ?>
+
+        <?php if($consulta[0]->iIdProyectoPrioritario != 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null){ ?>
+            $('#selectProyectoPrioritario').show();
+        <?php }else{ ?>
+            $('#selectProyectoPrioritario').hide();
         <?php } ?>
 
         $(".select2").select2();

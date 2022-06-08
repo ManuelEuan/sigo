@@ -486,6 +486,7 @@ class C_pat extends CI_Controller
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
                 'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
+                'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             $idAct = $this->pat->agregarAct($data);
@@ -583,6 +584,7 @@ class C_pat extends CI_Controller
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
                 'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
+                'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             if(isset($_POST['iODS'])) $data['iODS'] = 1;
