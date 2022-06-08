@@ -478,6 +478,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $('.select-lectura').attr('disabled',true);
             $('.input-lectura').attr('readonly','readonly');
             
+            
         <?php } ?>
         $('#idNivelMIR').hide();
         $('#selectProyectoPrioritario').hide();
@@ -489,12 +490,17 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         $(".select2").select2();
         url = $("#url").val();
         sumaMontoFin();
+        
+        idDependenciaGuardado = <?php echo $idDependencia ?>;
+        obtenerAreasResp(idDependenciaGuardado)
+        obtenerActividades(idDependenciaGuardado)
+
+
         $("#mostrarPOAS").removeClass("col-sm-3");
 
         $('#depAct').change(function(){
             idDEp = $(this).val();
-            idEje = $('#RetoAct').val();
-            obtenerActividades(idEje, idDEp)
+            obtenerActividades(idDEp)
             obtenerAreasResp(idDEp)
         });
 
@@ -525,12 +531,12 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         });
     });
 
-    function obtenerActividades(idEje, idDependencia){
+    function obtenerActividades(idDependencia){
 
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_pat/obtenerActividades",
-            data:{idEje:idEje, idDependencia:idDependencia},
+            data:{idDependencia:idDependencia},
             success: function(resp) {
                 var parsedData = JSON.parse(resp);
                 for(let i = 0; i <= parsedData.length; i++){

@@ -493,11 +493,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         }
         ?>
 
-            idEjeGuardado = <?php echo $consulta[0]->iideje ?>;
             idDependenciaGuardado = <?php echo $consulta[0]->iIdDependencia ?>;
 
             obtenerAreasResp(idDependenciaGuardado);
-            obtenerActividades(idEjeGuardado, idDependenciaGuardado)
+            obtenerActividades(idDependenciaGuardado)
 
         <?php if($consulta[0]->iAglomeraMIR == 1){ ?>
             $('#idActividad').show();
@@ -550,7 +549,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         $('#depAct').change(function(){
             idDEp = $(this).val();
             idEje = $('#RetoAct').val();
-            obtenerActividades(idEje, idDEp)
+            obtenerActividades(idDEp)
             obtenerAreasResp(idDEp)
         });
 
@@ -583,12 +582,12 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         let tipo = $("#valueTipo").val();
     });
 
-        function obtenerActividades(idEje, idDependencia){
+        function obtenerActividades(idDependencia){
 
             $.ajax({
                 type: "POST",
                 url: "<?= base_url() ?>C_pat/obtenerActividades",
-                data:{idEje:idEje, idDependencia:idDependencia},
+                data:{idDependencia:idDependencia},
                 success: function(resp) {
                     var parsedData = JSON.parse(resp);
                     for(let i = 0; i <= parsedData.length; i++){

@@ -191,10 +191,9 @@ class M_pat extends CI_Model
 		return $this->db->insert_id();
 	}
 
-	public function obtenerActividades($idEje, $idDependencia){
+	public function obtenerActividades($idDependencia){
 		$this->db->select();
 		$this->db->from('Actividad');
-		$this->db->where('iideje', $idEje);
 		$this->db->where('iIdDependencia', $idDependencia);
 		$query = $this->db->get();
 		$resultado = $query->result();

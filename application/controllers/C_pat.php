@@ -143,10 +143,9 @@ class C_pat extends CI_Controller
 
     public function obtenerActividades(){
 
-        $idEje = isset($_POST['idEje']) ? $_POST['idEje'] : '';
         $iIdDependencia = isset($_POST['idDependencia']) ? $_POST['idDependencia'] : '';
 
-        $actividades = $this->pat->obtenerActividades($idEje, $iIdDependencia);
+        $actividades = $this->pat->obtenerActividades($iIdDependencia);
 
         echo json_encode($actividades);
         //
@@ -282,6 +281,7 @@ class C_pat extends CI_Controller
         }
         $dependencia = $this->pat->getDependenciaById($_SESSION[PREFIJO.'_iddependencia']);
         $data3['vDependencia']  = $dependencia[0]->vDependencia;
+        $data3['idDependencia']  = $_SESSION[PREFIJO.'_iddependencia'];
         $data3['montoFinal']    = $this->sumaMonto();
         $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
         $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
@@ -584,7 +584,7 @@ class C_pat extends CI_Controller
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
                 'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
-                'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
+                //'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             if(isset($_POST['iODS'])) $data['iODS'] = 1;
