@@ -79,6 +79,21 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 </div>
 
                 <div class="form-row">
+                    <div class="col-md-2 mb-2">
+                        <label for="checkProyectoPrioritario">Proyecto Prioritario </label>
+                        <input type="checkbox" id="checkProyectoPrioritario" name="checkProyectoPrioritario" value="Si_ProyectoPrioritario">
+                    </div>
+                    <div class="col-md-10">
+                        <select class="custom-select select-lectura" name="selectProyectoPrioritario" id="selectProyectoPrioritario">
+                            <option value="">--Seleccione--</option>
+                            <?php foreach($proyectoPrioritario as $p){?>
+                            <option value="<?= $p->iIdProyectoPrioritario?>"><?= $p->vProyectoPrioritario ?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
                     <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Fecha de inicio</label>
                         <input type="date" class="form-control input-lectura" id="fINICIO" name="fINICIO" required value="<?= $consulta->dInicio ?>">
@@ -118,9 +133,24 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                 </div>
                 <?php } ?>
+                    <br>
+                <div class="form-row">
+                    <div class="col-md-1 mb-2">
+                        <label for="checkODS">ODS </label>
+                        <input type="checkbox" id="checkODS" name="checkODS">
+                    </div>
+                    <div class="col-md-11">
+                        <select class="custom-select select-lectura" name="selectODS" id="selectODS">
+                            <option value="">--Seleccione--</option>
+                            <?php foreach($ODS as $o){ ?>
+                                <option value="<?= $o->iIdOds ?>"><?= $o->vOds ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
 
                 <div class="form-row">
-                    <div class="col-md-12 mb-12">
+                    <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Reto</label>
                           <select class="form-control select-lectura" aria-invalid="false" name="iReto" id="iReto" required>
                             <option value="">--Seleccione--</option>
@@ -130,7 +160,18 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+
+                    <div class="col-md-6 mb-6">
+                        <label for="validationCustom04">Área Responsable</label>
+                          <select class="form-control select-lectura" aria-invalid="false" name="iAreaResponsable" id="iAreaResponsable" required>
+                            <option value="">--Seleccione--</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
                 </div>
+
 
                 <div class="form-row">
                     <div class="col-md-12 mb-12">
@@ -143,20 +184,22 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 </div>
 
                 <div class="form-row">
-                    <div class="col-md-6 mb-6">
+                    <div class="col-md-12 mb-12">
                         <label for="vEstrategia">Estrategia</label>
                         <textarea class="form-control input-lectura" id="vEstrategia" name="vEstrategia" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta->vEstrategia)?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
-                    <div class="col-md-6 mb-6">
+                    <!--
+                    <div class="col-md-6 mb-6" hidden style="display:none">
                         <label for="vAccion">Acción</label>
                         <textarea class="form-control input-lectura" id="vAccion" name="vAccion" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta->vAccion)?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                -->
                 </div>
 
                 <div class="form-row">
@@ -201,11 +244,11 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <label for="tipoActividad">Tipo de acción <span class="text-danger">*</span></label>
+                                        <label for="tipoActividad">Fuente de recurso<span class="text-danger">*</span></label>
                                         <select class="form-control" aria-invalid="false" name="vTipoActividad" id="vTipoActividad" required>
                                             <option value="">--Seleccione--</option>
                                             <option value="gestion">Gestion</option>
-                                            <option value="poa">POA</option>
+                                            <option value="poa">Estratégico</option>
                                         </select>
                                     </div>
 
@@ -235,9 +278,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                     
                 </div>-->
-                <hr>
 
-                <div class="content">
+                <div class="content" style="display: none;">
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
@@ -285,6 +327,97 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 <hr>
                 
                 <br><br>
+
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-2" style="text-align: -webkit-right;">
+                            <label for="icluyeMIR">Incluye MIR</label>
+                            <input type="checkbox" id="icluyeMIR" name="icluyeMIR">
+                        </div>
+
+                        <div class="col-md-2"></div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
+                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" >
+                        </div>
+
+                        <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idActividad" id="idActividad">
+                                        <option value="">--Seleccione--</option>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+
+                        <div class="col-md-2" style="text-align: -webkit-right;">
+                            <label for="ProgramaPresupuestario" id="txtNivelMIR" name="txtNivelMIR">Nivel de MIR</label>
+                        </div>
+
+                        <div class="col-md-2">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idNivelMIR" id="idNivelMIR">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($nivelesMIR as $nivelMIR){?>
+                                        <option value="<?= $nivelMIR->iIdNivelMIR ?>"><?= $nivelMIR->vNivelMIR ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div>
+
+                        <div class="col-md-2" style="text-align: -webkit-right;">
+                            <label for="ProgramaPresupuestario">Programa Presupuestario</label>
+                        </div>
+
+                        <div class="col-md-2">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="ProgramaPresupuestario" id="ProgramaPresupuestario">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($programaPresupuestario as $pp){?>
+                                        <option value="<?= $pp->iIdProgramaPresupuestario ?>"><?= $pp->vProgramaPresupuestario ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div>
+
+                        <div class="col-md-2" style="text-align: -webkit-right;">
+                            <label for="resumenNarrativo" id="txtResumenNarrativo" name="txtResumenNarrativo">Resumen Narrativo</label>
+                        </div>
+
+                        <div class="col-md-2">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="resumenNarrativo" id="resumenNarrativo">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($resumenNarrativo as $rN){?>
+                                        <option value="<?= $rN->iIdResumenNarrativo ?>"><?= $rN->vNombreResumenNarrativo ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-12 mb-10">
+                            <label for="validationCustom04">Supuesto</label>
+                            <textarea class="form-control input-lectura" id="txtSupuesto" name="txtSupuesto" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta->vDescripcion)?></textarea>
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                
                 <div class="content">
                     
@@ -324,12 +457,40 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $('.btn-lectura').css('display','none');
             $('.select-lectura').attr('disabled',true);
             $('.input-lectura').attr('readonly','readonly');
+            
         <?php } ?>
-        
+        $('#idNivelMIR').hide();
+        $('#selectProyectoPrioritario').hide();
+        $('#txtResumenNarrativo').hide();
+        $('#resumenNarrativo').hide();
+        $('#txtNivelMIR').hide();
+        $('#idActividad').hide();
+        $('#selectODS').hide();
         $(".select2").select2();
         url = $("#url").val();
         sumaMontoFin();
         $("#mostrarPOAS").removeClass("col-sm-3");
+
+        $('#depAct').change(function(){
+            idDEp = $(this).val();
+            idEje = $('#RetoAct').val();
+            obtenerActividades(idEje, idDEp)
+            obtenerAreasResp(idDEp)
+        });
+
+        $('#idNivelMIR').change(function(){
+            nivelMIR = $(this).val();
+            if(nivelMIR >= 1){
+                document.getElementById("resumenNarrativo").disabled = false;
+                $('#resumenNarrativo').show();
+                $('#txtResumenNarrativo').show();
+            }else{
+                $('#resumenNarrativo').hide();
+                $('#txtResumenNarrativo').hide();
+                document.getElementById("resumenNarrativo").disabled = true;
+            }
+            
+        });
 
         //Obtengo las dependencias para manejar en POA
         $.ajax({
@@ -342,6 +503,102 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 console.log(XMLHHttRequest);
             }
         });
+    });
+
+    function obtenerActividades(idEje, idDependencia){
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_pat/obtenerActividades",
+            data:{idEje:idEje, idDependencia:idDependencia},
+            success: function(resp) {
+                var parsedData = JSON.parse(resp);
+                for(let i = 0; i <= parsedData.length; i++){
+                    if(parsedData[i]?.vActividad != undefined){
+                        $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
+                    }
+                }
+                
+            },
+            error: function(XMLHHttRequest, textStatus, errorThrown) {
+                console.log(XMLHHttRequest);
+            }
+        });
+
+    }
+
+    function obtenerAreasResp(idDependencia){
+
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_pat/obtenerAreasRESP",
+            data:{idDependencia:idDependencia},
+            success: function(resp) {
+                var parsedData = JSON.parse(resp);
+                for(let i = 0; i <= parsedData.length; i++){
+                    if(parsedData[i]?.vAreaResponsable != undefined){
+                        $('#iAreaResponsable').append('<option value="'+parsedData[i]?.iIdAreaResponsable+'">'+parsedData[i]?.vAreaResponsable+'</option>')
+                    }
+                }
+                
+            },
+            error: function(XMLHHttRequest, textStatus, errorThrown) {
+                console.log(XMLHHttRequest);
+            }
+        });
+
+    }
+
+    $('#icluyeMIR').click(function(){
+        if($(this).is(':checked')){
+            document.getElementById("idNivelMIR").disabled = false;
+            $('#idNivelMIR').show();
+            $('#txtNivelMIR').show();
+        } else {
+            $('#idNivelMIR').prop('selectedIndex',0);
+            $('#idNivelMIR').hide();
+            $('#txtNivelMIR').hide();
+            document.getElementById("idNivelMIR").disabled = true;
+
+            $('#txtResumenNarrativo').hide();
+            $('#resumenNarrativo').hide();
+            $('#resumenNarrativo').prop('selectedIndex',0);
+            document.getElementById("resumenNarrativo").disabled = true;
+        }
+    });
+
+    
+    $('#checkODS').click(function(){
+        if($(this).is(':checked')){
+            document.getElementById("selectODS").disabled = false;
+            $('#selectODS').show();
+        } else {
+            $('#selectODS').prop('selectedIndex',0);
+            $('#selectODS').hide();
+            document.getElementById("selectODS").disabled = true;
+        }
+    });
+
+    $('#checkProyectoPrioritario').click(function(){
+        if($(this).is(':checked')){
+            document.getElementById("selectProyectoPrioritario").disabled = false;
+            $('#selectProyectoPrioritario').show();
+        } else {
+            $('#selectProyectoPrioritario').prop('selectedIndex',0);
+            $('#selectProyectoPrioritario').hide();
+            document.getElementById("selectProyectoPrioritario").disabled = true;
+        }
+    });
+
+    $('#tieneAglomeracion').click(function(){
+        if($(this).is(':checked')){
+            document.getElementById("idActividad").disabled = false;
+            $('#idActividad').show();
+        } else {
+            $('#idActividad').prop('selectedIndex',0);
+            $('#idActividad').hide();
+            document.getElementById("idActividad").disabled = true;
+        }
     });
     
     // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -399,7 +656,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
 
         return response;
     }
-
 
     function sumaMontoFin() {
         //alert(url);

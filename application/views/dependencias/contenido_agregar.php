@@ -122,7 +122,7 @@
             var nombreArea = $('#areaResposable').val()
             myArea.nombre = nombreArea
             myArea.id = id
-            var tbody = '<tr class="rowArea'+id+'"><td>'+id+'</td> <td> <input class="form-control" id="TnombreArea" name="TnombreArea[]" type="hidden" placeholder="Ingresar el Área Responsable" value="'+nombreArea+'"> '+nombreArea+'<td><button class="remover" type="button" onclick="remover('+id+');"><i class="mdi mdi-close-circle"></i></button></td></tr>'
+            var tbody = '<tr class="rowArea'+id+'"><td>'+id+'</td> <td> <input class="form-control" id="TnombreArea" name="TnombreArea[]" type="hidden" placeholder="Ingresar el Área Responsable" value="'+nombreArea+'"> '+nombreArea+'<td><button class="remover" type="button" onclick="remover('+id+');" style="border: none; background: none;"><i class="mdi mdi-close-circle" style="font-size: larger; color: red;"></i></button></td></tr>'
             $('#datosArea').append(tbody)
             $('#areaResposable').val('')
 
