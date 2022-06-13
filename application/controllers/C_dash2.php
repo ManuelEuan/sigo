@@ -303,6 +303,7 @@ class C_dash2 extends CI_Controller {
                 $data['hombres'] = 0;
                 $dependencias    = $this->M_dash->dependencias_por_eje($info->iIdEje);
                 
+                
 
                 foreach($dependencias as $dependencia){
                     $beneficiarios   =  $this->M_dash->avance_por_dependencia($dependencia->iIdDependencia, $an);
@@ -325,6 +326,7 @@ class C_dash2 extends CI_Controller {
 
                     }
                 }
+                $retos = $this->M_dash->retos_por_eje($info->iIdEje);
                 
                 $avance = ((int)$info->actividades > 0) ? round(($info->avance / (int)$info->actividades)):0;
                 $cifras[$info->iIdEje]['avance']        = $avance;
@@ -336,6 +338,8 @@ class C_dash2 extends CI_Controller {
                 $cifras[$info->iIdEje]['autorizado']    = round((float)$info->autorizado);
                 $cifras[$info->iIdEje]['mujeres']       = $data['mujeres'];
                 $cifras[$info->iIdEje]['hombres']       = $data['hombres'];
+                
+                $cifras[$info->iIdEje]['retos']         = $retos;
 
                 $porcentajeAutorizado = ($info->ejercido * 100)/ $info->autorizado;
                 $porcentajeAutorizado =  round($porcentajeAutorizado, 2, PHP_ROUND_HALF_UP);

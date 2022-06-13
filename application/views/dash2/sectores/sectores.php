@@ -146,15 +146,30 @@
                                     <div class="col-2"></div>
                                     <div class="col-10"><hr style="background-color:#000000;"></div>
                                 </div>
-                                
+
                                 <div class="row text-center mb-2">
                                     <div class="col-4">
+                                        <h4 class="mb-0" style="font-weight:700"><?=$value['retos']?> </h4>
+                                        <span class="font-14">Retos</span></div>
+
+                                    <div class="col-4">
+
+                                    </div>
+
+                                    <div class="col-4">
                                         <h4 class="mb-0" style="font-weight:700"><?=$value['pat']?> </h4>
-                                        <span class="font-14">Dependencias y Entidades</span></div>
-                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
-                                        <span class="font-14">Acciones</span></div>
-                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
-                                        <span class="font-14">Indicadores</span></div>
+                                        <span class="font-14">Dependencias y Entidades</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row text-center mb-2">
+                                    
+                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
+                                        <span class="font-14">Acciones</span>
+                                    </div>
+                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
+                                        <span class="font-14">Indicadores</span>
+                                    </div>
                                 </div>
 
                                 <div class="row mb-2">

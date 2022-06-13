@@ -14,14 +14,99 @@
             <?php if($av_capturados) echo '<small>Los campos deshabilitados no pueden modificarse debido a que el indicador cuenta con avances capturados en este o en años anteriores.</small>'; ?>
             <form class="needs-validation was-validated" onsubmit="modificarEntregables(this,event);">
                 <div class="form-row">
-                    <div class="col-md-12 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label>Nombre del indicador <span class="text-danger">*</span></label>
                         <textarea class="input-lectura form-control" id="entregable" name="entregable" aria-invalid="false" required="" placeholder="Ingresar nombre del indicador"><?= $consulta->vEntregable ?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
-                    </div>                   
+                    </div>  
+                    
+                    <div class="col-md-2 mb-3">
+                        <label for="validationCustom04">Forma Indicador<span class="text-danger">*</span></label>
+                        <select id="formaIndicador" name="formaIndicador" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <?php foreach($formaIndicador as $f){ ?>
+
+                                <option value="<?= $f->iIdFormaInd ?>" <?php if($f->iIdFormaInd == $idForma) echo 'selected';?>><?= $f->vDescripcion ?></option>
+
+                            <?php } ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                      <input type="hidden" id="" name="" required class="form-control" value=1>
+
+                   
+                    <div class="col-md-2 mb-3">
+                        <label>Dimensión<span class="text-danger">*</span></label>
+                        <select name="selectDimension" id="selectDimension" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <?php foreach($dimension as $d){ ?>
+
+                                <option value="<?= $d->iIdDimensionInd ?>" <?php if($d->iIdDimensionInd == $idDiemension) echo 'selected';?> ><?= $d->vDescripcion ?></option>
+
+                            <?php } ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                    
                 </div>
+
+                <!--- Este va a variar -->
+                <div class="form-row" id="divVariables">
+
+
+                    <?php foreach($Variables as $key => $v){ ?>
+                        <div class="col-md-3 mb-3 divVariable<?= $v->iIdVariableIndicador ?>">
+                            <?php if($key == 0){ ?>
+                                <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                            <?php } else {?>
+                                <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button class="remover" type="button" onclick="eliminar(<?= $v->iIdVariableIndicador ?>);" style="border: none;">x</button></label>
+                            <?php } ?>
+                        <input type="text" id="idVariable" name="idVariable[]" class="form-control" value="<?= $v->iIdVariableIndicador ?>" hidden>     
+                        <input type="text" id="<?= $v->vVariableIndicador ?>" name="Letra[]" class="form-control" required="required" value="<?= $v->vVariableIndicador ?>" hidden>
+                        <input type="text" id="<?= $v->vVariableIndicador ?>" name="Variable[]" class="form-control" required="required" placeholder="<?= $v->vVariableIndicador ?>" value="<?= $v->vNombreVariable ?>">
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                    <?php }?>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-2 mb-3">
+                        <label for="validationCustom04">Base Indicador<span class="text-danger">*</span></label>
+                        <input type="text" id="baseIndicador" name="baseIndicador" class="form-control" required="required" placeholder="" value="<?= $baseIndicador?>">
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                      <input type="hidden" id="" name="" required class="form-control" value=1>
+
+                   
+                    <div class="col-md-2 mb-3">
+                        <label>Medio Verificación<span class="text-danger">*</span></label>
+                        <input type="text" id="medioVerificacion" name="medioVerificacion" class="form-control" required="required" placeholder="" value="<?= $medioVerificacion?>">
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+                        <label>Area para calculo de variable<span class="text-danger">*</span></label>
+                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder="" ><?= $areaCalculo?></textarea>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                </div>
+
+
+                
 
                 <div class="form-row">
                     <div class="col-md-3 mb-3">
@@ -49,11 +134,6 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
-
-                     <select style="visibility:hidden" id="sujetoafectado" name="sujetoafectado" required class="input-lectura form-control" <?php if($av_capturados > 0) echo "disabled";?>>
-                            <?= $sujeto_afectado ?>
-                        </select>
-
                    <!-- <div class="col-md-2 mb-3">
                         <label for="validationCustom04">Sujeto afectaado<span class="text-danger">*</span></label>
                        
@@ -70,6 +150,10 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+
+                    <select style="visibility:hidden" id="sujetoafectado" name="sujetoafectado" required class="input-lectura form-control" <?php if($av_capturados > 0) echo "disabled";?>>
+                            <?= $sujeto_afectado ?>
+                        </select>
                 </div>
 
                 <div class="form-row">
@@ -178,6 +262,18 @@
 </div>
 
 <script>
+
+    var areaReponsableArray = []
+
+    var arrayJS=<?php echo json_encode($Variables);?>;
+
+    for(var i=1;i<arrayJS.length;i++)
+    {
+        myArea.id = i
+        areaReponsableArray.push(myArea);
+        myArea = {}
+    }
+
     $(document).ready(function(){
         $(".select2").select2();
     });
@@ -195,6 +291,29 @@
     function cargarComponente() {
         var value = $("#compromiso").val();
         $("#componente").load('C_entregables/showcomponentes/' + value);
+    }
+
+    
+    var myArea = {};
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function agregarVariable(){
+
+        var id = areaReponsableArray.length + 1
+
+        myArea.id = id
+
+        var tbody = '<div class="col-md-3 mb-3 divVariable'+id+'"> <label>Variable '+alphabet[id]+'<span class="text-danger">*</span> <button class="remover" type="button" onclick="remover('+id+');" style="border: none;">x</button></label> <input type="text" id="idVariable" name="idVariable[]" class="form-control" value="" hidden>  <input type="text" id="'+alphabet[id]+'" name="Letra[]" class="form-control" required="required" value="'+alphabet[id]+'" hidden> <input type="text" id="'+alphabet[id]+'" name="Variable[]" class="form-control" required="required" placeholder="'+alphabet[id]+'"> <div class="invalid-feedback"> Este campo no puede estar vacio. </div> </div>'
+        $('#divVariables').append(tbody)
+
+        areaReponsableArray.push(myArea);
+        myArea = {}
+        /*var result = eval('1+3-4'); */
+    }
+
+    function remover(id){
+        areaReponsableArray = areaReponsableArray.filter(obj => obj.id != id)
+        $(".divVariable"+id).remove();
     }
 
     function modificarEntregables(f, e) {
@@ -221,4 +340,33 @@
             }
         });
     }
+
+    function eliminar(id) {
+        swal({
+            title: '¿Estás seguro?',
+            type: "warning",   
+            showCancelButton: true,   
+            confirmButtonColor: "#DD6B55",   
+            confirmButtonText: "Confirmar",   
+            cancelButtonText: "Cancelar",
+            }).then((confirm) => {
+
+                if(confirm.hasOwnProperty('value')){
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= base_url() ?>C_entregables/eliminarVariable", //Nombre del controlador
+                        data: {id:id},
+                        success: function(resp) {
+                            remover(id)
+                            console.log(resp)
+                        },
+                        error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+                        }
+                    });
+                } 
+            });
+
+    }
+
 </script>
