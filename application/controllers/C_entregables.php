@@ -111,7 +111,7 @@ class C_entregables extends CI_Controller
 
                 //Agregado Saul Tun
                 foreach($Variable as $key => $v){
-                    $this->me->insertarVariablesIndicador('VariablesIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $identregable), $con);
+                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $identregable), $con);
                 }
 
                     $table2 = 'DetalleEntregable';
@@ -214,7 +214,7 @@ class C_entregables extends CI_Controller
         $data['formaIndicador'] = $this->me->obtenerForma();
         $data['dimension'] = $this->me->obtenerDimension();
         $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
-        $data['tVariables'] = $this->me->TotalobtenerVariables($data['id_ent']);
+        
         $data['baseIndicador'] = $data['consulta']->nLineaBase;
         $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
         $data['areaCalculo'] = $data['consulta']->vFormula;
@@ -265,7 +265,7 @@ class C_entregables extends CI_Controller
 
             foreach($Variable as $key => $v){
                 if($idVariable[$key] == ''){
-                    $this->me->insertarVariablesIndicador('VariablesIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent), $con);
+                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent), $con);
                 }else{
                     $this->me->actualizarVariables($idVariable[$key], array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent));
                 }   

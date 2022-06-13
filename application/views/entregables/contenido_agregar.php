@@ -73,7 +73,7 @@
                 <div class="form-row">
                     <div class="col-md-2 mb-3">
                         <label for="validationCustom04">Base Indicador<span class="text-danger">*</span></label>
-                        <input type="text" id="baseIndicador" name="baseIndicador" class="form-control" required="required" placeholder="">
+                        <input type="number" id="baseIndicador" name="baseIndicador" class="form-control" required="required" placeholder="">
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>

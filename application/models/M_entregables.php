@@ -457,7 +457,7 @@ class M_entregables extends CI_Model{
 
     public function eliminarVariables($id){
 		$this->db->where('iIdEntregable', $id);
-		$this->db->delete('VariablesIndicador');
+		$this->db->delete('VariableIndicador');
 		return true;
 	}
 
@@ -474,7 +474,7 @@ class M_entregables extends CI_Model{
     function obtenerVariables($id){
 
         $this->db->select();
-        $this->db->from('VariablesIndicador');
+        $this->db->from('VariableIndicador');
         $this->db->where('iIdEntregable', $id);
 
         $query =  $this->db->get();
@@ -483,27 +483,15 @@ class M_entregables extends CI_Model{
 
     }
 
-    function TotalobtenerVariables($id){
-
-        $this->db->select();
-        $this->db->from('VariablesIndicador');
-        $this->db->where('iIdEntregable', $id);
-
-        $query =  $this->db->get();
-		$resultado = $query->num_rows();
-        return $resultado;
-
-    }
-
     function actualizarVariables($id, $data){
 
         $this->db->where('iIdVariableIndicador', $id);
-        return $this->db->update('VariablesIndicador', $data);
+        return $this->db->update('VariableIndicador', $data);
     }
 
     function eliminarVariable($id){
         $this->db->where('iIdVariableIndicador', $id);
-		$this->db->delete('VariablesIndicador');
+		$this->db->delete('VariableIndicador');
 		return true;
     }
 }
