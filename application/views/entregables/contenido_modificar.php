@@ -58,23 +58,36 @@
 
                 <!--- Este va a variar -->
                 <div class="form-row" id="divVariables">
+                    
+                    <?php if(count($Variables) >= 1){ ?>
+                    
+                        <?php foreach($Variables as $key => $v){ ?>
+                            <div class="col-md-3 mb-3 divVariable<?= $v->iIdVariableIndicador ?>">
+                                <?php if($key == 0){ ?>
+                                    <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                                <?php } else {?>
+                                    <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button class="remover" type="button" onclick="eliminar(<?= $v->iIdVariableIndicador ?>);" style="border: none;">x</button></label>
+                                <?php } ?>
+                            <input type="text" id="idVariable" name="idVariable[]" class="form-control" value="<?= $v->iIdVariableIndicador ?>" hidden>     
+                            <input type="text" id="<?= $v->vVariableIndicador ?>" name="Letra[]" class="form-control" required="required" value="<?= $v->vVariableIndicador ?>" hidden>
+                            <input type="text" id="<?= $v->vVariableIndicador ?>" name="Variable[]" class="form-control" required="required" placeholder="<?= $v->vVariableIndicador ?>" value="<?= $v->vNombreVariable ?>">
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
+                        </div>
+                        <?php }?>
 
-
-                    <?php foreach($Variables as $key => $v){ ?>
-                        <div class="col-md-3 mb-3 divVariable<?= $v->iIdVariableIndicador ?>">
-                            <?php if($key == 0){ ?>
-                                <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
-                            <?php } else {?>
-                                <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span> <button class="remover" type="button" onclick="eliminar(<?= $v->iIdVariableIndicador ?>);" style="border: none;">x</button></label>
-                            <?php } ?>
-                        <input type="text" id="idVariable" name="idVariable[]" class="form-control" value="<?= $v->iIdVariableIndicador ?>" hidden>     
-                        <input type="text" id="<?= $v->vVariableIndicador ?>" name="Letra[]" class="form-control" required="required" value="<?= $v->vVariableIndicador ?>" hidden>
-                        <input type="text" id="<?= $v->vVariableIndicador ?>" name="Variable[]" class="form-control" required="required" placeholder="<?= $v->vVariableIndicador ?>" value="<?= $v->vNombreVariable ?>">
+                    <?php } else {?>
+                        <div class="col-md-3 mb-3">
+                        <label>Variable A<span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                        <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
+                        <input type="text" id="A" name="Variable[]" class="form-control" required="required" placeholder="A">
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
                     <?php }?>
+
                 </div>
 
                 <div class="form-row">
