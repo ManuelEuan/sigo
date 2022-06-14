@@ -70,8 +70,8 @@ class C_entregables extends CI_Controller
                     $municipalizacion = 0;
                 }
 
-                if(isset($_POST['beneficios'])){
-                    $beneficios = $this->input->post('beneficios',TRUE);
+                if(isset($_POST['checkMismoBenef'])){
+                    $beneficios = $this->input->post('checkMismoBenef',TRUE);
                 }else{
                     $beneficios = 0;
                 }
@@ -221,6 +221,7 @@ class C_entregables extends CI_Controller
 
         $data['idForma'] = $data['consulta']->iIdFormaInd;
         $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
+        $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
 
         if($all_edit > 1){
             $data['candado'] = false;
@@ -275,7 +276,7 @@ class C_entregables extends CI_Controller
                 $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
                 $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
-                $data['iMismosBeneficiarios'] = (isset($_POST['beneficios'])) ? 1:0;    
+                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;    
             }
 
             $where = "iIdEntregable =".$id_ent;

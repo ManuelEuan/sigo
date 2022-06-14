@@ -58,9 +58,7 @@
 
                 <!--- Este va a variar -->
                 <div class="form-row" id="divVariables">
-                    
-                    <?php if(count($Variables) >= 1){ ?>
-                    
+
                         <?php foreach($Variables as $key => $v){ ?>
                             <div class="col-md-3 mb-3 divVariable<?= $v->iIdVariableIndicador ?>">
                                 <?php if($key == 0){ ?>
@@ -76,17 +74,6 @@
                             </div>
                         </div>
                         <?php }?>
-
-                    <?php } else {?>
-                        <div class="col-md-3 mb-3">
-                        <label>Variable A<span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
-                        <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
-                        <input type="text" id="A" name="Variable[]" class="form-control" required="required" placeholder="A">
-                        <div class="invalid-feedback">
-                            Este campo no puede estar vacio.
-                        </div>
-                    </div>
-                    <?php }?>
 
                 </div>
 
@@ -185,18 +172,27 @@
                         </div>
                     </div>
                     
-                    <div class="col-md-2 mb-3">
-                       <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="margin-top:35px;">
-                            <input type="checkbox" class="select-lectura custom-control-input" id="checkbox0" name="municipalizable" value="1" <?php if($consulta->iMunicipalizacion == 1)  echo 'checked '; if($av_capturados) echo 'disabled'; ?>/>
-                            <label class="custom-control-label" for="checkbox0">Se entrega por municipio</label>
-                        </div>
+                    <div class="col-md-4 mb-3" style="padding-left: 20px;">
+                       <div class="row">
+
+                        <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="margin-top:35px;">
+                                <input type="checkbox" class="select-lectura custom-control-input" id="checkbox0" name="municipalizable" value="1" <?php if($consulta->iMunicipalizacion == 1)  echo 'checked '; if($av_capturados) echo 'disabled'; ?>/>
+                                <label class="custom-control-label" for="checkbox0">Se entrega por municipio</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="margin-top:35px;">
+                                    <input type="checkbox" class="custom-control-input" id="checkMismoBenef" name="checkMismoBenef" value="1" <?php if($iMismosBeneficiarios == 1) echo 'checked' ?>>
+                                    <label class="custom-control-label" for="checkMismoBenef">Mismo Beneficiario</label>
+                            </div>
+
+                       </div>
                     </div>
-                    <div class="col-md-2 mb-3">
+                    <div class="col-md-6 mb-3">
                        <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="margin-top:35px;">
                             <!--<input type="checkbox" class="select-lectura custom-control-input" id="checkbox1" name="beneficios" value="1" <?php if($consulta->iMismosBeneficiarios == 1)  echo 'checked '; if($av_capturados) echo 'disabled'; ?>/>
                             <label class="custom-control-label" for="checkbox1">Reporta los mismos beneficiarios</label>-->
 
-                            <input type="hidden" class="form-control input-lectura" maxlength="255" id="checkbox1" name="beneficios" value="0">
+                            <!--<input type="hidden" class="form-control input-lectura" maxlength="255" id="checkbox1" name="beneficios" value="0">-->
                         </div>
                     </div>
                     <div class="col-md-12">
@@ -278,11 +274,13 @@
 
     var areaReponsableArray = []
 
+    var myArea = {};
+
     var arrayJS=<?php echo json_encode($Variables);?>;
 
-    for(var i=1;i<arrayJS.length;i++)
+    for(var i=0;i<arrayJS.length;i++)
     {
-        myArea.id = i
+        myArea.id = 1;
         areaReponsableArray.push(myArea);
         myArea = {}
     }
@@ -307,8 +305,7 @@
     }
 
     
-    var myArea = {};
-    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var alphabet = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     function agregarVariable(){
 

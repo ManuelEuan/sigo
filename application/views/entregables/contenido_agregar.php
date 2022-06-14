@@ -148,7 +148,7 @@
                 <br>
                 <div class="form-row">
 
-                    <div class="col-md-3 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label>Fecha inicio<span class="text-danger">*</span></label>
                             <input type="date" id="fechainicio" name="fechainicio" class="form-control only_number" required="" placeholder="dd-mm-yyyy"  value="2022-01-01" readonly>
                             <div class="invalid-feedback">
@@ -161,14 +161,21 @@
                             <div class="invalid-feedback">
                                 Este campo no puede estar vacio.
                             </div>
-                    </div>
-                    <div class="col-md-3 mb-3" style="align-self: self-end;">
-                    <br>
-                    <br>
-                       <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="text-align: -webkit-center;">
-                            <input type="checkbox" class="custom-control-input" id="checkbox0" name="municipalizable" value="1">
-                            <label class="custom-control-label" for="checkbox0">Municipalizable</label>
                         </div>
+                    <div class="col-md-6 mb-3" style="align-self: self-end; padding-left: 20px;">
+                        <br>
+                        <br>
+                       <div class="row">
+                        <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="text-align: -webkit-center;">
+                                <input type="checkbox" class="custom-control-input" id="checkbox0" name="municipalizable" value="1">
+                                <label class="custom-control-label" for="checkbox0">Municipalizable</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="text-align: -webkit-center;">
+                                <input type="checkbox" class="custom-control-input" id="checkMismoBenef" name="checkMismoBenef" value="1">
+                                <label class="custom-control-label" for="checkMismoBenef">Mismo Beneficiario</label>
+                            </div>
+                       </div>
                     </div>
                     <div class="col-md-3 mb-3">
                       <!-- <div class="custom-control custom-checkbox mr-sm-2 m-b-15">
@@ -177,6 +184,7 @@
                         </div>-->
                         <input type="hidden" class="form-control input-lectura" maxlength="255" id="checkbox1" name="beneficios" value="0">
                     </div>
+
                     <div class="col-md-12" id="ctl-municipios">
                          <label for="municipios">Municipios</label>
                         <select aria-invalid="false" class="select2 form-control" multiple="multiple" style="height: 36px;width: 100%;" name="municipios[]" id="municipios">
@@ -186,6 +194,7 @@
                             Este campo no puede estar vacio.
                         </div>  
                     </div>
+
                 </div>
                 <br>
                 <br>

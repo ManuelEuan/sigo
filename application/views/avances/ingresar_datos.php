@@ -43,6 +43,26 @@
             </div>
             <?php } ?>
         </div>
+        
+            <div class="form-row">
+                <?php foreach($Variables as $v){ ?>
+                    <div class="col-md-3 mb-3">
+                        <label for=""><?= $v->vNombreVariable ?></label>
+                        <input class="form-control" type="text" id="letra" name="letra[]" value="<?= $v->vVariableIndicador ?>" hidden>
+                        <input class="form-control" type="number" id="valores" name="valores[]" placeholder="0" required>
+                    </div>
+                <?php } ?>
+            </div>
+
+            <!--<div class="form-row">
+                <div class="col-md-3 mb-3">
+                        <label for="">Presupuesto</label>
+                        <input class="form-control" type="number" id="presupuesto" name="presupuesto" placeholder="0" readonly>
+                    </div>
+            </div>-->
+            
+        
+        
         <div class="form-row">
             
             <div class="col-md-3 mb-3">
@@ -182,6 +202,27 @@
         else{
             $('#monto').val('0');
         }
+        
+        /*var formula = '<?= $vFormula ?: '' ?>'
+
+        var estructuraFinal = ''
+
+        for(i = 0; i <= formula.length; i++){
+            if(formula[i] != undefined){
+                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')'){
+                    estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], 5))
+                }else{
+                    estructuraFinal = estructuraFinal.concat(formula[i])
+                }
+            
+            }
+        }
+        console.log(formula)
+        console.log(estructuraFinal)
+        console.log(eval(estructuraFinal))*/
+
+        
+ 
     });
 
     $("#avance").attr("maxlength", 11);
