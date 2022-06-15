@@ -59,6 +59,8 @@
                 <!--- Este va a variar -->
                 <div class="form-row" id="divVariables">
 
+                    <?php if(count($Variables) > 0){ ?>
+
                         <?php foreach($Variables as $key => $v){ ?>
                             <div class="col-md-3 mb-3 divVariable<?= $v->iIdVariableIndicador ?>">
                                 <?php if($key == 0){ ?>
@@ -74,6 +76,18 @@
                             </div>
                         </div>
                         <?php }?>
+                    
+                    <?php }else{ ?>
+                        <div class="col-md-3 mb-3">
+                            <label>Variable A<span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                            <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
+                            <input type="text" id="A" name="Variable[]" class="form-control" required="required" placeholder="A">
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
+                        </div>
+                    <?php } ?>
+
 
                 </div>
 
@@ -271,12 +285,18 @@
 </div>
 
 <script>
-
+    
     var areaReponsableArray = []
 
     var myArea = {};
 
     var arrayJS=<?php echo json_encode($Variables);?>;
+
+    if(arrayJS.length == 0){
+        var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }else{
+        var alphabet = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    }
 
     for(var i=0;i<arrayJS.length;i++)
     {
@@ -304,8 +324,6 @@
         $("#componente").load('C_entregables/showcomponentes/' + value);
     }
 
-    
-    var alphabet = '.ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
     function agregarVariable(){
 
