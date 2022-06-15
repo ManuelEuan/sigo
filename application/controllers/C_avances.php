@@ -177,7 +177,10 @@ class C_avances extends CI_Controller {
 
                         $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
+                        $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+
                         $idInsertado = $this->ma->guardado_general($table,$data);
+                        
 
                         foreach($Valores as $key => $v){
                             $this->ma->insertarVariableAvance('VariablesAvance', array('iVariable' => $Letras[$key], 'iValor' => $v, 'iIdAvance' => $idInsertado), $con);
@@ -204,6 +207,8 @@ class C_avances extends CI_Controller {
                     //$data['nEjercido'] = 0;
 
                     $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
+
+                    $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
 
                     $idInsertado = $this->ma->guardado_general($table,$data);
 
@@ -1109,41 +1114,11 @@ class C_avances extends CI_Controller {
                             <tbody id="gridbody'.$mes.'">'.$tbody.'</tbody>
                         </table>
                     </div>
-                    <div class="row" id="divValorTotal">
-                        
-                    </div> 
                 </div>
                 <script>
                     $(document).ready(function(){
                         validarAcceso();
 
-                        /*formula = "'.$vFormul->vFormula.'"
-
-                        total = '.json_encode($value).'
-
-                        contadorValores = 0;
-
-                        estructuraFinal = ""
-
-                        for(i = 0; i <= formula.length; i++){
-                            if(formula[i] != undefined){
-                                if(formula[i] != "+" && formula[i] != "*" && formula[i] != "/" && formula[i] != "-" && formula[i] != "(" && formula[i] != ")"){                  
-                                    estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], total[contadorValores]))
-                                    contadorValores = contadorValores + 1
-                                }else{
-                                    estructuraFinal = estructuraFinal.concat(formula[i])
-                                }
-                            } 
-                        }
-                        //console.log(formula)
-                        //console.log(total)
-                        //console.log(estructuraFinal)
-                        console.log(eval(estructuraFinal))
-                        total = eval(estructuraFinal)
-
-                        if(!isNaN(total)){
-                            $("#divValorTotal").append("<label>Valor Total de las variables: " + total + "</label>")
-                        }*/
                     });
                         
                 </script>';

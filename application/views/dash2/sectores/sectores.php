@@ -188,15 +188,19 @@
                                 </div> 
                                 
                                 <div class="row mb-2">
-                                     <div class="col-4 text-center mb-2">
+                                     <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres'])?> </h4>
                                         <span class="font-14">Hombres</span>
                                     </div>
-                                    <div class="col-4 text-center mb-2">
+                                    <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['mujeres'])?> </h4>
                                         <span class="font-14">Mujeres</span>
                                     </div>
-                                    <div class="col-4 text-center mb-2">
+                                    <div class="col-3 text-center mb-2">
+                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['empresas'])?></h4>
+                                        <span class="font-14">Empresas</span>
+                                    </div>
+                                    <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres']) + intval($value['mujeres'])?></h4>
                                         <span class="font-14">Totales</span>
                                     </div>

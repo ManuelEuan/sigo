@@ -156,7 +156,15 @@
                 </div>
             </div>
         </div>
-        <br>
+         <div class="form-row">
+            <div class="col-md-3 mb-3">
+                <label>Empresas</label>
+                <input type="text" class="form-control" id="empresa" name="empresa" placeholder="Ingrese la empresa">
+                <div class="invalid-feedback">
+                    Este campo no puede estar vacio.
+                </div>
+            </div>
+        </div>
          <div class="form-row">
             <div class="col-md-12 mb-3">
                 <label>Observaciones</label>
@@ -166,6 +174,8 @@
                 </div>
             </div>
         </div>
+
+        
         <center style="margin:auto;">
             <input name="id_detent" type="hidden" value="<?= $consulta->iIdDetalleEntregable ?>">
             <button id="addavance" class="btn waves-effect waves-light btn-info" type="submit">+ Agregar avance</button>
@@ -338,13 +348,19 @@
             
             }
         }
-        console.log(formula)
-        console.log(estructuraFinal)
-        console.log(eval(estructuraFinal))
+        //console.log(formula)
+        //console.log(estructuraFinal)
+        //console.log(eval(estructuraFinal))
 
         total =  eval(estructuraFinal)
 
-        document.getElementById("avance").value = total;
+        if(total < 0){
+            document.getElementById("avance").value = 0;
+        }else{
+            document.getElementById("avance").value = total;
+        }
+
+        
     }
 
     function ValidarBeneficiariosM(){
