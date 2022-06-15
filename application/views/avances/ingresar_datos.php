@@ -159,7 +159,7 @@
          <div class="form-row">
             <div class="col-md-3 mb-3">
                 <label>Empresas</label>
-                <input type="text" class="form-control" id="empresa" name="empresa" placeholder="Ingrese la empresa">
+                <input type="number" class="form-control" id="empresa" name="empresa" placeholder="0">
                 <div class="invalid-feedback">
                     Este campo no puede estar vacio.
                 </div>
