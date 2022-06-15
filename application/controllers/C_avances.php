@@ -997,12 +997,6 @@ class C_avances extends CI_Controller {
 
         $value = array();
 
-        /*for($i = 1; $i <= strlen($formulaCalculo); $i++){
-            if($formulaCalculo[i] === '+'){
-                $estructuraFinal += 1;//$estructuraFinal = str_replace($formulaCalculo[i], 5);
-            }  
-        }*/
-
         foreach ($avances as $avance)
         {
             $valores = $this->ma->obtenerValoresVA($avance->iIdAvance);
@@ -1123,7 +1117,7 @@ class C_avances extends CI_Controller {
                     $(document).ready(function(){
                         validarAcceso();
 
-                        formula = "'.$vFormul->vFormula.'"
+                        /*formula = "'.$vFormul->vFormula.'"
 
                         total = '.json_encode($value).'
 
@@ -1149,7 +1143,7 @@ class C_avances extends CI_Controller {
 
                         if(!isNaN(total)){
                             $("#divValorTotal").append("<label>Valor Total de las variables: " + total + "</label>")
-                        }
+                        }*/
                     });
                         
                 </script>';

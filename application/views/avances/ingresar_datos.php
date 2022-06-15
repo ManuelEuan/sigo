@@ -2,7 +2,7 @@
     <form id="addavance" class="" onsubmit="guardarAvance(this,event);">
         <div class="form-row">
             <div class="col-md-3 mb-3">
-            <label for="validationCustom04">Fecha de corte<b class="text-danger">*</b></label>
+            <label for="validationCustom04">Mes reporte<b class="text-danger">*</b></label>
                 <select id="mes_corte" name="mes_corte" required class="form-control">
                     <option value="">Seleccionar...</option>
                     <option value="01">Ene</option>
@@ -45,13 +45,19 @@
         </div>
         
             <div class="form-row">
-                <?php foreach($Variables as $v){ ?>
+                <?php foreach($Variables as $key => $v){ ?>
                     <div class="col-md-3 mb-3">
                         <label for=""><?= $v->vNombreVariable ?></label>
                         <input class="form-control" type="text" id="letra" name="letra[]" value="<?= $v->vVariableIndicador ?>" hidden>
-                        <input class="form-control" type="number" id="valores" name="valores[]" placeholder="0" required>
+                        <input class="form-control full" type="number" id="valores" name="valores[]" placeholder="0" required>
                     </div>
                 <?php } ?>
+            </div>
+
+            <div class="form-row">
+                <div class="col-md-3 mb-3">
+                    <button type="button" class="btn waves-effect waves-light btn-info" onclick="changeInput();">Calcular</button>
+                </div>
             </div>
 
             <!--<div class="form-row">
@@ -65,9 +71,9 @@
         
         <div class="form-row">
             
-            <div class="col-md-3 mb-3">
-                <label>Avance a la fecha de corte<b class="text-danger">*</b></label>
-                <input type="text" id="avance" name="avance" class="form-control" required="" placeholder="Ingresar avance" onkeypress="return filterFloat(event,this);">
+            <div class="col-md-3 mb-3" id="avanceCalculado">
+                <label>Avance al mes de reporte<b class="text-danger">*</b></label>
+                <input type="text" id="avance" name="avance" class="form-control" required="" placeholder="Ingresar avance" onkeypress="return filterFloat(event,this);" readonly>
                 <div class="invalid-feedback">
                     Este campo no puede estar vacio.
                 </div>
@@ -202,26 +208,6 @@
         else{
             $('#monto').val('0');
         }
-        
-        /*var formula = '<?= $vFormula ?: '' ?>'
-
-        var estructuraFinal = ''
-
-        for(i = 0; i <= formula.length; i++){
-            if(formula[i] != undefined){
-                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')'){
-                    estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], 5))
-                }else{
-                    estructuraFinal = estructuraFinal.concat(formula[i])
-                }
-            
-            }
-        }
-        console.log(formula)
-        console.log(estructuraFinal)
-        console.log(eval(estructuraFinal))*/
-
-        
  
     });
 
@@ -326,6 +312,39 @@
         }else{
             //$("#addavance").prop( "disabled", false );
         }
+    }
+
+    function changeInput(){
+
+        const full = document.getElementsByClassName('full');
+        const arr = [...full].map(input => input.value);
+
+        console.log(arr);
+
+        var formula = '<?= $vFormula ?: '' ?>'
+
+        contadorValores = 0;
+
+        var estructuraFinal = ''
+
+        for(i = 0; i <= formula.length; i++){
+            if(formula[i] != undefined){
+                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')'){
+                    estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], arr[contadorValores]))
+                    contadorValores = contadorValores + 1
+                }else{
+                    estructuraFinal = estructuraFinal.concat(formula[i])
+                }
+            
+            }
+        }
+        console.log(formula)
+        console.log(estructuraFinal)
+        console.log(eval(estructuraFinal))
+
+        total =  eval(estructuraFinal)
+
+        document.getElementById("avance").value = total;
     }
 
     function ValidarBeneficiariosM(){
