@@ -3,7 +3,7 @@
   <div class="page-breadcrumb">
     <div class="row">
       <div class="col-5 align-self-center">
-        <h4 class="page-title">Reporte Mir</h4>
+        <h4 class="page-title">Reporte de avance de Indicadores</h4>
       </div>
     </div>
   </div>
@@ -178,7 +178,7 @@
 
     $.ajax({
       type: "POST",
-      url: "<?= base_url() ?>index.php/C_rmir/listar_actividades",
+      url: "<?= base_url() ?>index.php/C_rindicadores/listar_actividades",
       data: data,
       success: function(resp) {
         var ids = JSON.parse(resp);
@@ -225,7 +225,7 @@
   function comprimir(dir) {
     $.ajax({
       type: "POST",
-      url: "<?= base_url() ?>index.php/C_rmir/comprimir_directorio",
+      url: "<?= base_url() ?>index.php/C_rindicadores/comprimir_directorio",
       data: "dir=" + dir,
       success: function(resp) {
         resp = JSON.parse(resp);
@@ -251,7 +251,7 @@
     var id = document.getElementById("selEje").value;
     $.ajax({
       type: "POST",
-      url: "<?= base_url() ?>index.php/C_rmir/dependencias",
+      url: "<?= base_url() ?>index.php/C_rindicadores/dependencias",
       data: 'id=' + id,
       success: function(r) {
         $("#selDep").html(r);
@@ -279,7 +279,7 @@
     } else {
       $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>index.php/C_rmir/generarrepo",
+        url: "<?= base_url() ?>index.php/C_rindicadores/generarrepo",
         data: $("#frmReport").serialize(),
         beforeSend: function(xhr) {
           Swal.fire({

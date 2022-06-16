@@ -8,14 +8,14 @@ use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Row;
 
 
-class C_rmir extends CI_Controller {
+class C_rindicadores extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
         session_start();
         $this->load->library('excel');
         $this->load->helper('url');
-        $this->load->model('M_reporteMir');
+        $this->load->model('M_reporteindicadores');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
     }
@@ -44,13 +44,13 @@ class C_rmir extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
-        $this->load->view('reporte/mir', $data);
+        $this->load->view('reporte/indicadores', $data);
     }
 
     public function dependencias(){
         if($_REQUEST['id']){
             $id = $this->input->post('id',true);
-            $respuesta = $this->M_reporteMir->dependencias($id);
+            $respuesta = $this->M_reporteindicadores->dependencias($id);
             echo '<option value="0">Seleccione..</option>';
             if($respuesta!=false)
             {
@@ -86,7 +86,7 @@ class C_rmir extends CI_Controller {
         }
         
 
-        $mrep = new M_reporteMir();
+        $mrep = new M_reporteindicadores();
         
         $query = $mrep->reporte_pat($anio,$dep,$whereString);
 
@@ -94,7 +94,7 @@ class C_rmir extends CI_Controller {
         {
 
             $records = $query->result(); 
-            $ruta = 'public/reportes/mirBD.xlsx';
+            $ruta = 'public/reportes/indicadores.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);            
 			$blueStyle = (new StyleBuilder())
@@ -103,19 +103,16 @@ class C_rmir extends CI_Controller {
             ->setFontItalic()
             ->build();
             $cells = [
-                    WriterEntityFactory::createCell('Eje',$blueStyle),
                     WriterEntityFactory::createCell('Dependencia',$blueStyle),
-                    WriterEntityFactory::createCell('Año',$blueStyle),
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
                     WriterEntityFactory::createCell('Clave',$blueStyle),
-                    WriterEntityFactory::createCell('Programa presupuestario',$blueStyle),
-                    WriterEntityFactory::createCell('Objetivo del gobierno',$blueStyle),
-                    WriterEntityFactory::createCell('Estrategia',$blueStyle),
-                    WriterEntityFactory::createCell('Resumen',$blueStyle),
-                    WriterEntityFactory::createCell('Supuestos',$blueStyle),
-                    WriterEntityFactory::createCell('Area Responsable',$blueStyle),
-                    WriterEntityFactory::createCell('Indicadores',$blueStyle), 
-                    WriterEntityFactory::createCell('Medios de verificación',$blueStyle), 
+                    WriterEntityFactory::createCell('Resumen Narrativo',$blueStyle),
+                    WriterEntityFactory::createCell('Nombre del indicador',$blueStyle),
+                    WriterEntityFactory::createCell('Método de Cálculo',$blueStyle),
+                    WriterEntityFactory::createCell('Frecuencia Medición',$blueStyle),
+                    WriterEntityFactory::createCell('Meta Programada',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre',$blueStyle),
+                    WriterEntityFactory::createCell('Meta Alcanzada',$blueStyle), 
 
                    
                 ];
@@ -130,20 +127,17 @@ class C_rmir extends CI_Controller {
             {
                 $cells = [
                    
-                    WriterEntityFactory::createCell($rec->vEje),
                     WriterEntityFactory::createCell($rec->vDependencia),
-                    WriterEntityFactory::createCell((int)$rec->iAnio),
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
-                    WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                    WriterEntityFactory::createCell($rec->vObjetivo),
-                    WriterEntityFactory::createCell($rec->estrategiaact),
                     WriterEntityFactory::createCell($rec->vResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->vSupuesto),
-                    WriterEntityFactory::createCell($rec->vAreaResponsable),
                     WriterEntityFactory::createCell($rec->vEntregable),
-                    WriterEntityFactory::createCell($rec->vMedioVerifica),
-                    
+                    WriterEntityFactory::createCell($rec->vFormula),
+                    WriterEntityFactory::createCell($rec->vPeriodicidad),
+                    WriterEntityFactory::createCell((int)$rec->nMeta),
+                    WriterEntityFactory::createCell($rec->dFecha),
+                    WriterEntityFactory::createCell((int)$rec->nAvance),
+                     
                 ];
 
                 $singleRow = WriterEntityFactory::createRow($cells);
