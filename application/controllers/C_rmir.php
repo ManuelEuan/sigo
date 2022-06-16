@@ -119,76 +119,6 @@ class C_rmir extends CI_Controller {
 
                    
                 ];
-//             if(isset($tabla['fuentes']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('Fuente de financiamiento');
-//                 $cells[] = WriterEntityFactory::createCell('Monto de financimiento');
-//             }
-
-// /*
-//             if(isset($tabla['ubp']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('Clave PP');
-//                 $cells[] = WriterEntityFactory::createCell('Nombre PP');
-//                 $cells[] = WriterEntityFactory::createCell('Clave UBP');
-//                 $cells[] = WriterEntityFactory::createCell('Nombre UBP');
-//             }*/
-
-//             if(isset($tabla['ped']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('Eje');
-//                 $cells[] = WriterEntityFactory::createCell('Tema');
-//                 $cells[] = WriterEntityFactory::createCell('Objetivo');
-//                 $cells[] = WriterEntityFactory::createCell('Estrategia');
-//                 $cells[] = WriterEntityFactory::createCell('Línea de acción');
-//             }
-
-//             if(isset($tabla['entregables']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('ID Entregable');
-//                 $cells[] = WriterEntityFactory::createCell('ID Detalle Entregable');
-//                 $cells[] = WriterEntityFactory::createCell('Entregable');
-//                 $cells[] = WriterEntityFactory::createCell('Ponderación');
-//                 $cells[] = WriterEntityFactory::createCell('Meta');
-//                 $cells[] = WriterEntityFactory::createCell('Meta modificada');
-//                 $cells[] = WriterEntityFactory::createCell('Unidad de medida');
-//                 $cells[] = WriterEntityFactory::createCell('Suspendido');
-//                 $cells[] = WriterEntityFactory::createCell('Sujeto afectado');
-//                 $cells[] = WriterEntityFactory::createCell('Periodicidad');
-//                 $cells[] = WriterEntityFactory::createCell('Municipalizable');
-//                 $cells[] = WriterEntityFactory::createCell('Entrega a los mismos beneficiarios');
-//             }
-
-//             if(isset($tabla['compromisos']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('# Compromiso');
-//                 $cells[] = WriterEntityFactory::createCell('Compromiso');
-//                 $cells[] = WriterEntityFactory::createCell('Componente');
-//             }
-
-//             if(isset($tabla['metasmun']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('Municipio');
-//                 $cells[] = WriterEntityFactory::createCell('Meta municipio');
-//                 $cells[] = WriterEntityFactory::createCell('Meta modificada municipio');
-//             }
-
-//             if(isset($tabla['avances']))
-//             {
-//                 $cells[] = WriterEntityFactory::createCell('Municipio del avance');
-//                 $cells[] = WriterEntityFactory::createCell('Fecha');
-//                 $cells[] = WriterEntityFactory::createCell('Aprobado');
-//                 $cells[] = WriterEntityFactory::createCell('Avance');
-//                 $cells[] = WriterEntityFactory::createCell('Ejercido');
-//                 $cells[] = WriterEntityFactory::createCell('Beneficiarios H');
-//                 $cells[] = WriterEntityFactory::createCell('Beneficiarios M');
-//                 $cells[] = WriterEntityFactory::createCell('Discapacitados H');
-//                 $cells[] = WriterEntityFactory::createCell('Discapacitados M');
-//                 $cells[] = WriterEntityFactory::createCell('Mayahablentes H');
-//                 $cells[] = WriterEntityFactory::createCell('Mayahablantes M');
-//             }
-		
-	
             // Agregamos la fila de encabezados
             $rowStyle = (new StyleBuilder())
                             ->setFontBold()
@@ -206,7 +136,6 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                    // WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->vObjetivo),
                     WriterEntityFactory::createCell($rec->estrategiaact),
                     WriterEntityFactory::createCell($rec->vResumenNarrativo),
@@ -216,80 +145,6 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vMedioVerifica),
                     
                 ];
-
-                // if(isset($tabla['fuentes']))
-                // {
-                //     $cells[] = WriterEntityFactory::createCell($rec->vFinanciamiento);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->monto);
-                // }
-
-/*
-                if(isset($tabla['ubp']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->clavepp);
-                    $cells[] = WriterEntityFactory::createCell($rec->vProgramaPresupuestario);
-                    $cells[] = WriterEntityFactory::createCell($rec->claveubp);
-                    $cells[] = WriterEntityFactory::createCell($rec->vUBP);
-                }
-                */
-
-                // if(isset($tabla['ped']))
-                // {
-                //     $cells[] = WriterEntityFactory::createCell($rec->vEje);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vTema);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vObjetivo);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vEstrategia);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vLineaAccion);
-                // }
-
-                // if(isset($tabla['entregables']))
-                // {
-                //     $rec->iSuspension = ($rec->iSuspension == 1) ? 'Sí':'No';
-                //     $rec->iMunicipalizacion = ($rec->iMunicipalizacion == 1) ? 'Sí':'No';
-                //     $rec->iMismosBeneficiarios = ($rec->iMismosBeneficiarios == 1) ? 'Sí':'No';
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->iIdEntregable);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->iIdDetalleEntregable);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vEntregable);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->iPonderacion);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->nMeta);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->nMetaModificada);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vUnidadMedida);
-                //     $cells[] = WriterEntityFactory::createCell($rec->iSuspension);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vSujetoAfectado);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vPeriodicidad);
-                //     $cells[] = WriterEntityFactory::createCell($rec->iMunicipalizacion);
-                //     $cells[] = WriterEntityFactory::createCell($rec->iMismosBeneficiarios);
-                // }
-
-                // if(isset($tabla['compromisos']))
-                // {
-                //     $cells[] = WriterEntityFactory::createCell($rec->iNumero);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vCompromiso);
-                //     $cells[] = WriterEntityFactory::createCell($rec->vComponente);
-                // }
-
-                // if(isset($tabla['metasmun']))
-                // {
-                //     $cells[] = WriterEntityFactory::createCell($rec->municipiometa);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->metamunicipio);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->metamodificadamunicipio);
-                // }
-
-                // if(isset($tabla['avances']))
-                // {
-                //     $rec->aprobado = ($rec->aprobado == 1) ? 'Sí':'No';
-                //     $cells[] = WriterEntityFactory::createCell($rec->municipioavance);
-                //     $cells[] = WriterEntityFactory::createCell($rec->fecha);
-                //     $cells[] = WriterEntityFactory::createCell($rec->aprobado);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->avance);
-                //     $cells[] = WriterEntityFactory::createCell((float)$rec->ejercido);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->benh);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->benm);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->disch);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->discm);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->lengh);
-                //     $cells[] = WriterEntityFactory::createCell((int)$rec->lengm);
-                // }
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
