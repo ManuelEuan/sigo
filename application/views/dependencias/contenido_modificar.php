@@ -39,6 +39,53 @@
                         </div>                     
                     </div>
                 </div><br>
+
+                <div class="form-row">
+                    <div class="col-12">
+                        <label for="">Área responsable</label>
+                        <div class="row">
+                            <div class="col-11">
+                                <input class="form-control" type="text" id="areaResposable" name="areaResposable" placeholder="Ingresar el Área Responsable">
+                            </div>
+                            <div class="col-1">
+                                <button type="button" style="background: none; border: thick;" id="agregarArea" name="agregarArea" onclick="guardarArea();"><i class="mdi mdi-plus-circle" style="font-size: 20px; color: #37BCD5;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered display" style="width:100%" id="grid">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="50px">ID</th>
+                                                        <th style="text-align: -webkit-center;">Nombre</th>
+                                                        <th width="150px">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="datosArea">
+                                                    <?php foreach($areasResponsables as $key => $row){ ?>
+                                                        <tr class="rowArea<?= $row->iIdAreaResponsable?>">
+                                                            <td><?= $key+1?></td>
+                                                            <td><?= $row->vAreaResponsable?></td>
+                                                            <td><button class="remover" type="button" onclick="deleteArea(<?= $row->iIdAreaResponsable?>)" style="border: none; background: none;"><i class="mdi mdi-close-circle" style="font-size: larger; color: red;"></i></button></td>
+                                                        </tr>
+                                                    <?php } ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-row">
                     <div class="col-12 text-center">
                         <button class="btn waves-effect waves-light btn-info" type="submit">Guardar</button>
@@ -73,6 +120,64 @@
     $(document).ready(function(){
         $(".select2").select2();
     });
+
+    var areaReponsableArray = []
+    var contador = 0;
+    var myArea = {};
+
+
+    function guardarArea(){
+        if($('#areaResposable').val() != ''){
+            var id = areaReponsableArray.length + 1
+            var nombreArea = $('#areaResposable').val()
+            myArea.nombre = nombreArea
+            myArea.id = id
+            var tbody = '<tr class="rowArea'+id+'"><td>'+id+'</td> <td> <input class="form-control" id="TnombreArea" name="TnombreArea[]" type="hidden" placeholder="Ingresar el Área Responsable" value="'+nombreArea+'"> '+nombreArea+'<td><button class="remover" type="button" onclick="remover('+id+');" style="border: none; background: none;"><i class="mdi mdi-close-circle" style="font-size: larger; color: red;"></i></button></td></tr>'
+            $('#datosArea').append(tbody)
+            $('#areaResposable').val('')
+
+            areaReponsableArray.push(myArea);
+            myArea = {}
+        }
+    }
+
+    function remover(id){
+        areaReponsableArray = areaReponsableArray.filter(obj => obj.id != id)
+        $(".rowArea"+id).remove();
+    }
+
+    function deleteArea(id){
+
+        swal({
+            title: '¿Estás seguro?',
+            type: "warning",   
+            showCancelButton: true,   
+            confirmButtonColor: "#DD6B55",   
+            confirmButtonText: "Confirmar",   
+            cancelButtonText: "Cancelar",
+            }).then((confirm) => {
+
+                if(confirm.hasOwnProperty('value')){
+                    remover(id)
+                    $.ajax({
+
+                    type: "POST",
+                    url: "<?=base_url()?>C_dependencias/deleteArea", //Nombre del controlador
+                    data: {id:id},
+
+                    success: function(resp) {
+                        
+                        alerta('Eliminado exitosamente','success');  
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    
+                    }
+
+                })
+                } 
+            });
+
+    }
 
     function modificarDependencia(f,e){
         e.preventDefault();

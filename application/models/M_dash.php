@@ -926,6 +926,10 @@ class M_dash extends CI_Model {
 		return $this->db->query($sql)->result();
 	}
 
+	public function retos_por_eje($idEje){
+		$sql = 'SELECT "iIdReto" FROM public."Reto" where "iIdEje" = '.$idEje;
+		return $this->db->query($sql)->num_rows();
+	}
 
 	function avance_anios($idAct)
 	{

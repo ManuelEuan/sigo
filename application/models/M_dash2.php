@@ -136,7 +136,7 @@ class M_dash2 extends CI_Model {
 
 	function info_dash_sector($where='')
 	{
-		$this->sigo->select('s."iIdEje", s."vEje", COUNT(DISTINCT(s."iIdDependencia")) pats, COUNT(s."iIdDetalleActividad") actividades, SUM(s."nAvance") avance, SUM(s.entregables) entregables, SUM(s.presupuesto) presupuesto, SUM(s.ejercido) ejercido, SUM(dat."nPresupuestoAutorizado") autorizado',FALSE);
+		$this->sigo->select('s."iIdEje", s."vEje", COUNT(DISTINCT(s."iIdDependencia")) pats, COUNT(s."iIdDetalleActividad") actividades, SUM(s."nAvance") avance, SUM(s.entregables) entregables, SUM(s.presupuesto) presupuesto, SUM(s.ejercido) ejercido, SUM(s.empresas) empresas, SUM(dat."nPresupuestoAutorizado") autorizado',FALSE);
 		$this->sigo->from('info_dash_sector AS s');
 		$this->sigo->join('DetalleActividad dat', 'dat.iIdDetalleActividad = s.iIdDetalleActividad','LEFT OUTER');
 		if(!empty($where))$this->sigo->where($where);

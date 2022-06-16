@@ -230,4 +230,72 @@ class M_avances extends CI_Model
             
 		return $this->db->query($sql)->result();
     }
+
+    //Agregado Saul Tun
+    function obtenerDetalleId($id){
+        $this->db->select('iIdEntregable');
+        $this->db->from('DetalleEntregable');
+        $this->db->where('iIdDetalleEntregable', $id);
+        
+        $query =  $this->db->get();
+		$resultado = $query->row();
+        return $resultado;
+    }
+
+    function obtenerVariables($id){
+
+        $this->db->select();
+        $this->db->from('VariableIndicador');
+        $this->db->where('iIdEntregable', $id);
+
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+
+    }
+
+    function obtenerFormula($id){
+
+        $this->db->select();
+        $this->db->from('Entregable');
+        $this->db->where('iIdEntregable', $id);
+
+        $query =  $this->db->get();
+		$resultado = $query->row();
+        return $resultado;
+
+    }
+
+    public function insertarVariableAvance($tabla, $datos, $con=''){
+		if($con == '') $con = $this->db;
+		if($con->insert($tabla,$datos)) return true;
+		else return false;
+	}
+
+    public function eliminarVariableAvance($id){
+        $this->db->where('iIdAvance', $id);
+		$this->db->delete('VariablesAvance');
+		return true;
+    }
+
+    public function obtenerValoresVA($id){
+        $this->db->select();
+        $this->db->from('VariablesAvance');
+        $this->db->where('iIdAvance', $id);
+
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+    }
+
+    public function obtenerIDEntregable($id){
+        $this->db->select('iIdEntregable');
+        $this->db->from('DetalleEntregable');
+        $this->db->where('iIdDetalleEntregable', $id);
+
+        $query =  $this->db->get();
+		$resultado = $query->row();
+        return $resultado;
+    }
+
 }

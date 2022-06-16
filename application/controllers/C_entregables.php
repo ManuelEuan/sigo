@@ -43,6 +43,10 @@ class C_entregables extends CI_Controller
         $data['compromiso'] = $lib->options_tabla('compromisos');
         $data['compromisos'] = $this->me->mostrar_compromisos();
 
+        //Agregados Saul Tun
+        $data['FormaInd'] = $this->me->obtenerForma();
+        $data['dimension'] = $this->me->obtenerDimension();
+
         $data['municipios'] = $lib->options_multiselect('municipios',[]);
 
         $this->load->view('entregables/contenido_agregar',$data);
@@ -66,8 +70,8 @@ class C_entregables extends CI_Controller
                     $municipalizacion = 0;
                 }
 
-                if(isset($_POST['beneficios'])){
-                    $beneficios = $this->input->post('beneficios',TRUE);
+                if(isset($_POST['checkMismoBenef'])){
+                    $beneficios = $this->input->post('checkMismoBenef',TRUE);
                 }else{
                     $beneficios = 0;
                 }
@@ -78,10 +82,20 @@ class C_entregables extends CI_Controller
                 $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
                 $data['iActivo']= 1;
 
+                //Agregado Saul Tun
+                $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
+                $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
+                $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
+                $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
+                $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+                $Variable = $this->input->post('Variable', true);
+                $Letra = $this->input->post('Letra', true);
+
+
                 $table = 'Entregable';
 
                 $identregable = $this->me->guardado_general($table,$data);
-
+                
                 if($identregable > 0){
                   //municipio entregable
                 $municipios = $this->input->post('municipios',true);
@@ -93,6 +107,11 @@ class C_entregables extends CI_Controller
 
                       $this->me->guardar_entregablemunicipio('EntregableMunicipio', $muni);
                     }
+                }
+
+                //Agregado Saul Tun
+                foreach($Variable as $key => $v){
+                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $identregable), $con);
                 }
 
                     $table2 = 'DetalleEntregable';
@@ -191,6 +210,19 @@ class C_entregables extends CI_Controller
         $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
         $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
 
+        //Agregados Saul
+        $data['formaIndicador'] = $this->me->obtenerForma();
+        $data['dimension'] = $this->me->obtenerDimension();
+        $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
+        
+        $data['baseIndicador'] = $data['consulta']->nLineaBase;
+        $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
+        $data['areaCalculo'] = $data['consulta']->vFormula;
+
+        $data['idForma'] = $data['consulta']->iIdFormaInd;
+        $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
+        $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
+
         if($all_edit > 1){
             $data['candado'] = false;
         } else {
@@ -219,12 +251,32 @@ class C_entregables extends CI_Controller
             $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
             $data['vNombreEntregable'] = $this->input->post('vNombreEntregable',TRUE);
 
+            //Agregado Saul
+            $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
+            $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
+            $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
+            $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
+            $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+
+            //Actualizar tabla variables
+
+            $Variable = $this->input->post('Variable', true);
+            $Letra = $this->input->post('Letra', true);
+            $idVariable = $this->input->post('idVariable', true);
+
+            foreach($Variable as $key => $v){
+                if($idVariable[$key] == ''){
+                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent), $con);
+                }else{
+                    $this->me->actualizarVariables($idVariable[$key], array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent));
+                }   
+            }
             if(!$candado)
             {
                 $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
                 $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
-                $data['iMismosBeneficiarios'] = (isset($_POST['beneficios'])) ? 1:0;    
+                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;    
             }
 
             $where = "iIdEntregable =".$id_ent;
@@ -782,11 +834,15 @@ class C_entregables extends CI_Controller
             //$table = 'Entregable';
             //$table2 = 'DetalleEntregable';
             $where = "iIdDetalleEntregable =".$id_ent;
-            $data['iActivo'] = 0;
+            $data['iActivo'] = 0;         
 
             //if($this->me->eliminacion_generica($where,$table,$data)){
 
                 if($this->me->eliminacion_generica($where,'DetalleEntregable',$data)){
+
+                    $id_entregable = $this->me->obtenerDetalleId($id_ent);
+
+                    $this->me->eliminarVariables($id_entregable->iIdEntregable);
 
                     if($this->me->mostrar_entregables($_POST['id_detact']) != null){
                         echo true;
@@ -799,6 +855,7 @@ class C_entregables extends CI_Controller
         }else{
             echo 2;
         }
+
     }
 
     //funcion para obtener el porcentaje de cada avance
@@ -1004,6 +1061,12 @@ class C_entregables extends CI_Controller
         $upd = $seg->actualiza_registro('DetalleEntregable',$w_det_ent,$d_det_ent,$con);
 
         echo ($seg->terminar_transaccion($con))  ? 1:0;
+    }
+
+    function eliminarVariable(){
+        $idVariable = $this->input->post('id',true);
+        
+        $this->me->eliminarVariable($idVariable);
     }
 
 }

@@ -48,7 +48,7 @@
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">0</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">$0</h1>
                         <h5 style="font-weight:500;">Autorizados</h5></div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;"><?=$papro_totales?> %</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtPorcentaje">0%</h1>
                         <h5 style="font-weight:500;">%</h5></div>
                 </div>
             </div>
@@ -146,15 +146,30 @@
                                     <div class="col-2"></div>
                                     <div class="col-10"><hr style="background-color:#000000;"></div>
                                 </div>
-                                
+
                                 <div class="row text-center mb-2">
                                     <div class="col-4">
+                                        <h4 class="mb-0" style="font-weight:700"><?=$value['retos']?> </h4>
+                                        <span class="font-14">Retos</span></div>
+
+                                    <div class="col-4">
+
+                                    </div>
+
+                                    <div class="col-4">
                                         <h4 class="mb-0" style="font-weight:700"><?=$value['pat']?> </h4>
-                                        <span class="font-14">Dependencias y Entidades</span></div>
-                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
-                                        <span class="font-14">Acciones</span></div>
-                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
-                                        <span class="font-14">Indicadores</span></div>
+                                        <span class="font-14">Dependencias y Entidades</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="row text-center mb-2">
+                                    
+                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
+                                        <span class="font-14">Acciones</span>
+                                    </div>
+                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
+                                        <span class="font-14">Indicadores</span>
+                                    </div>
                                 </div>
 
                                 <div class="row mb-2">
@@ -173,15 +188,19 @@
                                 </div> 
                                 
                                 <div class="row mb-2">
-                                     <div class="col-4 text-center mb-2">
+                                     <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres'])?> </h4>
                                         <span class="font-14">Hombres</span>
                                     </div>
-                                    <div class="col-4 text-center mb-2">
+                                    <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['mujeres'])?> </h4>
                                         <span class="font-14">Mujeres</span>
                                     </div>
-                                    <div class="col-4 text-center mb-2">
+                                    <div class="col-3 text-center mb-2">
+                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['empresas'])?></h4>
+                                        <span class="font-14">Empresas</span>
+                                    </div>
+                                    <div class="col-3 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres']) + intval($value['mujeres'])?></h4>
                                         <span class="font-14">Totales</span>
                                     </div>
@@ -281,8 +300,11 @@
                         totalAprobado = (totalJsonAprobado - sumaMyUAprobado)
                         totalPagado = (totalJsonPagado - sumaMyUPagado)
                         
-                        document.getElementById("txtAutizado").innerHTML = number_format(totalAprobado, 2);
-                        document.getElementById("txtGastado").innerHTML = number_format(totalPagado, 2);
+                        var porcentaje = (totalPagado/totalAprobado)*100;
+                        
+                        document.getElementById("txtAutizado").innerHTML = "$" + number_format(totalAprobado, 2);
+                        document.getElementById("txtGastado").innerHTML = "$" + number_format(totalPagado, 2);
+                        document.getElementById("txtPorcentaje").innerHTML = number_format(porcentaje, 2) + "%";
                         
                     },
                     error: function(XMLHHttRequest, textStatus, errorThrown) {

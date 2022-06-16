@@ -43,7 +43,19 @@ class C_avances extends CI_Controller {
         
         $data['consulta'] = $this->ma->mostrar_actividadentregable($id_detent);
 
+        //Escalar a la tabla VariableIndicador
+        $id_entregable = $this->ma->obtenerDetalleId($id_detent);
+
+        $Formula = $this->ma->obtenerFormula($id_entregable->iIdEntregable);
+
+        $Variables = $this->ma->obtenerVariables($id_entregable->iIdEntregable);
+
+        $data['Variables'] = $Variables;
+
+        $data['vFormula'] = $Formula->vFormula;
+
     	$this->load->view('avances/principal',$data);
+
     }
 
     /**
@@ -69,6 +81,9 @@ class C_avances extends CI_Controller {
                 $data['nAvance'] = EliminaComas($this->input->post('avance',TRUE));
                 $data['nEjercido'] = EliminaComas($this->input->post('monto',TRUE)) == "" ? 0 : EliminaComas($this->input->post('monto',TRUE));
                 $data['iActivo'] = 1;
+
+                $Letras = $this->input->post('letra',TRUE);
+                $Valores = $this->input->post('valores',TRUE);
 
                 //echo "Monto=";
                 //echo $data['nEjercido'] ;
@@ -162,7 +177,16 @@ class C_avances extends CI_Controller {
 
                         $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
-                        if($this->ma->guardado_general($table,$data)){
+                        $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+
+                        $idInsertado = $this->ma->guardado_general($table,$data);
+                        
+
+                        foreach($Valores as $key => $v){
+                            $this->ma->insertarVariableAvance('VariablesAvance', array('iVariable' => $Letras[$key], 'iValor' => $v, 'iIdAvance' => $idInsertado), $con);
+                        }
+
+                        if($idInsertado){
                             $result = true;
                         }
                     }
@@ -184,7 +208,15 @@ class C_avances extends CI_Controller {
 
                     $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
-                    if($this->ma->guardado_general($table,$data)){
+                    $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+
+                    $idInsertado = $this->ma->guardado_general($table,$data);
+
+                    foreach($Valores as $key => $v){
+                        $this->ma->insertarVariableAvance('VariablesAvance', array('iVariable' => $Letras[$key], 'iValor' => $v, 'iIdAvance' => $idInsertado), $con);
+                    }
+
+                    if($idInsertado){
                         $result = true;
                     }
                 }
@@ -960,8 +992,19 @@ class C_avances extends CI_Controller {
         $tbody = '';
         $avances = $this->ma->obtener_avance_mes($mes,$iddetent);
 
+        $idEntregable = $this->ma->obtenerIDEntregable($iddetent);
+
+        $vFormul = $this->ma->obtenerFormula($idEntregable->iIdEntregable);
+
+        $formulaCalculo = strval($vFormul->vFormula);
+
+        $estructuraFinal = 0;
+
+        $value = array();
+
         foreach ($avances as $avance)
         {
+            $valores = $this->ma->obtenerValoresVA($avance->iIdAvance);
             // Validamos acceso por avance
             if($acceso_rev > 1) $class_read = '';
             elseif($acceso > 1 && $avance->iAprobado == 0 ) $class_read = '';
@@ -1028,6 +1071,11 @@ class C_avances extends CI_Controller {
             <button title="Eliminar" type="button" class="btn-lectura btn waves-effect waves-light btn-xs btn-danger" onclick="eliminarAvance('.$avance->iIdAvance.',\''.$mes.'\');"><i class="mdi mdi-close"></i></button>
             <input type="hidden" name="idavance" id="idavance" value="'.$avance->iIdAvance.'">';
 
+           
+            foreach($valores as $v){
+                array_push($value, $v->iValor);
+            }
+
             $class = ($avance->iAprobado == 1) ? 'table-success':'';
             $tbody .= '<tr class="'.$class.'">
                         <td>'.$checkbox.'</td>
@@ -1070,7 +1118,9 @@ class C_avances extends CI_Controller {
                 <script>
                     $(document).ready(function(){
                         validarAcceso();
+
                     });
+                        
                 </script>';
 
         return $html;
@@ -1107,7 +1157,10 @@ class C_avances extends CI_Controller {
                             'iIdUsuarioActualiza' => $_SESSION[PREFIJO.'_idusuario'],
                             'dFechaActualiza' => date("Y-m-d h:i:s")
                         );
+
             echo ($this->M_seguridad->actualiza_registro('Avance',$where,$data)) ? true:false;
+
+            $this->ma->eliminarVariableAvance($where["iIdAvance"]);
         }else echo false;
     }
 

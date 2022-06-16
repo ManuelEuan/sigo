@@ -14,6 +14,7 @@ class C_pat extends CI_Controller
         $this->load->model('M_seguridad', 'mseg');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
+        $this->load->library('session');
 
         //Parametros para la conexion al sistema de finanzas
         $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
@@ -141,25 +142,6 @@ class C_pat extends CI_Controller
         $this->load->view('PAT/editar_actividad', $data2);
     }
 
-    public function obtenerActividades(){
-
-        $iIdDependencia = isset($_POST['idDependencia']) ? $_POST['idDependencia'] : '';
-
-        $actividades = $this->pat->obtenerActividades($iIdDependencia);
-
-        echo json_encode($actividades);
-        //
-    }
-
-    public function obtenerAreasRESP(){
-        $iIdDependencia = isset($_POST['idDependencia']) ? $_POST['idDependencia'] : '';
-
-        $areas = $this->pat->obtenerAreasRESP($iIdDependencia);
-
-        echo json_encode($areas);
-        //
-    }
-
     public function edit() {
         $_SESSION['carritoFinan'] = null;
         $_SESSION['carritoUbpP'] = null;
@@ -238,11 +220,6 @@ class C_pat extends CI_Controller
                     $catPoas .= '<option value="'.$value->numeroProyecto.'" '.$selected.'>'.$value->nombreProyecto.'</option>'; 
                 }
             }
-            $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
-            $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
-            $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
-            $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
-            $data3['ODS']    = $this->pat->obtenerODS();
            
             $seg = new Class_seguridad();
             $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
@@ -265,7 +242,6 @@ class C_pat extends CI_Controller
         $data3['eje'] = $this->pat->mostrarEje();
         $seg = new Class_seguridad();
         $opt = new Class_options();
-
         
         $all_sec = $seg->tipo_acceso(9,$_SESSION[PREFIJO.'_idusuario']);
         $all_dep = $seg->tipo_acceso(10,$_SESSION[PREFIJO.'_idusuario']);
@@ -281,13 +257,9 @@ class C_pat extends CI_Controller
         }
         $dependencia = $this->pat->getDependenciaById($_SESSION[PREFIJO.'_iddependencia']);
         $data3['vDependencia']  = $dependencia[0]->vDependencia;
-        $data3['idDependencia']  = $_SESSION[PREFIJO.'_iddependencia'];
         $data3['montoFinal']    = $this->sumaMonto();
-        $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
-        $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
-        $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
-        $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
-        $data3['ODS']    = $this->pat->obtenerODS();
+        $data3['catalogosPOA']  = $this->getCatalogoPOA(false);
+
         $seg = new Class_seguridad();
         $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
         $this->load->view('PAT/crear_actividad', $data3);
@@ -438,25 +410,6 @@ class C_pat extends CI_Controller
             $objReto = $this->pat->getReto($this->input->post('iReto',true));
             $idEje = $objReto[0]->iIdEje;
         }
-        $incluyeMIR = $this->input->post('icluyeMIR', true);
-        $incluyeAglomeraMIR = $this->input->post('tieneAglomeracion', true);
-        $idActividadAglomera = $this->input->post('idActividad', true);
-        $idNivelMIR = $this->input->post('idNivelMIR', true);
-        $valorMIR = 0;
-        $valorAglomeraMIR = 0;
-
-        if($incluyeMIR == 'on'){
-            $valorMIR = 1;
-        }else{
-            $valorMIR = 0;
-        }
-
-        if($incluyeAglomeraMIR == 'on'){
-            $valorAglomeraMIR = 1;
-        }else{
-            $valorAglomeraMIR = 0;
-        }
-
 
         if (isset($_POST['NombAct'])) {
             $data = array(
@@ -464,12 +417,12 @@ class C_pat extends CI_Controller
                 'vObjetivo'     => $this->input->post('objGeneral',true),
                 'vDescripcion'  => strip_tags($_POST['descripcion']),
                 'iActivo'       => 1,
-                'iODS'          => $this->input->post('selectODS',true)?: 0,
+                'iODS'          => 0,
                // 'iIdDependencia'=> $this->input->post('depAct'),
                'iIdDependencia'=> $idDep,
               //  (isset($_POST['depAct'])) ? $this->input->post('depAct'):0;
 
-                'vResponsable'  => $this->input->post('iAreaResponsable',true),
+                'vResponsable'  => $this->input->post('vResponsable',true),
                 'vCargo'        => $this->input->post('vCargo',true),
                 'vCorreo'       => $this->input->post('vCorreo',true),
                 'vTelefono'     => $this->input->post('vTelefono',true),
@@ -479,14 +432,6 @@ class C_pat extends CI_Controller
                 'iideje'        => $idEje,
                 'vtipoactividad'    => $this->input->post('vTipoActividad', true),
                 'vcattipoactividad' => $this->input->post('valCatPoas', true),
-                'iIncluyeMIR' => $valorMIR ?: 0,
-                'iAglomeraMIR' => $valorAglomeraMIR ,
-                'iIdActividadMIR' => $idActividadAglomera ?: null,
-                'iIdNivelMIR' => $idNivelMIR ?: null,
-                'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
-                'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
-                'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
-                'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             $idAct = $this->pat->agregarAct($data);
@@ -537,25 +482,6 @@ class C_pat extends CI_Controller
             $idActividad    = $this->input->post('idAct',true);
             //$iIdDependencia = (isset($_POST['depAct'])) ? $this->input->post('depAct'):0;
 
-            $incluyeMIR = $this->input->post('icluyeMIR', true);
-            $incluyeAglomeraMIR = $this->input->post('tieneAglomeracion', true);
-            $idActividadAglomera = $this->input->post('idActividad', true);
-            $idNivelMIR = $this->input->post('idNivelMIR', true);
-            $valorMIR = 0;
-            $valorAglomeraMIR = 0;
-
-            if($incluyeMIR == 'on'){
-                $valorMIR = 1;
-            }else{
-                $valorMIR = 0;
-            }
-
-            if($incluyeAglomeraMIR == 'on'){
-                $valorAglomeraMIR = 1;
-            }else{
-                $valorAglomeraMIR = 0;
-            }
-
             //  Iniciamos laa transaccion
             $con = $this->mseg->iniciar_transaccion();
 
@@ -563,10 +489,10 @@ class C_pat extends CI_Controller
             $data = array(
                 'vActividad'        => $this->input->post('NombAct',true),
                 'vNombreActividad'  => $this->input->post('vNombreActividad',true),
-                'vObjetivo'         => $this->input->post('objGeneral',true),
+                //Simbolo %
+                'vObjetivo'         => $this->input->post('objGeneral',false),
                 'vDescripcion'      => strip_tags($_POST['descripcion']),
-                'iODS'              => $this->input->post('selectODS',true)?: 0,
-                'vResponsable'      => $this->input->post('iAreaResponsable',true),
+                'vResponsable'      => $this->input->post('vResponsable',true),
                 'vCargo'            => $this->input->post('vCargo',true),
                 'vCorreo'           => $this->input->post('vCorreo',true),
                 'vTelefono'         => $this->input->post('vTelefono',true),
@@ -577,14 +503,6 @@ class C_pat extends CI_Controller
                 'iideje'            => $idEje,
                 'vtipoactividad'    => $this->input->post('vTipoActividad', true),
                 'vcattipoactividad' => $this->input->post('valCatPoas', true),
-                'iIncluyeMIR' => $valorMIR,
-                'iAglomeraMIR' => $valorAglomeraMIR,
-                'iIdActividadMIR' => $idActividadAglomera ?: null,
-                'iIdNivelMIR' => $idNivelMIR ?: null,
-                'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
-                'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
-                'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
-                //'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             if(isset($_POST['iODS'])) $data['iODS'] = 1;
@@ -1972,9 +1890,34 @@ class C_pat extends CI_Controller
         }
     }
 
-    function actualizarValoresPOA(){
-        $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
-        echo var_dump($catalogosPOA);
+    function getCatalogoPOAAvances($print = true) {
+        $url    = $this->urlFinanzas.'proyectos/listado';
+        unset($_SESSION["catalogoPOA"]);
+
+        try{
+            $ch = curl_init($url);
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: Basic '. base64_encode("$this->userFinanzas:$this->passFinanzas")
+            );
+
+            $headers = array();
+            $headers[] = 'Cache-Control: no-cache';
+            $headers[] = 'Content-Type: application/json; charset= utf-8';
+
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_USERPWD, $this->authFinanzas);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            
+            echo $result;
+
+            $this->session->catalogoPOA = $result;
+            return "Operación Exitosa";
+        }catch(Exception $ex){
+            print_r($ex);
+        }
     }
 
     /**

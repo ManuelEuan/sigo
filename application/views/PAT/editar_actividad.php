@@ -78,6 +78,21 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 </div>
 
                 <div class="form-row">
+                    <div class="col-md-2 mb-2">
+                        <label for="checkProyectoPrioritario">Proyecto Prioritario </label>
+                        <input type="checkbox" id="checkProyectoPrioritario" name="checkProyectoPrioritario" <?php if($consulta[0]->iIdProyectoPrioritario > 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null ) echo 'checked' ?>>
+                    </div>
+                    <div class="col-md-10">
+                        <select class="custom-select select-lectura" name="selectProyectoPrioritario" id="selectProyectoPrioritario">
+                            <option value="">--Seleccione--</option>
+                            <?php foreach($proyectoPrioritario as $p){?>
+                            <option value="<?= $p->iIdProyectoPrioritario?>"<?php if($consulta[0]->iIdProyectoPrioritario == $p->iIdProyectoPrioritario) echo 'selected' ?> ><?= $p->vProyectoPrioritario ?></option>
+                            <?php }?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
                     <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Fecha de inicio</label>
                         <input type="date" class="form-control input-lectura" id="fINICIO" name="fINICIO" required value="<?= $consulta[0]->dInicio ?>">
@@ -118,15 +133,42 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                     </div>
                 <?php } ?>
 
+                <br>
                 <div class="form-row">
-                    <div class="col-md-12 mb-12">
+                    <div class="col-md-1 mb-2">
+                        <label for="checkODS">ODS </label>
+                        <input type="checkbox" id="checkODS" name="checkODS" <?php if($consulta[0]->iODS != '' || $consulta[0]->iODS != 0 || $consulta[0]->iODS != null) echo 'checked' ?>>
+                    </div>
+                    <div class="col-md-11">
+                        <select class="custom-select select-lectura" name="selectODS" id="selectODS">
+                            <option value="">--Seleccione--</option>
+                            <?php foreach($ODS as $O){?>
+                            <option value="<?= $O->iIdOds ?>" <?php if($O->iIdOds == $consulta[0]->iODS) echo 'selected' ?>><?= $O->vOds ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Reto</label>
                       <select class="form-control select-lectura" aria-invalid="false" name="iReto" id="iReto" required>
                             <option value="">--Seleccione--</option>
                             <?=$retos?>
                         </select>
                     </div>
+                    <div class="col-md-6 mb-6">
+                        <label for="validationCustom04">Área Responsable</label>
+                          <select class="form-control select-lectura" aria-invalid="false" name="iAreaResponsable" id="iAreaResponsable" required>
+                            <option value="">--Seleccione--</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
                 </div>
+
+                
 
                 <div class="form-row">
                     <div class="col-md-12 mb-12">
@@ -139,20 +181,20 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 </div>
 
                 <div class="form-row">
-                    <div class="col-md-6 mb-6">
+                    <div class="col-md-12 mb-12">
                         <label for="vEstrategia">Estrategia</label>
                         <textarea class="form-control input-lectura" id="vEstrategia" name="vEstrategia" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta[0]->vEstrategia)?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
-                    <div class="col-md-6 mb-6">
+                    <!--<div class="col-md-6 mb-6">
                         <label for="vAccion">Acción</label>
                         <textarea class="form-control input-lectura" id="vAccion" name="vAccion" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta[0]->vAccion)?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
-                    </div>
+                    </div>-->
                 </div>
 
                 <div class="form-row">
@@ -183,6 +225,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                     </div>
                 <?php } ?>
+
                 <hr>
 
                 <div class="row">
@@ -237,7 +280,8 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                     </div>
                 </div>
-
+                
+                <!--
                 <div class="form-row">
                     <div class="col-md-12 mb-12">
                         <label for="vJustificaCambio">Justificación del cambio</label>
@@ -247,8 +291,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                     </div>
                 </div>
-                <hr>
-              
+                
                 <div class="content">
                     <div class="row">
                         <div class="col-12">
@@ -294,9 +337,119 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                     </div>
                 </div>
+                                        -->
                 <hr>
                 <br><br>
-               
+
+                <div class="content">
+
+                    <div class="row">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="icluyeMIR">Incluye MIR</label>
+                            
+                        </div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
+                            <input type="checkbox" id="icluyeMIR" name="icluyeMIR" <?php if($consulta[0]->iIncluyeMIR == 1) echo 'checked' ?>>
+                        </div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="ProgramaPresupuestario" id="txtNivelMIR" name="txtNivelMIR">Nivel de MIR</label>
+                        </div>
+
+                        <div class="col-md-6">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idNivelMIR" id="idNivelMIR">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($nivelesMIR as $nivelMIR){?>
+                                        <option value="<?= $nivelMIR->iIdNivelMIR ?>" <?php if($nivelMIR->iIdNivelMIR == $consulta[0]->iIdNivelMIR) echo 'selected' ?>><?= $nivelMIR->vNivelMIR ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div> 
+                    </div>
+
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+                        
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="tieneAglomeracion">Tiene Aglomeracion</label>
+                        </div>
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-center;">
+                            <input type="checkbox" id="tieneAglomeracion" name="tieneAglomeracion" <?php if($consulta[0]->iAglomeraMIR == 1) echo 'checked' ?>>
+                        </div>
+
+                        <div class="col-md-8">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="idActividad" id="idActividad">
+                                        <option value="">--Seleccione--</option>
+                                    </select>
+                                </div>
+                        </div>
+
+                    </div>
+                </div>
+                <br>
+                <div class="content">
+                    <div class="row">
+
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="ProgramaPresupuestario">Programa Presupuestario</label>
+                        </div>
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                        </div>
+
+                        <div class="col-md-8 mb-2">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="ProgramaPresupuestario" id="ProgramaPresupuestario">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($programaPresupuestario as $pp){ ?>
+                                            <option value="<?=$pp->iIdProgramaPresupuestario ?>" <?php if($pp->iIdProgramaPresupuestario == $consulta[0]->iIdProgramaPresupuestario) echo 'selected' ?> > <?= $pp->vProgramaPresupuestario ?> </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                            <label for="resumenNarrativo" id="txtResumenNarrativo" name="txtResumenNarrativo">Resumen Narrativo</label>
+                        </div>
+                        <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
+                        </div>
+
+                        <div class="col-md-8 mb-2">
+                                <div class="col-md-12">
+                                    <select class="form-control" name="resumenNarrativo" id="resumenNarrativo">
+                                        <option value="">--Seleccione--</option>
+                                        <?php foreach($resumenNarrativo as $rN){?>
+                                        <option value="<?= $rN->iIdResumenNarrativo ?>" <?php if($rN->iIdResumenNarrativo == $consulta[0]->vResumenNarrativo) echo 'selected' ?>><?= $rN->vNombreResumenNarrativo ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content">
+                    <div class="row">
+                        <div class="col-md-12 mb-10">
+                            <label for="validationCustom04">Supuesto</label>
+                            <textarea class="form-control input-lectura" id="txtSupuesto" name="txtSupuesto" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?=htmlspecialchars($consulta[0]->vSupuesto)?></textarea>
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="content">
                     <br><br>
                     <center>
@@ -339,9 +492,80 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         <?php
         }
         ?>
+
+            idDependenciaGuardado = <?php echo $consulta[0]->iIdDependencia ?>;
+
+            obtenerAreasResp(idDependenciaGuardado);
+            obtenerActividades(idDependenciaGuardado)
+
+        <?php if($consulta[0]->iAglomeraMIR == 1){ ?>
+            $('#idActividad').show();
+        <?php }else{ ?>
+            $('#idActividad').hide();
+        <?php } ?>
+
+        <?php if($consulta[0]->iIncluyeMIR == 1){ ?>
+                document.getElementById("idNivelMIR").disabled = false;
+                $('#idNivelMIR').show();
+                $('#txtNivelMIR').show();
+
+                <?php if($consulta[0]->vResumenNarrativo != '' || $consulta[0]->vResumenNarrativo != null){ ?>
+                    $('#txtResumenNarrativo').show();
+                    $('#resumenNarrativo').show();
+                <?php }else{ ?>
+                    $('#txtResumenNarrativo').hide();
+                    $('#resumenNarrativo').hide();
+                <?php } ?>
+
+        <?php }else{ ?>
+                $('#idNivelMIR').prop('selectedIndex',0);
+                $('#idNivelMIR').hide();
+                $('#txtNivelMIR').hide();
+                document.getElementById("idNivelMIR").disabled = true;
+
+                $('#txtResumenNarrativo').hide();
+                $('#resumenNarrativo').hide();
+                $('#resumenNarrativo').prop('selectedIndex',0);
+                document.getElementById("resumenNarrativo").disabled = true;
+        <?php } ?>
+
+        $('#selectProyectoPrioritario').hide();
+        <?php if($consulta[0]->iODS != 0 || $consulta[0]->iODS != '' || $consulta[0]->iODS != null){ ?>
+            $('#selectODS').show();
+        <?php }else{ ?>
+            $('#selectODS').hide();
+        <?php } ?>
+
+        <?php if($consulta[0]->iIdProyectoPrioritario != 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null){ ?>
+            $('#selectProyectoPrioritario').show();
+        <?php }else{ ?>
+            $('#selectProyectoPrioritario').hide();
+        <?php } ?>
+
         $(".select2").select2();
         url = $("#url").val();
         sumaMontoFin();
+
+        $('#depAct').change(function(){
+            idDEp = $(this).val();
+            idEje = $('#RetoAct').val();
+            obtenerActividades(idDEp)
+            obtenerAreasResp(idDEp)
+        });
+
+        $('#idNivelMIR').change(function(){
+            nivelMIR = $(this).val();
+            if(nivelMIR >= 1){
+                document.getElementById("resumenNarrativo").disabled = false;
+                $('#resumenNarrativo').show();
+                $('#txtResumenNarrativo').show();
+            }else{
+                $('#resumenNarrativo').hide();
+                $('#txtResumenNarrativo').hide();
+                document.getElementById("resumenNarrativo").disabled = true;
+            }
+            
+        });
 
         //Obtengo las dependencias para manejar en POA
          $.ajax({
@@ -357,6 +581,113 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
         let tipo = $("#valueTipo").val();
     });
+
+        function obtenerActividades(idDependencia){
+
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>C_pat/obtenerActividades",
+                data:{idDependencia:idDependencia},
+                success: function(resp) {
+                    var parsedData = JSON.parse(resp);
+                    for(let i = 0; i <= parsedData.length; i++){
+                        if(parsedData[i]?.vActividad != undefined){
+                            $idActividadGuardada = <?php if($consulta[0]->iIdActividadMIR == '.' || $consulta[0]->iIdActividadMIR == ''){ echo 'null'; } else{ echo $consulta[0]->iIdActividadMIR; } ?>;
+                            if(parsedData[i]?.iIdActividad == $idActividadGuardada){
+                                $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'" selected>'+parsedData[i]?.vActividad+'</option>')
+                            }else{
+                                $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
+                            }
+                        }
+                    }
+                    
+                },
+                error: function(XMLHHttRequest, textStatus, errorThrown) {
+                    console.log(XMLHHttRequest);
+                }
+            });
+
+        }
+
+        function obtenerAreasResp(idDependencia){
+
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>C_pat/obtenerAreasRESP",
+                data:{idDependencia:idDependencia},
+                success: function(resp) {
+                    var parsedData = JSON.parse(resp);
+                    for(let i = 0; i <= parsedData.length; i++){
+                        if(parsedData[i]?.vAreaResponsable != undefined){
+                            $idvResponsable = <?php if($consulta[0]->vResponsable == '.' || $consulta[0]->vResponsable == ''){ echo 'null'; } else{ echo $consulta[0]->vResponsable; } ?>;
+                            if(parsedData[i]?.iIdAreaResponsable == $idvResponsable){
+                                $('#iAreaResponsable').append('<option value="'+parsedData[i]?.iIdAreaResponsable+'" selected>'+parsedData[i]?.vAreaResponsable+'</option>')
+                            }else{
+                                $('#iAreaResponsable').append('<option value="'+parsedData[i]?.iIdAreaResponsable+'">'+parsedData[i]?.vAreaResponsable+'</option>')
+                            }
+                            
+                        }
+                    }
+                    
+                },
+                error: function(XMLHHttRequest, textStatus, errorThrown) {
+                    console.log(XMLHHttRequest);
+                }
+            });
+
+        }
+
+        $('#icluyeMIR').click(function(){
+            if($(this).is(':checked')){
+                document.getElementById("idNivelMIR").disabled = false;
+                $('#idNivelMIR').show();
+                $('#txtNivelMIR').show();
+            } else {
+                $('#idNivelMIR').prop('selectedIndex',0);
+                $('#idNivelMIR').hide();
+                $('#txtNivelMIR').hide();
+                document.getElementById("idNivelMIR").disabled = true;
+
+                $('#txtResumenNarrativo').hide();
+                $('#resumenNarrativo').hide();
+                $('#resumenNarrativo').prop('selectedIndex',0);
+                document.getElementById("resumenNarrativo").disabled = true;
+        }
+        });
+
+
+        $('#checkODS').click(function(){
+            if($(this).is(':checked')){
+                document.getElementById("selectODS").disabled = false;
+                $('#selectODS').show();
+            } else {
+                $('#selectODS').prop('selectedIndex',0);
+                $('#selectODS').hide();
+                document.getElementById("selectODS").disabled = true;
+            }
+        });
+
+        $('#checkProyectoPrioritario').click(function(){
+            if($(this).is(':checked')){
+                document.getElementById("selectProyectoPrioritario").disabled = false;
+                $('#selectProyectoPrioritario').show();
+            } else {
+                $('#selectProyectoPrioritario').prop('selectedIndex',0);
+                $('#selectProyectoPrioritario').hide();
+                document.getElementById("selectProyectoPrioritario").disabled = true;
+            }
+        });
+
+        $('#tieneAglomeracion').click(function(){
+            if($(this).is(':checked')){
+                document.getElementById("idActividad").disabled = false;
+                $('#idActividad').show();
+            } else {
+                $('#idActividad').prop('selectedIndex',0);
+                $('#idActividad').hide();
+                document.getElementById("idActividad").disabled = true;
+            }
+        });
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     (function() {

@@ -47,6 +47,7 @@ class C_dependencias extends CI_Controller {
                 $data['vDependencia'] = $this->input->post('dependencia',true);
                 $data['vNombreCorto'] = $this->input->post('nombrecorto',true);
                 $ejes = $this->input->post('ejes',true);
+                $TnombreArea = $this->input->post('TnombreArea', true);
                 $data['iActivo']= 1;
                 $seg = new M_seguridad();
 
@@ -57,6 +58,10 @@ class C_dependencias extends CI_Controller {
                     $seg->inserta_registro_no_pk('DependenciaEje',array('iIdDependencia' => $id, 'iIdEje' => $value),$con);
                 }
 
+                foreach($TnombreArea as $a){
+                    $seg->insertarAreaResponsable('AreaResponsable', array('vAreaResponsable' => $a, 'iIdDependencia' => $id), $con);
+                }
+                
                 if($seg->terminar_transaccion($con)) echo $id;
                 else echo 'Ha ocurrido un error.';
             } catch (Exception $e) {
@@ -67,6 +72,8 @@ class C_dependencias extends CI_Controller {
             //Mensaje en caso de que no reciba el POST
             echo "Falla algo";
         }
+        $array =  $this->input->post('arrayArea');
+        echo 'Resultado' + $array->nombre;
     }
 
     //Muestra la pantalla de edicion para el update
@@ -76,15 +83,21 @@ class C_dependencias extends CI_Controller {
             $id = $this->input->post('id',true);
             $opt = new Class_options();
             $seleccionado = array();
+            $areas = array();
 
             $data['consulta'] = $this->md->preparar_update($id);
             $ejes = $this->md->get_ejes($id)->result();
+            $areasResp = $this->md->get_areas_responsables($id)->result();
             foreach ($ejes as $row) {
                 $seleccionado[] = $row->iIdEje;
             }
+            foreach($areasResp as $a){
+                $areas[] = $a;
+            }
+            $data['areasResponsables'] = $areas;
             $data['options_eje'] = $opt->options_multiselect('eje',$seleccionado);
             $this->load->view('dependencias/contenido_modificar',$data);
-
+            
         }else{
             echo "No recibe la variable";
         }
@@ -102,6 +115,7 @@ class C_dependencias extends CI_Controller {
             $data['vDependencia'] = $this->input->post('dependencia',true);
             $data['vNombreCorto'] = $this->input->post('nombrecorto',true);
             $ejes = $this->input->post('ejes',true);
+            $TnombreArea = $this->input->post('TnombreArea', true);
             
             $seg = new M_seguridad();
             $con = $seg->iniciar_transaccion();
@@ -115,6 +129,9 @@ class C_dependencias extends CI_Controller {
             foreach ($ejes as $value) {
                 $data = array('iIdEje' => $value, 'iIdDependencia' => $id);
                 $id2 = $seg->inserta_registro_no_pk('DependenciaEje',$data,$con);
+            }
+            foreach($TnombreArea as $a){
+                $seg->insertarAreaResponsable('AreaResponsable', array('vAreaResponsable' => $a, 'iIdDependencia' => $id), $con);
             }
             //----------------------------------
             if($seg->terminar_transaccion($con)) echo true;
@@ -133,12 +150,24 @@ class C_dependencias extends CI_Controller {
 
             $id = $this->input->post('id',true);
             $resultado = $this->md->eliminar_dependencia($id);
+            $borrarAreas = $this->md->eliminarAreas($id);
 
             echo $resultado;
 
         }else{
             echo "algo salio mal";
         }
+
+    
     }
+
+    public function deleteArea(){
+        $idArea = $this->input->post('id', true);
+
+        $resultado = $this->md->delete_area($idArea);
+
+        echo 'Eliminado';
+    }
+
 }
 ?>
