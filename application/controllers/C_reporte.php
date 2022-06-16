@@ -104,29 +104,14 @@ class C_reporte extends CI_Controller {
                     WriterEntityFactory::createCell('Actividad'),
                     WriterEntityFactory::createCell('Descripción'),
                     WriterEntityFactory::createCell('Objetivo'),
-                    WriterEntityFactory::createCell('Estrategia'),
-                    WriterEntityFactory::createCell('Reto'),
+                    WriterEntityFactory::createCell('Población objetivo'),
                     WriterEntityFactory::createCell('Fecha de inicio'),
                     WriterEntityFactory::createCell('Fecha de fin'),
                     WriterEntityFactory::createCell('% de cumplimiento'),
-                    WriterEntityFactory::createCell('Presupuesto Autorizado '),
-                    WriterEntityFactory::createCell('Presupuesto Pagado '),
-                    WriterEntityFactory::createCell('Benef H '),
-                    WriterEntityFactory::createCell('Benef M '),
-                    WriterEntityFactory::createCell('Benef H Discapacidad '),
-                    WriterEntityFactory::createCell('Benef M Discapacidad '),
-                    WriterEntityFactory::createCell('Benef H Indígena '),
-                    WriterEntityFactory::createCell('Benef M Indígena '),
-                    WriterEntityFactory::createCell('Benef H Tercera Edad '),
-                    WriterEntityFactory::createCell('Benef M Tercera Edad '),
-                    WriterEntityFactory::createCell('Benef H Adolescentes '),
-                    WriterEntityFactory::createCell('Benef M Adolescentes ')
+                    WriterEntityFactory::createCell('Ayuda a reactivar la economía'),
+                    WriterEntityFactory::createCell('Presupuesto modificado'),
+                    WriterEntityFactory::createCell('Presupuesto Autorizado por la Secretaría de Finanzas ')
                 ];
-
-
-
-
-
 
             if(isset($tabla['fuentes']))
             {
@@ -134,14 +119,14 @@ class C_reporte extends CI_Controller {
                 $cells[] = WriterEntityFactory::createCell('Monto de financimiento');
             }
 
-/*
+
             if(isset($tabla['ubp']))
             {
                 $cells[] = WriterEntityFactory::createCell('Clave PP');
                 $cells[] = WriterEntityFactory::createCell('Nombre PP');
                 $cells[] = WriterEntityFactory::createCell('Clave UBP');
                 $cells[] = WriterEntityFactory::createCell('Nombre UBP');
-            }*/
+            }
 
             if(isset($tabla['ped']))
             {
@@ -215,36 +200,13 @@ class C_reporte extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vActividad),
                     WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->objetivoact),
-                    WriterEntityFactory::createCell($rec->estrategiaact),
-                    WriterEntityFactory::createCell($rec->vreto),
+                    WriterEntityFactory::createCell($rec->vPoblacionObjetivo),
                     WriterEntityFactory::createCell($rec->dInicio),
                     WriterEntityFactory::createCell($rec->dFin),
                     WriterEntityFactory::createCell((int)round($rec->nAvance)),
-                    
-
-
-
-
-
-                    WriterEntityFactory::createCell($rec->pauth),
-
-
-                    WriterEntityFactory::createCell($rec->ejercido),
-
-                    WriterEntityFactory::createCell($rec->bh),
-                    WriterEntityFactory::createCell($rec->bm),
-                    WriterEntityFactory::createCell($rec->bdh),
-                    WriterEntityFactory::createCell($rec->bdm),
-                    WriterEntityFactory::createCell($rec->blh),
-                    WriterEntityFactory::createCell($rec->blm),
-                    WriterEntityFactory::createCell($rec->bth),
-                    WriterEntityFactory::createCell($rec->btm),
-                    WriterEntityFactory::createCell($rec->bah),
-                    WriterEntityFactory::createCell($rec->bam)
-
-
-
-                    //WriterEntityFactory::createCell((float)$rec->pauth)
+                    WriterEntityFactory::createCell($rec->iReactivarEconomia),
+                    WriterEntityFactory::createCell((float)$rec->nPresupuestoModificado),
+                    WriterEntityFactory::createCell((float)$rec->nPresupuestoAutorizado)
                 ];
 
                 if(isset($tabla['fuentes']))
@@ -253,7 +215,6 @@ class C_reporte extends CI_Controller {
                     $cells[] = WriterEntityFactory::createCell((float)$rec->monto);
                 }
 
-/*
                 if(isset($tabla['ubp']))
                 {
                     $cells[] = WriterEntityFactory::createCell($rec->clavepp);
@@ -261,7 +222,6 @@ class C_reporte extends CI_Controller {
                     $cells[] = WriterEntityFactory::createCell($rec->claveubp);
                     $cells[] = WriterEntityFactory::createCell($rec->vUBP);
                 }
-                */
 
                 if(isset($tabla['ped']))
                 {

@@ -48,6 +48,12 @@ class M_seguridad extends CI_Model {
 		else return false;
 	}
 
+	public function insertarAreaResponsable($tabla, $datos, $con=''){
+		if($con == '') $con = $this->db;
+		if($con->insert($tabla,$datos)) return true;
+		else return false;
+	}
+
 	public function actualiza_registro($tabla,$where,$datos,$con='')
 	{
 		if($con == '') $con = $this->db;

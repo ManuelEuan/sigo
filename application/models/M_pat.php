@@ -191,6 +191,64 @@ class M_pat extends CI_Model
 		return $this->db->insert_id();
 	}
 
+	public function obtenerActividades($idDependencia){
+		$this->db->select();
+		$this->db->from('Actividad');
+		$this->db->where('iIdDependencia', $idDependencia);
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerAreasRESP($idDependencia){
+		$this->db->select();
+		$this->db->from('AreaResponsable');
+		$this->db->where('iIdDependencia', $idDependencia);
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerODS(){
+		$this->db->select();
+		$this->db->from('ODS');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerProyectosPrioritarios(){
+		$this->db->select();
+		$this->db->from('ProyectosPrioritarios');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerProgramaPresupuestario(){
+		$this->db->select();
+		$this->db->from('ProgramaPresupuestario');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerNivelesMIR(){
+		$this->db->select();
+		$this->db->from('NivelMIR');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+
+	public function obtenerResumenNarrativo(){
+		$this->db->select();
+		$this->db->from('ResumenNarrativo');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}	
+
 	public function agregarDetAct($data)
 	{
 		$this->db->insert('DetalleActividad', $data);

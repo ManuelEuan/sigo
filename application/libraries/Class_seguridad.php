@@ -54,7 +54,7 @@ class Class_seguridad {
                                         if($hijo->iTipoAcceso > 0)
                                         {
                                             if($modulo_inicial == '' && $hijo->iInicial > 0) $modulo_inicial = base_url().$hijo->vUrl;
-                                            $str.= '<li class="sidebar-item"><a style="cursor:pointer;" onclick="cargar(\''.base_url().$hijo->vUrl.'\',\'#contenido\');" class="sidebar-link"><i class="'.$hijo->vClass.'"></i><span class="hide-menu"> '.$hijo->vPermiso.' </span></a></li>';
+                                            $str.= '<li class="sidebar-item"><a style="cursor:pointer;" onclick="cargar(\''.base_url().$hijo->vUrl.'\',\'#contenido\');" class="sidebar-link"><i class="'.$hijo->vClass.'"></i><span class="hide-menu"> '.$hijo->vPermiso.'</span></a></li>';
                                         }
                                     }
                                 }

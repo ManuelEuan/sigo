@@ -428,6 +428,72 @@ class M_entregables extends CI_Model{
         $query = $this->db->query($sql);
         return ($query->row()->avances > 0) ? true:false;
     }
+
+    //Agregados Saul Tun
+    function obtenerForma(){
+        $this->db->select();
+        $this->db->from('FormaIndicador');
+        
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+    }
+
+    function obtenerDimension(){
+        $this->db->select();
+        $this->db->from('DimensionIndicador');
+        
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+    }
+
+    
+	public function insertarVariablesIndicador($tabla, $datos, $con=''){
+		if($con == '') $con = $this->db;
+		if($con->insert($tabla,$datos)) return true;
+		else return false;
+	}
+
+    public function eliminarVariables($id){
+		$this->db->where('iIdEntregable', $id);
+		$this->db->delete('VariableIndicador');
+		return true;
+	}
+
+    function obtenerDetalleId($id){
+        $this->db->select('iIdEntregable');
+        $this->db->from('DetalleEntregable');
+        $this->db->where('iIdDetalleEntregable', $id);
+        
+        $query =  $this->db->get();
+		$resultado = $query->row();
+        return $resultado;
+    }
+
+    function obtenerVariables($id){
+
+        $this->db->select();
+        $this->db->from('VariableIndicador');
+        $this->db->where('iIdEntregable', $id);
+
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+
+    }
+
+    function actualizarVariables($id, $data){
+
+        $this->db->where('iIdVariableIndicador', $id);
+        return $this->db->update('VariableIndicador', $data);
+    }
+
+    function eliminarVariable($id){
+        $this->db->where('iIdVariableIndicador', $id);
+		$this->db->delete('VariableIndicador');
+		return true;
+    }
 }
 
 ?>

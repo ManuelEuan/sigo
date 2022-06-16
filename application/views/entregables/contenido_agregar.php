@@ -22,22 +22,86 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <label>Fecha inicio<span class="text-danger">*</span></label>
-                        <input type="date" id="fechainicio" name="fechainicio" class="form-control only_number" required="" placeholder="dd-mm-yyyy"  value="2022-01-01" readonly>
+
+                    <div class="col-md-2 mb-3">
+                        <label for="validationCustom04">Forma Indicador<span class="text-danger">*</span></label>
+                        <select id="formaIndicador" name="formaIndicador" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <?php foreach($FormaInd as $f){ ?>
+
+                                <option value="<?= $f->iIdFormaInd ?>"><?= $f->vDescripcion ?></option>
+
+                            <?php } ?>
+                        </select>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                      <input type="hidden" id="" name="" required class="form-control" value=1>
+
+                   
+                    <div class="col-md-2 mb-3">
+                        <label>Dimensión<span class="text-danger">*</span></label>
+                        <select name="selectDimension" id="selectDimension" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <?php foreach($dimension as $d){ ?>
+
+                                <option value="<?= $d->iIdDimensionInd ?>"><?= $d->vDescripcion ?></option>
+
+                            <?php } ?>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                    
+                </div>
+
+
+                <!--- Este va a variar -->
+                <div class="form-row" id="divVariables">
                     <div class="col-md-3 mb-3">
-                        <label>Fecha fin<span class="text-danger">*</span></label>
-                        <input type="date" id="fechafin" name="fechafin" class="form-control only_number" required="" placeholder="dd-mm-yyyy" value="2022-12-31" readonly>
+                        <label>Variable A<span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                        <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
+                        <input type="text" id="A" name="Variable[]" class="form-control" required="required" placeholder="A">
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
                     </div>
                 </div>
+
                 <div class="form-row">
+                    <div class="col-md-2 mb-3">
+                        <label for="validationCustom04">Base Indicador<span class="text-danger">*</span></label>
+                        <input type="number" id="baseIndicador" name="baseIndicador" class="form-control" required="required" placeholder="">
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                      <input type="hidden" id="" name="" required class="form-control" value=1>
+
+                   
+                    <div class="col-md-2 mb-3">
+                        <label>Medio Verificación<span class="text-danger">*</span></label>
+                        <input type="text" id="medioVerificacion" name="medioVerificacion" class="form-control" required="required" placeholder="">
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+
+                    <div class="col-md-8 mb-3">
+                        <label>Area para calculo de variable<span class="text-danger">*</span></label>
+                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder=""  onkeypress="sinEspacios(event);"></textarea>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="form-row">
+
                     <div class="col-md-3 mb-3">
                         <label>Meta<span class="text-danger">*</span></label>
                         <input type="text" id="meta" name="meta" class="form-control only_number" required="required" placeholder="" onKeypress="return soloDigitos(event,'OK');" maxlength="30" onblur="moneyFormat(this.id);">
@@ -79,13 +143,39 @@
                         </div>
                     </div>
                 </div>
+
+
                 <br>
                 <div class="form-row">
-                    <div class="col-md-3 mb-3">
-                       <div class="custom-control custom-checkbox mr-sm-2 m-b-15">
-                            <input type="checkbox" class="custom-control-input" id="checkbox0" name="municipalizable" value="1">
-                            <label class="custom-control-label" for="checkbox0">Municipalizable</label>
+
+                        <div class="col-md-3 mb-3">
+                            <label>Fecha inicio<span class="text-danger">*</span></label>
+                            <input type="date" id="fechainicio" name="fechainicio" class="form-control only_number" required="" placeholder="dd-mm-yyyy"  value="2022-01-01" readonly>
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
                         </div>
+                        <div class="col-md-3 mb-3">
+                            <label>Fecha fin<span class="text-danger">*</span></label>
+                            <input type="date" id="fechafin" name="fechafin" class="form-control only_number" required="" placeholder="dd-mm-yyyy" value="2022-12-31" readonly>
+                            <div class="invalid-feedback">
+                                Este campo no puede estar vacio.
+                            </div>
+                        </div>
+                    <div class="col-md-6 mb-3" style="align-self: self-end; padding-left: 20px;">
+                        <br>
+                        <br>
+                       <div class="row">
+                        <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="text-align: -webkit-center;">
+                                <input type="checkbox" class="custom-control-input" id="checkbox0" name="municipalizable" value="1">
+                                <label class="custom-control-label" for="checkbox0">Municipalizable</label>
+                            </div>
+
+                            <div class="custom-control custom-checkbox mr-sm-2 m-b-15" style="text-align: -webkit-center;">
+                                <input type="checkbox" class="custom-control-input" id="checkMismoBenef" name="checkMismoBenef" value="1">
+                                <label class="custom-control-label" for="checkMismoBenef">Mismo Beneficiario</label>
+                            </div>
+                       </div>
                     </div>
                     <div class="col-md-3 mb-3">
                       <!-- <div class="custom-control custom-checkbox mr-sm-2 m-b-15">
@@ -94,6 +184,7 @@
                         </div>-->
                         <input type="hidden" class="form-control input-lectura" maxlength="255" id="checkbox1" name="beneficios" value="0">
                     </div>
+
                     <div class="col-md-12" id="ctl-municipios">
                          <label for="municipios">Municipios</label>
                         <select aria-invalid="false" class="select2 form-control" multiple="multiple" style="height: 36px;width: 100%;" name="municipios[]" id="municipios">
@@ -103,6 +194,7 @@
                             Este campo no puede estar vacio.
                         </div>  
                     </div>
+
                 </div>
                 <br>
                 <br>
@@ -166,7 +258,55 @@ $(".only_number").attr("maxlength", 11);
                  $("#ctl-municipios").hide();
             }
         });
+
+        /*alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        letra = '';
+        
+        for(i=0; i<= alphabet.length; i++){
+            letra = alphabet[i]
+            console.log(letra)
+        }*/
+
     });
+
+    var areaReponsableArray = []
+    var contador = 0;
+    var myArea = {};
+    var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function agregarVariable(){
+        console.log('Estas clickando el boton de mas ')
+
+        var id = areaReponsableArray.length + 1
+
+        myArea.id = id
+
+        var tbody = '<div class="col-md-3 mb-3 divVariable'+id+'"> <label>Variable '+alphabet[id]+'<span class="text-danger">*</span> <button class="remover" type="button" onclick="remover('+id+');" style="border: none;">x</button></label> <input type="text" id="'+alphabet[id]+'" name="Letra[]" class="form-control" required="required" value="'+alphabet[id]+'" hidden> <input type="text" id="'+alphabet[id]+'" name="Variable[]" class="form-control" required="required" placeholder="'+alphabet[id]+'"> <div class="invalid-feedback"> Este campo no puede estar vacio. </div> </div>'
+        $('#divVariables').append(tbody)
+
+        areaReponsableArray.push(myArea);
+        myArea = {}
+        /*var result = eval('1+3-4'); 
+        console.log(result)*/
+    }
+
+    function remover(id){
+        areaReponsableArray = areaReponsableArray.filter(obj => obj.id != id)
+        $(".divVariable"+id).remove();
+    }
+
+    function sinEspacios(e) {
+        $("#areaCalculo").on({
+            keydown: function(e) {
+                if (e.which === 32)
+                return false;
+            },
+            change: function() {
+                this.value = this.value.replace(/\s/g, "");
+            }
+        });
+    }
+
     function guardarEntregables(f, e) {
         e.preventDefault();
 
