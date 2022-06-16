@@ -117,7 +117,9 @@ class C_reportesPOA extends CI_Controller {
 	
             // Agregamos la fila de encabezados
             $rowStyle = (new StyleBuilder())
-                            ->setFontBold()
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
                             ->build();
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
