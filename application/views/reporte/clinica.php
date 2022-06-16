@@ -3,7 +3,7 @@
   <div class="page-breadcrumb">
     <div class="row">
       <div class="col-5 align-self-center">
-        <h4 class="page-title">Reporte de Construcción de Clínica Post-COVID</h4>
+        <h4 class="page-title">Reporte Avance MIR</h4>
       </div>
     </div>
   </div>
