@@ -343,47 +343,47 @@ class M_reportePOA extends CI_Model {
     public function reporte_pat($anio, $dep, $eje, $whereString=null, $mes)
     {
         
-        $sql = 'SELECT
-        "Dependencia"."vDependencia" AS organismo, 
-        "AreaResponsable"."vAreaResponsable" AS area, 
-        "ProgramaPresupuestario"."vProgramaPresupuestario", 
-        "PED2019Eje"."vEje", 
-        "PED2019Eje"."iIdEje",
-        "Actividad"."vObjetivo", 
-        "Actividad"."vEstrategia", 
-        "NivelMIR"."vNivelMIR", 
-        "Actividad"."iIdActividad" AS clave, 
-        "Actividad"."vDescripcion" AS resumennarrativo, 
-        "Entregable"."vEntregable" as Indicador, 
-        "DetalleEntregable"."nMeta" as Meta, 
-        "UnidadMedida"."vUnidadMedida" as UnidadMedida,
-        "DetalleActividad"."iAnio",
-        "Dependencia"."iIdDependencia"
-        FROM "Dependencia"
-        INNER JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
-        INNER JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
-        INNER JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
-        INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-        INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-        INNER JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
-        INNER JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
-        INNER JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
-        INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
-        WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio. ' AND "Dependencia"."iIdDependencia" = '. $dep;
-
-
-      /*$whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio;
-      
-      if(!empty($whereString)){
+        $select = 'SELECT
+            "Dependencia"."vDependencia" AS organismo, 
+            "AreaResponsable"."vAreaResponsable" AS area, 
+            "ProgramaPresupuestario"."vProgramaPresupuestario", 
+            "PED2019Eje"."vEje", 
+            "PED2019Eje"."iIdEje",
+            "Actividad"."vObjetivo", 
+            "Actividad"."vEstrategia", 
+            "NivelMIR"."vNivelMIR", 
+            "Actividad"."iIdActividad" AS clave, 
+            "Actividad"."vDescripcion" AS resumennarrativo, 
+            "Entregable"."vEntregable" as Indicador, 
+            "DetalleEntregable"."nMeta" as Meta, 
+            "UnidadMedida"."vUnidadMedida" as UnidadMedida,
+            "DetalleActividad"."iAnio",
+            "Dependencia"."iIdDependencia",
+            "DetalleEntregable"."dFechaInicio",
+	        "DetalleEntregable"."dFechaFin"
+            FROM "Dependencia"
+            INNER JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+            INNER JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
+            INNER JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+            INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+            INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+            INNER JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+            INNER JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
+            INNER JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+            INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"';
+        
+            $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio. ' AND "Dependencia"."iIdDependencia" = '. $dep;
+        
+      /*if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
       }
       
       $group_by = '';*/
       
-      //$sql = $select.$from.$whereCondition.$group_by;
-      $query =  $this->db->query($sql);
+        $sql = $select.$whereCondition;
+        $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
-      return $query;
+        return $query;
     }
 
     function catalogos($tipo)

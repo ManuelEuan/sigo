@@ -136,9 +136,9 @@ class C_reportesPOA extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vEstrategia),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->resumennarrativo),
-                    WriterEntityFactory::createCell($rec->Indicador),
-                    WriterEntityFactory::createCell($rec->Meta),
-                    WriterEntityFactory::createCell($rec->UnidadMedida),
+                    WriterEntityFactory::createCell($rec->indicador),
+                    WriterEntityFactory::createCell($rec->meta),
+                    WriterEntityFactory::createCell($rec->unidadmedida),
                 ];
 
 
