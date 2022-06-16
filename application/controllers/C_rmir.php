@@ -115,7 +115,7 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell('Supuestos'),
                     WriterEntityFactory::createCell('Area Responsable'),
                     WriterEntityFactory::createCell('Indicadores'), 
-                    WriterEntityFactory::createCell('Medio verifica'), 
+                    WriterEntityFactory::createCell('Medios de verificación'), 
 
                    
                 ];

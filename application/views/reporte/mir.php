@@ -83,7 +83,7 @@
           </div>
         </div>
 
-        <div id="divChecks">
+        <!-- <div id="divChecks">
           <div class="row">
             <div class="col-12">
               <h4><b>Campos adicionales</b></h4>
@@ -121,7 +121,7 @@
             </div>
 
           </div>
-        </div>
+        </div> -->
 
         <div class="row">
           <div class="col-md-4">
