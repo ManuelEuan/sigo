@@ -77,13 +77,13 @@ $db['default'] = array(
 	'dsn'	=> '',
 	'hostname' => '20.114.113.83',
 	'username' => 'sissigo',
-	'password' => '659q7I0wu0wd2021',
+	'password' => 'angelica2234.',
 
 	//'hostname' => 'localhost',
 	//'username' => 'postgres',
 	//'password' => 'root',
 
-	'database' => 'sigoqueretaroprodclon',
+	'database' => 's10',
 
 	//'database' => 'sigoqueretarodev',
 	'dbdriver' => 'postgre',
