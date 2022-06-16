@@ -326,8 +326,8 @@ class M_reporteMir extends CI_Model {
       "DetalleActividad"."nPresupuestoAutorizado",
       "DetalleActividad"."nPresupuestoModificado",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
-      "Entregable"."vEntregable" AS Indicador,
-      "Entregable"."vMedioVerifica" AS medioverifica,
+      "Entregable"."vEntregable" ,
+      "Entregable"."vMedioVerifica" ,
       "Reto"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
       "PED2019Eje"."iIdEje"
