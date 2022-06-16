@@ -206,15 +206,17 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
+                    // WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->vObjetivo),
                     WriterEntityFactory::createCell($rec->estrategiaact),
                     WriterEntityFactory::createCell($rec->vResumenNarrativo),
                     WriterEntityFactory::createCell($rec->vSupuesto),
                     WriterEntityFactory::createCell($rec->vAreaResponsable),
-                    WriterEntityFactory::createCell($rec->indicador),
-                    WriterEntityFactory::createCell($rec->medioverifica),
+                    WriterEntityFactory::createCell($rec->vEntregable),
+                    WriterEntityFactory::createCell($rec->vMedioVerifica),
                     
                 ];
+
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
