@@ -119,6 +119,76 @@ class C_rmir extends CI_Controller {
 
                    
                 ];
+//             if(isset($tabla['fuentes']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('Fuente de financiamiento');
+//                 $cells[] = WriterEntityFactory::createCell('Monto de financimiento');
+//             }
+
+// /*
+//             if(isset($tabla['ubp']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('Clave PP');
+//                 $cells[] = WriterEntityFactory::createCell('Nombre PP');
+//                 $cells[] = WriterEntityFactory::createCell('Clave UBP');
+//                 $cells[] = WriterEntityFactory::createCell('Nombre UBP');
+//             }*/
+
+//             if(isset($tabla['ped']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('Eje');
+//                 $cells[] = WriterEntityFactory::createCell('Tema');
+//                 $cells[] = WriterEntityFactory::createCell('Objetivo');
+//                 $cells[] = WriterEntityFactory::createCell('Estrategia');
+//                 $cells[] = WriterEntityFactory::createCell('Línea de acción');
+//             }
+
+//             if(isset($tabla['entregables']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('ID Entregable');
+//                 $cells[] = WriterEntityFactory::createCell('ID Detalle Entregable');
+//                 $cells[] = WriterEntityFactory::createCell('Entregable');
+//                 $cells[] = WriterEntityFactory::createCell('Ponderación');
+//                 $cells[] = WriterEntityFactory::createCell('Meta');
+//                 $cells[] = WriterEntityFactory::createCell('Meta modificada');
+//                 $cells[] = WriterEntityFactory::createCell('Unidad de medida');
+//                 $cells[] = WriterEntityFactory::createCell('Suspendido');
+//                 $cells[] = WriterEntityFactory::createCell('Sujeto afectado');
+//                 $cells[] = WriterEntityFactory::createCell('Periodicidad');
+//                 $cells[] = WriterEntityFactory::createCell('Municipalizable');
+//                 $cells[] = WriterEntityFactory::createCell('Entrega a los mismos beneficiarios');
+//             }
+
+//             if(isset($tabla['compromisos']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('# Compromiso');
+//                 $cells[] = WriterEntityFactory::createCell('Compromiso');
+//                 $cells[] = WriterEntityFactory::createCell('Componente');
+//             }
+
+//             if(isset($tabla['metasmun']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('Municipio');
+//                 $cells[] = WriterEntityFactory::createCell('Meta municipio');
+//                 $cells[] = WriterEntityFactory::createCell('Meta modificada municipio');
+//             }
+
+//             if(isset($tabla['avances']))
+//             {
+//                 $cells[] = WriterEntityFactory::createCell('Municipio del avance');
+//                 $cells[] = WriterEntityFactory::createCell('Fecha');
+//                 $cells[] = WriterEntityFactory::createCell('Aprobado');
+//                 $cells[] = WriterEntityFactory::createCell('Avance');
+//                 $cells[] = WriterEntityFactory::createCell('Ejercido');
+//                 $cells[] = WriterEntityFactory::createCell('Beneficiarios H');
+//                 $cells[] = WriterEntityFactory::createCell('Beneficiarios M');
+//                 $cells[] = WriterEntityFactory::createCell('Discapacitados H');
+//                 $cells[] = WriterEntityFactory::createCell('Discapacitados M');
+//                 $cells[] = WriterEntityFactory::createCell('Mayahablentes H');
+//                 $cells[] = WriterEntityFactory::createCell('Mayahablantes M');
+//             }
+		
+	
             // Agregamos la fila de encabezados
             $rowStyle = (new StyleBuilder())
                             ->setFontBold()
@@ -141,8 +211,8 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vResumenNarrativo),
                     WriterEntityFactory::createCell($rec->vSupuesto),
                     WriterEntityFactory::createCell($rec->vAreaResponsable),
-                    WriterEntityFactory::createCell($rec->vEntregable),
-                    WriterEntityFactory::createCell($rec->vMedioVerifica),
+                    WriterEntityFactory::createCell($rec->indicador),
+                    WriterEntityFactory::createCell($rec->medioverifica),
                     
                 ];
 

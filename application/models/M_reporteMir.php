@@ -326,8 +326,8 @@ class M_reporteMir extends CI_Model {
       "DetalleActividad"."nPresupuestoAutorizado",
       "DetalleActividad"."nPresupuestoModificado",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
-      "Entregable"."vEntregable",
-      "Entregable"."vMedioVerifica",
+      "Entregable"."vEntregable" AS Indicador,
+      "Entregable"."vMedioVerifica" AS medioverifica,
       "Reto"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
       "PED2019Eje"."iIdEje"
@@ -354,7 +354,7 @@ class M_reporteMir extends CI_Model {
       inner join "Reto" on "Actividad"."iReto"="Reto"."iIdReto"
       inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
-      left join "Entregable" on "DetalleEntregable"."iIdDetalleEntregable"="Entregable"."iIdEntregable"
+      left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
       // if(isset($tabla['fuentes'])) $select.= ', fin."vFinanciamiento", daf.monto';
