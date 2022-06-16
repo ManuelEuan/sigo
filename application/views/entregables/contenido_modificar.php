@@ -112,7 +112,7 @@
 
                     <div class="col-md-8 mb-3">
                         <label>Area para calculo de variable<span class="text-danger">*</span></label>
-                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder="" ><?= $areaCalculo?></textarea>
+                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder="" onkeypress="sinEspacios(event);"><?= $areaCalculo?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
@@ -365,6 +365,18 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
 
+            }
+        });
+    }
+
+    function sinEspacios(e) {
+        $("#areaCalculo").on({
+            keydown: function(e) {
+                if (e.which === 32)
+                return false;
+            },
+            change: function() {
+                this.value = this.value.replace(/\s/g, "");
             }
         });
     }

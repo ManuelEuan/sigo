@@ -348,9 +348,9 @@
             
             }
         }
-        //console.log(formula)
-        //console.log(estructuraFinal)
-        //console.log(eval(estructuraFinal))
+        console.log(formula)
+        console.log(estructuraFinal)
+        console.log(eval(estructuraFinal))
 
         total =  eval(estructuraFinal)
 
@@ -359,8 +359,6 @@
         }else{
             document.getElementById("avance").value = total;
         }
-
-        
     }
 
     function ValidarBeneficiariosM(){

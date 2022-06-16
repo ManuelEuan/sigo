@@ -91,7 +91,7 @@
 
                     <div class="col-md-8 mb-3">
                         <label>Area para calculo de variable<span class="text-danger">*</span></label>
-                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder="" ></textarea>
+                        <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder=""  onkeypress="sinEspacios(event);"></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
@@ -293,6 +293,18 @@ $(".only_number").attr("maxlength", 11);
     function remover(id){
         areaReponsableArray = areaReponsableArray.filter(obj => obj.id != id)
         $(".divVariable"+id).remove();
+    }
+
+    function sinEspacios(e) {
+        $("#areaCalculo").on({
+            keydown: function(e) {
+                if (e.which === 32)
+                return false;
+            },
+            change: function() {
+                this.value = this.value.replace(/\s/g, "");
+            }
+        });
     }
 
     function guardarEntregables(f, e) {
