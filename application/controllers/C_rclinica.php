@@ -99,6 +99,19 @@ class C_rclinica extends CI_Controller {
             $ruta = 'public/reportes/avancemir.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);
+
+            $totalMeta = 0;
+            $totalAvance = 0;
+            $porcentaje = 0;
+
+            foreach ($records as $rec){
+                $totalMeta = $totalMeta + $rec->nMeta;
+                $totalAvance = $totalAvance + $rec->nAvance;
+
+            }
+
+            $porcentaje = ($totalAvance/$totalMeta)*100;
+            $porcentajeRedondeado = round($porcentaje, 0);
             
             $obtenerDep = $mrep->obtenerDep($dep);
 
@@ -123,7 +136,7 @@ class C_rclinica extends CI_Controller {
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell('REPORTE CLINICA',$tituloexcel),
+                WriterEntityFactory::createCell('REPORTE AVANCE MIR',$tituloexcel),
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$titulo);
             $writer->addRow($singleRow); 
@@ -150,6 +163,11 @@ class C_rclinica extends CI_Controller {
             $cells =[
                 WriterEntityFactory::createCell('Eje',$rowStyle),
                 WriterEntityFactory::createCell($obtenerEje->vEje),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('Porcentaje: '.$porcentajeRedondeado.'%', $tituloexcel),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
@@ -208,19 +226,19 @@ class C_rclinica extends CI_Controller {
                 $cells = [
                     
 
-                    WriterEntityFactory::createCell($rec->vActividad),
+                    WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->vResumenNarrativo),
                     WriterEntityFactory::createCell($rec->vEntregable),
                     WriterEntityFactory::createCell($rec->vVariableIndicador),
                     WriterEntityFactory::createCell($rec->vNombreVariable),
-                    WriterEntityFactory::createCell($rec->iVariable),
-                    WriterEntityFactory::createCell($rec->nLineaBase),
-                    WriterEntityFactory::createCell($rec->nMeta),
-                    WriterEntityFactory::createCell($rec->vPeriodicidad),
-                    WriterEntityFactory::createCell($rec->nAvance),
                     WriterEntityFactory::createCell($rec->iValor),
+                    WriterEntityFactory::createCell($rec->nLineaBase),
+                    WriterEntityFactory::createCell((int)$rec->nMeta.'%'),
+                    WriterEntityFactory::createCell($rec->vPeriodicidad),
+                    WriterEntityFactory::createCell((int)$rec->nAvance.'%'),
+                    WriterEntityFactory::createCell($rec->vMedioVerifica),
                     WriterEntityFactory::createCell($rec->vSupuesto),
      
                      
