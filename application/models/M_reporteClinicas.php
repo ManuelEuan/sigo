@@ -305,8 +305,8 @@ class M_reporteClinicas extends CI_Model {
       "Avance"."nAvance",
       "Avance"."dFecha",
       "Actividad"."vSupuesto",
-      "DetalleActividad"."iAnio",
-      "DetalleActividad"."dInicio"';
+      "NivelMIR"."vNivelMIR",
+      "Entregable"."vMedioVerifica"';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
 
       $from = 'FROM "Actividad"
@@ -317,7 +317,8 @@ class M_reporteClinicas extends CI_Model {
       LEFT JOIN "VariableIndicador" ON "Entregable"."iIdEntregable" = "VariableIndicador"."iIdEntregable"
       LEFT JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
       LEFT JOIN "VariablesAvance" ON "Avance"."iIdAvance" = "VariablesAvance"."iIdAvance"
-      LEFT JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"';     
+      LEFT JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
+      LEFT JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"';     
     //   $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio;
 
       if(!empty($whereString)){
