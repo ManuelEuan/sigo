@@ -79,9 +79,15 @@ $db['default'] = array(
 	'username' => 'sissigo',
 	'password' => 'angelica2234.',
 
+<<<<<<< HEAD
 	// 'hostname' => 'localhost',
 	// 'username' => 'postgres',
 	// 'password' => 'TunChe.43',
+=======
+	/*'hostname' => 'localhost',
+	'username' => 'postgres',
+	'password' => '',*/
+>>>>>>> 5ef9894c84fddcc963a93c2a3db25017e957dbf1
 
 	'database' => 's10',
 
