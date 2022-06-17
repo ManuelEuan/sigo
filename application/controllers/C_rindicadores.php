@@ -140,7 +140,10 @@ class C_rindicadores extends CI_Controller {
                     WriterEntityFactory::createCell('Método de Cálculo',$blueStyle),
                     WriterEntityFactory::createCell('Frecuencia Medición',$blueStyle),
                     WriterEntityFactory::createCell('Meta Programada',$blueStyle),
-                    WriterEntityFactory::createCell('Trimestre',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 1',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 2',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 3',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 4',$blueStyle),
                     WriterEntityFactory::createCell('Meta Alcanzada',$blueStyle), 
 
                    
@@ -152,8 +155,39 @@ class C_rindicadores extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
+            $totalAvanceTrim1 = 0;
+            $totalAvanceTrim2 = 0;
+            $totalAvanceTrim3 = 0;
+            $totalAvanceTrim4 = 0;
+
+            foreach ($records as $rec){
+                $mes = date("m",strtotime($rec->dFecha));
+
+                $mestrim = is_null($mes) ? date('m') : $mes;
+                $trim=floor(($mestrim-1)/3)+1;
+
+                if($trim == 1){
+                    $totalAvanceTrim1 = $totalAvanceTrim1 + $rec->nAvance;
+                }
+                if($trim == 2){
+                    $totalAvanceTrim2 = $totalAvanceTrim2 + $rec->nAvance;
+                }
+                if($trim == 3){
+                    $totalAvanceTrim3 = $totalAvanceTrim2 + $rec->nAvance;
+                }
+                if($trim == 4){
+                    $totalAvanceTrim4 = $totalAvanceTrim4 + $rec->nAvance;
+                    
+                }
+            }
+
             foreach ($records as $rec)
             {
+                $mes = date("m",strtotime($rec->dFecha));
+
+                $mestrim = is_null($mes) ? date('m') : $mes;
+                $trim=floor(($mestrim-1)/3)+1;
+
                 $cells = [
                    
                     WriterEntityFactory::createCell($rec->vDependencia),
@@ -163,15 +197,60 @@ class C_rindicadores extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vEntregable),
                     WriterEntityFactory::createCell($rec->vFormula),
                     WriterEntityFactory::createCell($rec->vPeriodicidad),
-                    WriterEntityFactory::createCell((int)$rec->nMeta),
-                    WriterEntityFactory::createCell($rec->dFecha),
-                    WriterEntityFactory::createCell((int)$rec->nAvance),
-                     
+                    WriterEntityFactory::createCell((int)$rec->nMeta)
                 ];
+
+                
+                    if($trim == 1){
+                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 2){
+                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 3){
+                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 4){
+                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                     
+                    
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
+
+                
             }
+
+            $cells = [
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell($totalAvanceTrim1),
+                WriterEntityFactory::createCell($totalAvanceTrim2),
+                WriterEntityFactory::createCell($totalAvanceTrim3),
+                WriterEntityFactory::createCell($totalAvanceTrim4),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
 
             $writer->close();
            
