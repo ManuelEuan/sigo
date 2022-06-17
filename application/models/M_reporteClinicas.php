@@ -291,6 +291,7 @@ class M_reporteClinicas extends CI_Model {
     {
       $select ='SELECT "Actividad"."iIdActividad",
       "Actividad"."vActividad",
+      "Actividad"."vNombreActividad",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
       "ProgramaPresupuestario"."vDescripcion",
       "Actividad"."vResumenNarrativo",
@@ -307,6 +308,7 @@ class M_reporteClinicas extends CI_Model {
       "Avance"."dFecha",
       "Actividad"."vSupuesto",
       "NivelMIR"."vNivelMIR",
+      "ResumenNarrativo"."vNombreResumenNarrativo",
       "Entregable"."vMedioVerifica"';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
 
@@ -314,6 +316,7 @@ class M_reporteClinicas extends CI_Model {
       JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       LEFT JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
       LEFT JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
+      left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
       LEFT JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
       LEFT JOIN "VariableIndicador" ON "Entregable"."iIdEntregable" = "VariableIndicador"."iIdEntregable"
       LEFT JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"

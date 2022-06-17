@@ -225,9 +225,9 @@ class C_rclinica extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vDescripcion),
-                    WriterEntityFactory::createCell($rec->vResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->vEntregable),
-                    WriterEntityFactory::createCell($rec->vVariableIndicador),
+                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                    WriterEntityFactory::createCell($rec->vActividad),
+                    WriterEntityFactory::createCell($rec->vEntregable),//
                     WriterEntityFactory::createCell($rec->vNombreVariable),
                     WriterEntityFactory::createCell($rec->iValor),
                     WriterEntityFactory::createCell($rec->nLineaBase),
