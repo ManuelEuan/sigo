@@ -94,7 +94,7 @@ class C_rclinica extends CI_Controller {
         {
 
             $records = $query->result(); 
-            $ruta = 'public/reportes/clinica.xlsx';
+            $ruta = 'public/reportes/avancemir.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);            
 			$blueStyle = (new StyleBuilder())
@@ -102,6 +102,13 @@ class C_rclinica extends CI_Controller {
             ->setFontColor(Color::WHITE)
             ->setFontItalic()
             ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo'),
+                WriterEntityFactory::createCell($dep),
+                WriterEntityFactory::createCell('Dependencia'),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
                     WriterEntityFactory::createCell('PP',$blueStyle),

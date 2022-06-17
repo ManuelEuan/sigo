@@ -84,12 +84,13 @@ class C_rmir extends CI_Controller {
         if((int)$this->input->post('mes')  > 0){
             $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
         }
-        
-
         $mrep = new M_reporteMir();
+        $obtenerDep = $mrep->obtenerDep($dep);
+        $obtenerEje = $mrep->obtenerEje($eje);
+
         
         $query = $mrep->reporte_pat($anio,$dep,$whereString);
-
+$fechaactual = date('m-d-Y h:i:s a');
         if($query->num_rows() > 0)
         {
 
@@ -102,6 +103,39 @@ class C_rmir extends CI_Controller {
             ->setFontColor(Color::WHITE)
             ->setFontItalic()
             ->build();
+            $tituloexcel = (new StyleBuilder())
+            ->setBackgroundColor(Color::WHITE)
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(45)
+            ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo',$blueStyle),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('REPORTE MIR',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programática',$blueStyle)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Gasto de orden',$blueStyle)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Fecha:',$blueStyle),
+                WriterEntityFactory::createCell($fechaactual)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
             $cells = [
                     WriterEntityFactory::createCell('Eje',$blueStyle),
                     WriterEntityFactory::createCell('Dependencia',$blueStyle),
