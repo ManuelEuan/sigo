@@ -244,10 +244,10 @@ class C_rindicadores extends CI_Controller {
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell($totalAvanceTrim1),
-                WriterEntityFactory::createCell($totalAvanceTrim2),
-                WriterEntityFactory::createCell($totalAvanceTrim3),
-                WriterEntityFactory::createCell($totalAvanceTrim4),
+                WriterEntityFactory::createCell($totalAvanceTrim1, $blueStyle),
+                WriterEntityFactory::createCell($totalAvanceTrim2, $blueStyle),
+                WriterEntityFactory::createCell($totalAvanceTrim3, $blueStyle),
+                WriterEntityFactory::createCell($totalAvanceTrim4, $blueStyle),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
