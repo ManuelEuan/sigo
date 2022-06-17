@@ -90,13 +90,75 @@ class C_reportesPOA extends CI_Controller {
         
         $query = $mrep->reporte_pat($anio,$dep,$eje,$whereString, $mes);
 
+        $fechaactual = date('m-d-Y h:i:s a');
+
         if($query->num_rows() > 0)
         {
 
             $records = $query->result(); 
             $ruta = 'public/reportes/POAS.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
-            $writer->openToFile($ruta);            
+            $writer->openToFile($ruta); 
+
+            $obtenerDep = $mrep->obtenerDep($dep);
+
+            $obtenerEje = $mrep->obtenerEje($eje); 
+            
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+            
+            $tituloexcel = (new StyleBuilder())
+            ->setBackgroundColor(Color::WHITE)
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(45)
+            ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo'),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('POA (SF)',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$titulo);
+            $writer->addRow($singleRow); 
+
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación'),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Programa Presupuestario'),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+
+            $cells =[
+                WriterEntityFactory::createCell(''),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Fecha'),
+                WriterEntityFactory::createCell($fechaactual),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+            
 			
             $cells = [
                     WriterEntityFactory::createCell('Eje'),
@@ -111,7 +173,6 @@ class C_reportesPOA extends CI_Controller {
                     WriterEntityFactory::createCell('Indicadores'),
                     WriterEntityFactory::createCell('Meta'),
                     WriterEntityFactory::createCell('Unidad de Medida'),
-
                 ];
 
 	
