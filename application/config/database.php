@@ -78,6 +78,13 @@ $db['default'] = array(
 	'hostname' => '20.114.113.83',
 	'username' => 'sissigo',
 	'password' => 'angelica2234.',
+
+	// 'hostname' => 'localhost',
+	// 'username' => 'postgres',
+	// 'password' => 'TunChe.43',
+	/*'hostname' => 'localhost',
+	'username' => 'postgres',
+	'password' => '',*/
 	/*'hostname' => 'localhost',
 	'username' => 'postgres',
 	'password' => '',*/
