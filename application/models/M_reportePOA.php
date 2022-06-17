@@ -360,10 +360,12 @@ class M_reportePOA extends CI_Model {
             "DetalleActividad"."iAnio",
             "Dependencia"."iIdDependencia",
             "DetalleEntregable"."dFechaInicio",
+            "ResumenNarrativo"."vNombreResumenNarrativo",
 	        "DetalleEntregable"."dFechaFin"
             FROM "Dependencia"
             INNER JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
             INNER JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
+            left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
             INNER JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
             INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
             INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"

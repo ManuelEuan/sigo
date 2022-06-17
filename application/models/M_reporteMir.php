@@ -320,9 +320,9 @@ return $resultado;
 
 
 
-    public function reporte_pat($anio, $dep, $whereString=null)
+    public function reporte_pat($anio,$eje, $dep, $whereString=null)
     {
-      $select ='SELECT
+      $select ='SELECT DISTINCT
       "PED2019Eje"."vEje", 
       "Dependencia"."vDependencia", 
       "Actividad"."iIdActividad", 
@@ -347,6 +347,7 @@ return $resultado;
       "Reto"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
       "Dependencia"."iIdDependencia", 
+      "ResumenNarrativo"."vNombreResumenNarrativo",
       "PED2019Eje"."iIdEje"
       ';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
@@ -366,6 +367,7 @@ return $resultado;
       INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
       INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
       left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+      left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
       INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
       INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
       inner join "Reto" on "Actividad"."iReto"="Reto"."iIdReto"
@@ -446,7 +448,7 @@ return $resultado;
 
 
 
-      $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep;
+      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep;
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
@@ -454,7 +456,7 @@ return $resultado;
       
       $group_by = '';
       
-      $sql = $select.$from.$whereCondition.$group_by;
+      $sql = $select.$from.$whereCondition;
       $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
       return $query;

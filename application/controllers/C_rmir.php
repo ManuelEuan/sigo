@@ -89,7 +89,7 @@ class C_rmir extends CI_Controller {
         $obtenerEje = $mrep->obtenerEje($eje);
 
         
-        $query = $mrep->reporte_pat($anio,$dep,$whereString);
+        $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString);
 $fechaactual = date('m-d-Y h:i:s a');
         if($query->num_rows() > 0)
         {
@@ -233,7 +233,7 @@ $fechaactual = date('m-d-Y h:i:s a');
             foreach ($records as $rec)
             {
                 $cells = [
-                   
+                    
                     WriterEntityFactory::createCell($rec->vEje),
                     WriterEntityFactory::createCell($rec->vDependencia),
                     WriterEntityFactory::createCell((int)$rec->iAnio),
@@ -243,7 +243,7 @@ $fechaactual = date('m-d-Y h:i:s a');
                     // WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->vObjetivo),
                     WriterEntityFactory::createCell($rec->estrategiaact),
-                    WriterEntityFactory::createCell($rec->vResumenNarrativo),
+                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
                     WriterEntityFactory::createCell($rec->vSupuesto),
                     WriterEntityFactory::createCell($rec->vAreaResponsable),
                     WriterEntityFactory::createCell($rec->vEntregable),
