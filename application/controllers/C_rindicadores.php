@@ -140,7 +140,10 @@ class C_rindicadores extends CI_Controller {
                     WriterEntityFactory::createCell('Método de Cálculo',$blueStyle),
                     WriterEntityFactory::createCell('Frecuencia Medición',$blueStyle),
                     WriterEntityFactory::createCell('Meta Programada',$blueStyle),
-                    WriterEntityFactory::createCell('Trimestre',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 1',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 2',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 3',$blueStyle),
+                    WriterEntityFactory::createCell('Trimestre 4',$blueStyle),
                     WriterEntityFactory::createCell('Meta Alcanzada',$blueStyle), 
 
                    
@@ -154,6 +157,11 @@ class C_rindicadores extends CI_Controller {
 
             foreach ($records as $rec)
             {
+                $mes = date("m",strtotime($rec->dFecha));
+
+                $mestrim = is_null($mes) ? date('m') : $mes;
+                $trim=floor(($mestrim-1)/3)+1;
+
                 $cells = [
                    
                     WriterEntityFactory::createCell($rec->vDependencia),
@@ -163,15 +171,40 @@ class C_rindicadores extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vEntregable),
                     WriterEntityFactory::createCell($rec->vFormula),
                     WriterEntityFactory::createCell($rec->vPeriodicidad),
-                    WriterEntityFactory::createCell((int)$rec->nMeta),
-                    WriterEntityFactory::createCell($rec->dFecha),
-                    WriterEntityFactory::createCell((int)$rec->nAvance),
-                     
+                    WriterEntityFactory::createCell((int)$rec->nMeta)
                 ];
+                    if($trim == 1){
+                        $cells[] = WriterEntityFactory::createCell($rec->nAvance);
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 2){
+                        $cells[] = WriterEntityFactory::createCell($rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 3){
+                        $cells[] = WriterEntityFactory::createCell($rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    if($trim == 4){
+                        $cells[] = WriterEntityFactory::createCell($rec->nAvance);
+                        
+                    }else{
+                        $cells[] = WriterEntityFactory::createCell('');
+                    }
+                    
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                     
+               
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
             }
+            
 
             $writer->close();
            
