@@ -199,8 +199,8 @@ class C_rindicadores extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vDependencia),
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
-                    WriterEntityFactory::createCell($rec->vResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->vEntregable),
+                    WriterEntityFactory::createCell($rec->vresumennarrativo),
+                    WriterEntityFactory::createCell($rec->ventregable),
                     WriterEntityFactory::createCell($rec->vFormula),
                     WriterEntityFactory::createCell($rec->vPeriodicidad),
                     WriterEntityFactory::createCell((int)$rec->nMeta)
