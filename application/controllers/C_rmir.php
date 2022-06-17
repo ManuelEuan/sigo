@@ -106,7 +106,7 @@ $fechaactual = date('m-d-Y h:i:s a');
             $tituloexcel = (new StyleBuilder())
             ->setBackgroundColor(Color::WHITE)
             ->setFontColor(Color::BLACK)
-            ->setFontSize(45)
+            ->setFontSize(22)
             ->build();
             $cells =[
                 WriterEntityFactory::createCell('Organismo',$blueStyle),

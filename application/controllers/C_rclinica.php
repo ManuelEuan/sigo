@@ -126,7 +126,7 @@ class C_rclinica extends CI_Controller {
             $tituloexcel = (new StyleBuilder())
             ->setBackgroundColor(Color::WHITE)
             ->setFontColor(Color::BLACK)
-            ->setFontSize(45)
+            ->setFontSize(22)
             ->build();
             $cells =[
                 WriterEntityFactory::createCell('Organismo',$rowStyle),

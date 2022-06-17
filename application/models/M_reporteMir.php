@@ -346,6 +346,7 @@ return $resultado;
       "Entregable"."vMedioVerifica" ,
       "Reto"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
+      "Dependencia"."iIdDependencia", 
       "PED2019Eje"."iIdEje"
       ';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
@@ -445,7 +446,7 @@ return $resultado;
 
 
 
-      $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio;
+      $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep;
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
