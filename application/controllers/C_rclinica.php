@@ -90,13 +90,82 @@ class C_rclinica extends CI_Controller {
         
         $query = $mrep->reporte_pat($anio,$dep,$whereString);
 
+        $fechaactual = date('m-d-Y h:i:s a');
+
         if($query->num_rows() > 0)
         {
 
             $records = $query->result(); 
             $ruta = 'public/reportes/clinica.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
-            $writer->openToFile($ruta);            
+            $writer->openToFile($ruta);
+            
+            $obtenerDep = $mrep->obtenerDep($dep);
+
+            $obtenerEje = $mrep->obtenerEje($eje); 
+            
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+            
+            $tituloexcel = (new StyleBuilder())
+            ->setBackgroundColor(Color::WHITE)
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(45)
+            ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo',$rowStyle),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('REPORTE CLINICA',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$titulo);
+            $writer->addRow($singleRow); 
+
+
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+
+            $cells =[
+                WriterEntityFactory::createCell('Programa Presupuestario'),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programática​'),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Eje',$rowStyle),
+                WriterEntityFactory::createCell($obtenerEje->vEje),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell(''),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Fecha',$rowStyle),
+                WriterEntityFactory::createCell($fechaactual),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
 			$blueStyle = (new StyleBuilder())
             ->setBackgroundColor(Color::BLUE)
             ->setFontColor(Color::WHITE)

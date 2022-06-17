@@ -369,6 +369,24 @@ class M_reporteClinicas extends CI_Model {
         }
         return $this->db->query($sql);
     }
+
+    public function obtenerDep($dep){
+      $this->db->select('vDependencia');
+      $this->db->from('Dependencia');
+      $this->db->where('iIdDependencia', $dep);
+      $query =  $this->db->get();
+		  $resultado = $query->row();
+      return $resultado;
+    }
+
+    public function obtenerEje($eje){
+      $this->db->select('vEje');
+      $this->db->from('PED2019Eje');
+      $this->db->where('iIdEje', $eje);
+      $query =  $this->db->get();
+		  $resultado = $query->row();
+      return $resultado;
+    }
 }
 
                         
