@@ -160,6 +160,8 @@ class C_rindicadores extends CI_Controller {
             $totalAvanceTrim3 = 0;
             $totalAvanceTrim4 = 0;
 
+            $toalMeta = 0;
+
             foreach ($records as $rec){
                 $mes = date("m",strtotime($rec->dFecha));
 
@@ -179,7 +181,11 @@ class C_rindicadores extends CI_Controller {
                     $totalAvanceTrim4 = $totalAvanceTrim4 + $rec->nAvance;
                     
                 }
+                
+
             }
+
+            $toalMeta = $totalAvanceTrim1 + $totalAvanceTrim2 + $totalAvanceTrim3 + $totalAvanceTrim4;
 
             foreach ($records as $rec)
             {
@@ -225,7 +231,7 @@ class C_rindicadores extends CI_Controller {
                         $cells[] = WriterEntityFactory::createCell('');
                     }
                     
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance, $blueStyle);
                      
                     
 
@@ -248,6 +254,8 @@ class C_rindicadores extends CI_Controller {
                 WriterEntityFactory::createCell($totalAvanceTrim2, $blueStyle),
                 WriterEntityFactory::createCell($totalAvanceTrim3, $blueStyle),
                 WriterEntityFactory::createCell($totalAvanceTrim4, $blueStyle),
+                WriterEntityFactory::createCell('Total Meta: '.$toalMeta, $blueStyle),
+                
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
