@@ -185,13 +185,7 @@ class C_rclinica extends CI_Controller {
             ->setFontColor(Color::WHITE)
             ->setFontItalic()
             ->build();
-            $cells =[
-                WriterEntityFactory::createCell('Organismo'),
-                WriterEntityFactory::createCell($dep),
-                WriterEntityFactory::createCell('Dependencia'),
-            ];
-            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
-            $writer->addRow($singleRow);
+           
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
                     WriterEntityFactory::createCell('PP',$blueStyle),
