@@ -307,16 +307,25 @@ class M_reporteindicadores extends CI_Model {
     {
       $select ='SELECT "Dependencia"."vDependencia",
       "DetalleActividad"."iAnio",
-      "DetalleActividad"."dInicio", 
       "NivelMIR"."vNivelMIR",
       "Actividad"."iIdActividad",
-      "Actividad"."vResumenNarrativo",
-      "Entregable"."vEntregable",
+      "ResumenNarrativo"."vNombreResumenNarrativo" AS vresumennarrativo,
+      "Actividad"."vDescripcion" AS ventregable,
       "Entregable"."vFormula",
       "Periodicidad"."vPeriodicidad",
       "DetalleEntregable"."nMeta",
       "Avance"."dFecha",
-      "Avance"."nAvance"';
+      "Avance"."nAvance"
+      FROM "DetalleEntregable"
+      JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+      JOIN "DetalleActividad" ON "DetalleEntregable"."iIdDetalleActividad" = "DetalleActividad"."iIdDetalleActividad"
+      JOIN "Actividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"
+      JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+      JOIN "Dependencia" ON "Actividad"."iIdDependencia" = "Dependencia"."iIdDependencia"
+      JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
+      JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
+      JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
 
       $from = 'FROM "DetalleEntregable"
@@ -327,7 +336,8 @@ class M_reporteindicadores extends CI_Model {
       JOIN "Dependencia" ON "Actividad"."iIdDependencia" = "Dependencia"."iIdDependencia"
       JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
       JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
-      JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"';     
+      JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';     
       $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio;
 
       if(!empty($whereString)){
@@ -336,7 +346,7 @@ class M_reporteindicadores extends CI_Model {
       
       $group_by = '';
       
-      $sql = $select.$from.$whereCondition.$group_by;
+      $sql = $select.$whereCondition.$group_by;
       $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
       return $query;
