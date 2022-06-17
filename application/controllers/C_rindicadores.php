@@ -87,6 +87,8 @@ class C_rindicadores extends CI_Controller {
         
 
         $mrep = new M_reporteindicadores();
+        $obtenerDep = $mrep->obtenerDep($dep);
+        $obtenerEje = $mrep->obtenerEje($eje);
         
         $query = $mrep->reporte_pat($anio,$dep,$whereString);
 
@@ -102,6 +104,33 @@ class C_rindicadores extends CI_Controller {
             ->setFontColor(Color::WHITE)
             ->setFontItalic()
             ->build();
+            $tituloexcel = (new StyleBuilder())
+            ->setBackgroundColor(Color::WHITE)
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(25)
+            ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo',$blueStyle),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('AVANCE DE INDICADORES (SF)',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell('Denominación del Programa',$blueStyle)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+          
+            $cells =[
+                WriterEntityFactory::createCell('Fecha de elaboración:',$blueStyle),
+                WriterEntityFactory::createCell($fechaactual)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
             $cells = [
                     WriterEntityFactory::createCell('Dependencia',$blueStyle),
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
