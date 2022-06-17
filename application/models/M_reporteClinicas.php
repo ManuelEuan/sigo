@@ -295,6 +295,7 @@ class M_reporteClinicas extends CI_Model {
       "ProgramaPresupuestario"."vDescripcion",
       "Actividad"."vResumenNarrativo",
       "Entregable"."vEntregable",
+      "Entregable"."iIdEntregable",
       "VariableIndicador"."vVariableIndicador",
       "VariableIndicador"."vNombreVariable",
       "VariablesAvance"."iVariable",
@@ -387,6 +388,32 @@ class M_reporteClinicas extends CI_Model {
       $query =  $this->db->get();
 		  $resultado = $query->row();
       return $resultado;
+    }
+    
+    public function porcentaje($idEntregable){
+      $sql = 'SELECT
+      "Entregable"."iIdEntregable",
+      "Entregable"."vEntregable",
+      "DetalleEntregable"."iIdDetalleEntregable",
+      avg("DetalleEntregable"."nMeta") as Meta,
+      sum("Avance"."nAvance") as SumaAvances,
+      sum("Avance"."nAvance") / avg("DetalleEntregable"."nMeta") * 100 as PorcentajeAvance
+      FROM
+      "DetalleEntregable"
+      INNER JOIN
+      "Entregable"
+      ON
+      "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+      INNER JOIN
+      "Avance"
+      ON
+      "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
+      where "Entregable"."iIdEntregable"='.$idEntregable.'
+      group by "Entregable"."iIdEntregable", "Entregable"."vEntregable", "DetalleEntregable"."iIdDetalleEntregable"
+      order by "iIdEntregable", "iIdDetalleEntregable"';
+
+      $query =  $this->db->query($sql)->result();
+      return $query;
     }
 }
 
