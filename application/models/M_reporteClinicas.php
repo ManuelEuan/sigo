@@ -289,7 +289,7 @@ class M_reporteClinicas extends CI_Model {
 
     public function reporte_pat($anio, $dep, $whereString=null)
     {
-      $select ='SELECT "Actividad"."iIdActividad",
+      $select ='SELECT DISTINCT "Actividad"."iIdActividad",
       "Actividad"."vActividad",
       "Actividad"."vNombreActividad",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
