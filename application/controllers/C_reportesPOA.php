@@ -169,8 +169,7 @@ class C_reportesPOA extends CI_Controller {
             $writer->addRow($singleRow);
 
             $cells =[
-                WriterEntityFactory::createCell('Estrategia de Gobierno',$azulStyle),
-                WriterEntityFactory::createCell($obtenerEje->vEstrategia),
+                WriterEntityFactory::createCell('Estrategia',$azulStyle),
                 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
