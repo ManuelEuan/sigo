@@ -283,9 +283,38 @@ class M_reporteClinicas extends CI_Model {
 
         return $this->db->query($sql);
     }
+    public function obtenerDatosPorActividad($idActividad){
+      $coma = "','";
+      $sql = 'select "vActividad",
+      "vNivelMIR",
+      "vProgramaPresupuestario",
+      "vDescripcion",
+      "vNombreResumenNarrativo",
+      "vEntregable",
+      "iValor",
+      "nLineaBase",
+      "nMeta",
+      "vPeriodicidad",
+      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
+      (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
+      "vMedioVerifica",
+      "vSupuesto"
+      from vistaMir4
+      where "iIdActividad" = '.$idActividad.'
+      group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto"';
 
+      $query =  $this->db->query($sql)->result();
+      return $query;
+    }
 
-
+    public function obteneridActividades($idEje, $idDep){
+      $sql = 'SELECT "Actividad"."iIdActividad", "DetalleActividad"."iAnio", "iIdDependencia", iideje
+      FROM public."Actividad"
+      INNER JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+      WHERE "iideje" = '.$idEje.' AND "iIdDependencia" = '.$idDep;
+      $query =  $this->db->query($sql);
+      return $query;
+    }
 
     public function reporte_pat($anio, $dep, $whereString=null)
     {

@@ -92,8 +92,14 @@ class C_rclinica extends CI_Controller {
 
         $fechaactual = date('m-d-Y h:i:s a');
 
-        if($query->num_rows() > 0)
-        {
+        $idActividades = $mrep->obteneridActividades($eje, $dep);
+
+        //$idActividades[0]->iIdActividad
+        //$resultado = $mrep->obtenerDatosPorActividad(6001);
+
+        if($query > 0){
+
+            $resultadosID = $idActividades->result();
 
             $records = $query->result(); 
             $ruta = 'public/reportes/avancemir.xlsx';
@@ -116,7 +122,7 @@ class C_rclinica extends CI_Controller {
             $obtenerDep = $mrep->obtenerDep($dep);
 
             $obtenerEje = $mrep->obtenerEje($eje); 
-            
+                
             $rowStyle = (new StyleBuilder())
                             ->setBackgroundColor(Color::BLUE)
                             ->setFontColor(Color::WHITE)
@@ -188,7 +194,7 @@ class C_rclinica extends CI_Controller {
            
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
-                    WriterEntityFactory::createCell('PP',$blueStyle),
+                    WriterEntityFactory::createCell('Pograma Presupuestario',$blueStyle),
                     WriterEntityFactory::createCell('Descripción del PP',$blueStyle),
                     WriterEntityFactory::createCell('Resumen Narrativo',$blueStyle),
                     WriterEntityFactory::createCell('Acción o Proyecto',$blueStyle),
@@ -211,32 +217,32 @@ class C_rclinica extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
-            foreach ($records as $rec)
-            {
-                //$respuesta = $mrep->porcentaje($rec->iIdEntregable);
-                $respuesta = $mrep->porcentaje((int)$rec->iIdEntregable);
-                $cells = [
-                    WriterEntityFactory::createCell($rec->vNivelMIR),
-                    WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                    WriterEntityFactory::createCell($rec->vDescripcion),
-                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->vActividad),
-                    WriterEntityFactory::createCell($rec->vEntregable),//
-                    WriterEntityFactory::createCell($rec->vNombreVariable),
-                    WriterEntityFactory::createCell($rec->iValor),
-                    WriterEntityFactory::createCell($rec->nLineaBase),
-                    WriterEntityFactory::createCell('100%'),
-                    WriterEntityFactory::createCell($rec->vPeriodicidad),
-                    WriterEntityFactory::createCell(round($respuesta[0]->porcentajeavance).'%'),
-                    WriterEntityFactory::createCell($rec->vMedioVerifica),
-                    WriterEntityFactory::createCell($rec->vSupuesto),
-     
-                     
-                ];
+            foreach ($resultadosID as $key => $id) {
+                $resultado = $mrep->obtenerDatosPorActividad($id->iIdActividad);
 
-                $singleRow = WriterEntityFactory::createRow($cells);
-                $writer->addRow($singleRow);
+                    $cells = [
+                        WriterEntityFactory::createCell($resultado[0]->vNivelMIR),
+                        WriterEntityFactory::createCell($resultado[0]->vProgramaPresupuestario),
+                        WriterEntityFactory::createCell($resultado[0]->vDescripcion),
+                        WriterEntityFactory::createCell($resultado[0]->vNombreResumenNarrativo),
+                        WriterEntityFactory::createCell($resultado[0]->vActividad),
+                        WriterEntityFactory::createCell($resultado[0]->vEntregable),
+                        WriterEntityFactory::createCell($resultado[0]->vnombrevariable),
+                        WriterEntityFactory::createCell($resultado[0]->iValor),
+                        WriterEntityFactory::createCell($resultado[0]->nLineaBase),
+                        WriterEntityFactory::createCell((int)'100%'),
+                        WriterEntityFactory::createCell($resultado[0]->vPeriodicidad),
+                        WriterEntityFactory::createCell($resultado[0]->porcentajeavance.'%'),
+                        WriterEntityFactory::createCell($resultado[0]->vMedioVerifica),
+                        WriterEntityFactory::createCell($resultado[0]->vSupuesto),
+                    ];
+    
+                    $singleRow = WriterEntityFactory::createRow($cells);
+                    $writer->addRow($singleRow);
+     
+
             }
+
 
             $writer->close();
            
@@ -245,6 +251,7 @@ class C_rclinica extends CI_Controller {
         } else {
             $resp['error_message'] = 'Sin registros';
         }
+        
         echo json_encode($resp);
     }
 
