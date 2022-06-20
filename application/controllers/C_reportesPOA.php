@@ -113,17 +113,17 @@ class C_reportesPOA extends CI_Controller {
             $tituloexcel = (new StyleBuilder())
             ->setBackgroundColor(Color::WHITE)
             ->setFontColor(Color::BLACK)
-            ->setFontSize(22)
+            ->setFontSize(20)
             ->build();
+
+            $azulStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
             $cells =[
-                WriterEntityFactory::createCell('Organismo'),
-                WriterEntityFactory::createCell($obtenerDep->vDependencia),
-                WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell('POA (SF)',$tituloexcel),
+                WriterEntityFactory::createCell('Organismo',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),              
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$titulo);
             $writer->addRow($singleRow); 
@@ -135,42 +135,66 @@ class C_reportesPOA extends CI_Controller {
                             ->build();
 
             $cells =[
-                WriterEntityFactory::createCell('Clasificación'),
+                WriterEntityFactory::createCell('Clasificación Programatica',$azulStyle),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
-                WriterEntityFactory::createCell('Programa Presupuestario'),
+                WriterEntityFactory::createCell('Gasto de Orden',$azulStyle),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
+            $cells =[
+                WriterEntityFactory::createCell('Eje',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Objetivo de Gobierno',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+
+            $cells =[
+                WriterEntityFactory::createCell(' ',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Fecha',$azulStyle),
+                WriterEntityFactory::createCell($fechaactual),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('POA (SF)',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell(''),
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
             $writer->addRow($singleRow);
+
             $cells =[
-                WriterEntityFactory::createCell('Fecha'),
-                WriterEntityFactory::createCell($fechaactual),
+                WriterEntityFactory::createCell(''),
             ];
-            $singleRow = WriterEntityFactory::createRow($cells);
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
             $writer->addRow($singleRow);
             
 			
             $cells = [
-                    WriterEntityFactory::createCell('Eje'),
-                    WriterEntityFactory::createCell('Dependencia'),
-                    WriterEntityFactory::createCell('Año'),
                     WriterEntityFactory::createCell('Nivel'),
                     WriterEntityFactory::createCell('Clave'),
-                    WriterEntityFactory::createCell('Objetivo de Gobierno'),
                     WriterEntityFactory::createCell('Estrategia'),
                     WriterEntityFactory::createCell('Programa Presupuestario'),
                     WriterEntityFactory::createCell('Resumen Narrativo'),
-                    WriterEntityFactory::createCell('Indicadores'),
+                    WriterEntityFactory::createCell('Inidcadores'),
                     WriterEntityFactory::createCell('Meta'),
                     WriterEntityFactory::createCell('Unidad de Medida'),
                 ];
@@ -188,12 +212,8 @@ class C_reportesPOA extends CI_Controller {
             foreach ($records as $rec)
             {
                 $cells = [
-                    WriterEntityFactory::createCell($rec->vEje),
-                    WriterEntityFactory::createCell($rec->organismo),
-                    WriterEntityFactory::createCell($rec->iAnio),
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell($rec->clave),
-                    WriterEntityFactory::createCell($rec->vObjetivo),
                     WriterEntityFactory::createCell($rec->vEstrategia),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
