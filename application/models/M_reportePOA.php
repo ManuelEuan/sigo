@@ -436,13 +436,23 @@ class M_reportePOA extends CI_Model {
     }
 
     public function obtenerEje($eje){
-      $this->db->select('vEje');
+      $this->db->select();
       $this->db->from('PED2019Eje');
       $this->db->where('iIdEje', $eje);
       $query =  $this->db->get();
 		  $resultado = $query->row();
       return $resultado;
     }
+
+    public function obtenerObj($eje){
+      $this->db->select('vObjetivo');
+      $this->db->from('PED2019Eje');
+      $this->db->where('iIdEje', $eje);
+      $query =  $this->db->get();
+		  $resultado = $query->row();
+      return $resultado;
+  
+     }
 
 }
 

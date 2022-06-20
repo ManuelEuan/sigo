@@ -500,6 +500,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
 
         $('#depAct').change(function(){
             idDEp = $(this).val();
+            $("#iAreaResponsable").empty();
             obtenerActividades(idDEp)
             obtenerAreasResp(idDEp)
         });
