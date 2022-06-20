@@ -416,9 +416,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                 <div class="col-md-12">
                                     <select class="form-control" name="resumenNarrativo" id="resumenNarrativo">
                                         <option value="">--Seleccione--</option>
-                                        <?php foreach($resumenNarrativo as $rN){?>
-                                        <option value="<?= $rN->iIdResumenNarrativo ?>"><?= $rN->vNombreResumenNarrativo ?></option>
-                                        <?php } ?>
+                                        
                                     </select>
                                 </div>
                         </div>
@@ -509,6 +507,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             nivelMIR = $(this).val();
             if(nivelMIR >= 1){
                 document.getElementById("resumenNarrativo").disabled = false;
+                $("#resumenNarrativo").empty()
+                obtenerResumen(nivelMIR)
                 $('#resumenNarrativo').show();
                 $('#txtResumenNarrativo').show();
             }else{
@@ -531,7 +531,26 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             }
         });
     });
-
+    function obtenerResumen(nivelMIR){
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_pat/obtenerResumenNarrativo",
+            data:{nivelMIR:nivelMIR},
+            success: function(resp) {
+                var parsedData = JSON.parse(resp);
+                for(let i = 0; i <= parsedData.length; i++){
+                    if(parsedData[i]?.vNombreResumenNarrativo != undefined){
+                        $('#resumenNarrativo').append('<option value="'+parsedData[i]?.iIdResumenNarrativo+'">'+parsedData[i]?.vNombreResumenNarrativo+'</option>')
+                    }
+                }
+                
+                
+            },
+            error: function(XMLHHttRequest, textStatus, errorThrown) {
+                console.log(XMLHHttRequest);
+            }
+        });
+    }
     function obtenerActividades(idDependencia){
 
         $.ajax({

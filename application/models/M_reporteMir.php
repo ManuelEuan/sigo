@@ -278,6 +278,14 @@ return $resultado;
     $resultado = $query->row();
     return $resultado;
    }
+   public function obtenerObj($eje){
+    $this->db->select('vObjetivo');
+    $this->db->from('PED2019Eje');
+    $this->db->where('iIdEje',$eje);
+    $query = $this->db->get();
+    $resultado = $query->row();
+    return $resultado;
+   }
 
    /******************** Funciones Jorge E ************************/
 

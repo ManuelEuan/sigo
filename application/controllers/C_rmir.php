@@ -87,10 +87,11 @@ class C_rmir extends CI_Controller {
         $mrep = new M_reporteMir();
         $obtenerDep = $mrep->obtenerDep($dep);
         $obtenerEje = $mrep->obtenerEje($eje);
+        $obtenerObj = $mrep->obtenerObj($eje);
 
         
         $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString);
-$fechaactual = date('m-d-Y h:i:s a');
+        $fechaactual = date('m-d-Y h:i:s a');
         if($query->num_rows() > 0)
         {
 
@@ -138,6 +139,8 @@ $fechaactual = date('m-d-Y h:i:s a');
             $writer->addRow($singleRow);
             $cells =[
                 WriterEntityFactory::createCell('Objetivo del gobierno',$blueStyle),
+                WriterEntityFactory::createCell($obtenerObj->vObjetivo)
+
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
@@ -148,7 +151,14 @@ $fechaactual = date('m-d-Y h:i:s a');
             $writer->addRow($singleRow);
 
             $cells =[
-                WriterEntityFactory::createCell('Fecha:',$blueStyle),
+                WriterEntityFactory::createCell('Año',$blueStyle),
+                WriterEntityFactory::createCell($anio)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Fecha de elaboración:',$blueStyle),
                 WriterEntityFactory::createCell($fechaactual)
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
@@ -163,7 +173,6 @@ $fechaactual = date('m-d-Y h:i:s a');
                     WriterEntityFactory::createCell('Supuestos',$blueStyle),
                     WriterEntityFactory::createCell('Area Responsable',$blueStyle),
                     WriterEntityFactory::createCell('Programa presupuestario',$blueStyle),
-                    WriterEntityFactory::createCell('Año',$blueStyle),
                     
 
                    
@@ -189,7 +198,6 @@ $fechaactual = date('m-d-Y h:i:s a');
                     WriterEntityFactory::createCell($rec->vSupuesto),
                     WriterEntityFactory::createCell($rec->vAreaResponsable),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                    WriterEntityFactory::createCell((int)$rec->iAnio),
                    
                     
                 ];
