@@ -167,6 +167,11 @@ class C_reportesPOA extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
+            $cells =[
+                WriterEntityFactory::createCell(' ',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Fecha',$azulStyle),
