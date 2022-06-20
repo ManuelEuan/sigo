@@ -199,6 +199,14 @@ class M_pat extends CI_Model
 		$resultado = $query->result();
 		return $resultado;
 	}
+	public function obtenerResumen($idNivel){
+		$this->db->select();
+		$this->db->from('ResumenNarrativo');
+		$this->db->where('iNivel', $idNivel);
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
 
 	public function obtenerAreasRESP($idDependencia){
 		$this->db->select();

@@ -251,7 +251,13 @@ class C_pat extends CI_Controller
             $this->load->view('PAT/editar_actividad', $data3);
         }
     }
+    public function obtenerResumenNarrativo(){
+        $nivelMIR = isset($_POST['nivelMIR']) ? $_POST['nivelMIR'] : '';
 
+        $mir = $this->pat->obtenerResumen($nivelMIR);
+
+        echo json_encode($mir);
+    }
     /**
      * Retorna la vista para agregar un nuevo reto
      * @return view
