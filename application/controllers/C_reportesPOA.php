@@ -102,7 +102,7 @@ class C_reportesPOA extends CI_Controller {
 
             $obtenerDep = $mrep->obtenerDep($dep);
 
-            $obtenerEje = $mrep->obtenerEje($eje); 
+            $obtenerEje = $mrep->obtenerObj($eje); 
             
             $rowStyle = (new StyleBuilder())
                             ->setBackgroundColor(Color::BLUE)
@@ -167,6 +167,15 @@ class C_reportesPOA extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Estrategia de Gobierno',$azulStyle),
+                WriterEntityFactory::createCell($obtenerEje->vEstrategia),
+                
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
             $cells =[
                 WriterEntityFactory::createCell(' ',$azulStyle),
             ];
@@ -199,7 +208,6 @@ class C_reportesPOA extends CI_Controller {
             $cells = [
                     WriterEntityFactory::createCell('Nivel'),
                     WriterEntityFactory::createCell('Clave'),
-                    WriterEntityFactory::createCell('Estrategia'),
                     WriterEntityFactory::createCell('Programa Presupuestario'),
                     WriterEntityFactory::createCell('Resumen Narrativo'),
                     WriterEntityFactory::createCell('Inidcadores'),
@@ -222,7 +230,6 @@ class C_reportesPOA extends CI_Controller {
                 $cells = [
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell($rec->clave),
-                    WriterEntityFactory::createCell($rec->vEstrategia),
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
                     WriterEntityFactory::createCell($rec->indicador),
