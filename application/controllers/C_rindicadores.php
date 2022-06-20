@@ -91,6 +91,7 @@ class C_rindicadores extends CI_Controller {
         $obtenerEje = $mrep->obtenerEje($eje);
         
         $query = $mrep->reporte_pat($anio,$dep,$whereString);
+        $fechaactual = date('m-d-Y h:i:s a');
 
         if($query->num_rows() > 0)
         {
@@ -120,11 +121,22 @@ class C_rindicadores extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
             $cells =[
+                WriterEntityFactory::createCell('Eje',$blueStyle),
+                WriterEntityFactory::createCell($obtenerEje->vEje)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            $cells =[
                 WriterEntityFactory::createCell('Denominación del Programa',$blueStyle)
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
-          
+            $cells =[
+                WriterEntityFactory::createCell('Año',$blueStyle),
+                WriterEntityFactory::createCell($anio)
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
             $cells =[
                 WriterEntityFactory::createCell('Fecha de elaboración:',$blueStyle),
                 WriterEntityFactory::createCell($fechaactual)
@@ -132,7 +144,6 @@ class C_rindicadores extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
             $cells = [
-                    WriterEntityFactory::createCell('Dependencia',$blueStyle),
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
                     WriterEntityFactory::createCell('Clave',$blueStyle),
                     WriterEntityFactory::createCell('Resumen Narrativo',$blueStyle),
@@ -196,7 +207,6 @@ class C_rindicadores extends CI_Controller {
 
                 $cells = [
                    
-                    WriterEntityFactory::createCell($rec->vDependencia),
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
                     WriterEntityFactory::createCell($rec->vresumennarrativo),
