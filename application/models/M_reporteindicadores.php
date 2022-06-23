@@ -327,7 +327,6 @@ class M_reporteindicadores extends CI_Model {
       JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
       LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
-
       $from = 'FROM "DetalleEntregable"
       JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
       JOIN "DetalleActividad" ON "DetalleEntregable"."iIdDetalleActividad" = "DetalleActividad"."iIdDetalleActividad"
@@ -388,6 +387,23 @@ class M_reporteindicadores extends CI_Model {
           $sql = 'SELECT * FROM "UnidadMedida" WHERE "iActivo" = 1 ORDER BY "iIdUnidadMedida"'; 
         }
         return $this->db->query($sql);
+    }
+
+    function obtenerPP(){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $query = $this->db->get()->result();
+
+      return $query;
+    }
+
+    function obtenerPPporId($id){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $this->db->where('iIdProgramaPresupuestario', $id);
+      $query = $this->db->get()->row();
+
+      return $query;
     }
 }
 

@@ -106,7 +106,7 @@ class C_reportesPOA extends CI_Controller {
             $obtenerDep = $mrep->obtenerDep($dep);
             $proPre = $mrep->obtenerPPporId($pp);
 
-            $obtenerEje = $mrep->obtenerEje($eje); 
+            $obtenerEje = $mrep->obtenerObj($eje); 
             
             $rowStyle = (new StyleBuilder())
                             ->setBackgroundColor(Color::BLUE)
@@ -159,18 +159,33 @@ class C_reportesPOA extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Eje',$azulStyle),
-                WriterEntityFactory::createCell($obtenerEje->vEje)
-
+            
+                WriterEntityFactory::createCell($obtenerEje->vEje),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Objetivo de Gobierno',$azulStyle),
+                WriterEntityFactory::createCell($obtenerEje->vObjetivo),
+                
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
+
+            $cells =[
+                WriterEntityFactory::createCell(' ',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Estrategia',$azulStyle),
+                
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell(' ',$azulStyle),
