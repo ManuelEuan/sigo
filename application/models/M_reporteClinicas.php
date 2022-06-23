@@ -146,7 +146,19 @@ class M_reporteClinicas extends CI_Model {
         }
         return $datos;
     }
-
+    function obtenerPP(){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $query = $this->db->get()->result();
+      return $query;
+    }
+    function obtenerPPporId($id){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $this->db->where('iIdProgramaPresupuestario', $id);
+      $query = $this->db->get()->row();
+      return $query;
+    }
     public function generar3($eje,$anio){
 
         $datos = '';
