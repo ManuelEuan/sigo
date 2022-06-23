@@ -45,6 +45,7 @@ class C_reportesPOA extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
+        $data['PP'] = $this->M_reportePOA->obtenerPP();
         $this->load->view('reporte/reportePOA', $data);
     }
 
@@ -69,6 +70,8 @@ class C_reportesPOA extends CI_Controller {
         $eje = $this->input->post('selEje',true);
         $mes = $this->input->post('mes',true);
         $dep = $this->input->post('selDep',true) ?: 0;
+        $pp = $this->input->post('selPP',true);
+
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
@@ -101,6 +104,7 @@ class C_reportesPOA extends CI_Controller {
             $writer->openToFile($ruta); 
 
             $obtenerDep = $mrep->obtenerDep($dep);
+            $proPre = $mrep->obtenerPPporId($pp);
 
             $obtenerEje = $mrep->obtenerObj($eje); 
             
@@ -135,6 +139,13 @@ class C_reportesPOA extends CI_Controller {
                             ->build();
 
             $cells =[
+                WriterEntityFactory::createCell('Programa Presupuestario',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario)
+
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+            $cells =[
                 WriterEntityFactory::createCell('Clasificación Programatica',$azulStyle),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
@@ -148,6 +159,7 @@ class C_reportesPOA extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Eje',$azulStyle),
+            
                 WriterEntityFactory::createCell($obtenerEje->vEje),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);

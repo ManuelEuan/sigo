@@ -44,6 +44,7 @@ class C_rclinica extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
+        $data['PP'] = $this->M_reporteClinicas->obtenerPP();
         $this->load->view('reporte/clinica', $data);
     }
 
@@ -67,6 +68,7 @@ class C_rclinica extends CI_Controller {
         $anio = $this->input->post('anio',true);
         $eje = $this->input->post('selEje',true);
         $dep = $this->input->post('selDep',true);
+        $pp = $this->input->post('selPP',true);
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
@@ -122,7 +124,10 @@ class C_rclinica extends CI_Controller {
             $obtenerDep = $mrep->obtenerDep($dep);
 
             $obtenerEje = $mrep->obtenerEje($eje); 
-                
+
+            $proPre = $mrep->obtenerPPporId($pp);
+            
+
             $rowStyle = (new StyleBuilder())
                             ->setBackgroundColor(Color::BLUE)
                             ->setFontColor(Color::WHITE)
@@ -156,6 +161,7 @@ class C_rclinica extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Programa Presupuestario'),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario),
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
             $writer->addRow($singleRow);
