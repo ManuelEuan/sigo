@@ -180,12 +180,7 @@ class C_reportesPOA extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
-            $cells =[
-                WriterEntityFactory::createCell('Estrategia',$azulStyle),
-                
-            ];
-            $singleRow = WriterEntityFactory::createRow($cells);
-            $writer->addRow($singleRow);
+            
 
             $cells =[
                 WriterEntityFactory::createCell(' ',$azulStyle),
@@ -219,7 +214,6 @@ class C_reportesPOA extends CI_Controller {
             $cells = [
                     WriterEntityFactory::createCell('Nivel'),
                     WriterEntityFactory::createCell('Clave'),
-                    WriterEntityFactory::createCell('Programa Presupuestario'),
                     WriterEntityFactory::createCell('Resumen Narrativo'),
                     WriterEntityFactory::createCell('Inidcadores'),
                     WriterEntityFactory::createCell('Meta'),
@@ -241,7 +235,6 @@ class C_reportesPOA extends CI_Controller {
                 $cells = [
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell($rec->clave),
-                    WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
                     WriterEntityFactory::createCell($rec->indicador),
                     WriterEntityFactory::createCell($rec->meta),

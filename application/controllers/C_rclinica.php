@@ -160,10 +160,10 @@ class C_rclinica extends CI_Controller {
                             ->build();
 
             $cells =[
-                WriterEntityFactory::createCell('Programa Presupuestario'),
+                WriterEntityFactory::createCell('Programa Presupuestario',$rowStyle),
                 WriterEntityFactory::createCell($proPre->vProgramaPresupuestario),
             ];
-            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
@@ -200,7 +200,6 @@ class C_rclinica extends CI_Controller {
            
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
-                    WriterEntityFactory::createCell('Pograma Presupuestario',$blueStyle),
                     WriterEntityFactory::createCell('Descripción del PP',$blueStyle),
                     WriterEntityFactory::createCell('Resumen Narrativo',$blueStyle),
                     WriterEntityFactory::createCell('Acción o Proyecto',$blueStyle),
@@ -228,7 +227,6 @@ class C_rclinica extends CI_Controller {
 
                     $cells = [
                         WriterEntityFactory::createCell($resultado[0]->vNivelMIR),
-                        WriterEntityFactory::createCell($resultado[0]->vProgramaPresupuestario),
                         WriterEntityFactory::createCell($resultado[0]->vDescripcion),
                         WriterEntityFactory::createCell($resultado[0]->vNombreResumenNarrativo),
                         WriterEntityFactory::createCell($resultado[0]->vActividad),
