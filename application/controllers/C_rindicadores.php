@@ -44,6 +44,7 @@ class C_rindicadores extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
+        $data['PP'] = $this->M_reporteindicadores->obtenerPP();
         $this->load->view('reporte/indicadores', $data);
     }
 
@@ -69,6 +70,7 @@ class C_rindicadores extends CI_Controller {
         $dep = $this->input->post('selDep',true);
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
+        $pp = $this->input->post('selPP',true);
 
 	
 
@@ -89,8 +91,9 @@ class C_rindicadores extends CI_Controller {
         $mrep = new M_reporteindicadores();
         $obtenerDep = $mrep->obtenerDep($dep);
         $obtenerEje = $mrep->obtenerEje($eje);
+        $proPre = $mrep->obtenerPPporId($pp);
         
-        $query = $mrep->reporte_pat($anio,$dep,$whereString);
+        $query = $mrep->reporte_pat($anio,$dep,$whereString, $pp);
         $fechaactual = date('m-d-Y h:i:s a');
 
         if($query->num_rows() > 0)
@@ -120,17 +123,21 @@ class C_rindicadores extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
             $cells =[
                 WriterEntityFactory::createCell('Eje',$blueStyle),
                 WriterEntityFactory::createCell($obtenerEje->vEje)
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
             $cells =[
-                WriterEntityFactory::createCell('Denominación del Programa',$blueStyle)
+                WriterEntityFactory::createCell('ProgramaPresupuestario',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario)
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
             $cells =[
                 WriterEntityFactory::createCell('Año',$blueStyle),
                 WriterEntityFactory::createCell($anio)

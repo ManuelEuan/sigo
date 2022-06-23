@@ -44,6 +44,7 @@ class C_rmir extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
+        $data['PP'] = $this->M_reporteMir->obtenerPP();
         $this->load->view('reporte/mir', $data);
     }
 
@@ -67,10 +68,11 @@ class C_rmir extends CI_Controller {
         $anio = $this->input->post('anio',true);
         $eje = $this->input->post('selEje',true);
         $dep = $this->input->post('selDep',true);
+        $pp = $this->input->post('selPP',true);
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
-	
+        
 
         if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
         if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
@@ -88,9 +90,10 @@ class C_rmir extends CI_Controller {
         $obtenerDep = $mrep->obtenerDep($dep);
         $obtenerEje = $mrep->obtenerEje($eje);
         $obtenerObj = $mrep->obtenerObj($eje);
+        $proPre = $mrep->obtenerPPporId($pp);
 
         
-        $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString);
+        $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString, $pp);
         $fechaactual = date('m-d-Y h:i:s a');
         if($query->num_rows() > 0)
         {
@@ -121,6 +124,17 @@ class C_rmir extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Programa Presupuestario',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario),
+                
+            ];
+
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+
+
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programática',$blueStyle)
             ];
@@ -144,12 +158,7 @@ class C_rmir extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
-            $cells =[
-                WriterEntityFactory::createCell('Estrategia',$blueStyle),
-            ];
-            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
-            $writer->addRow($singleRow);
-
+            
             $cells =[
                 WriterEntityFactory::createCell('Año',$blueStyle),
                 WriterEntityFactory::createCell($anio)
@@ -172,9 +181,6 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell('Medios de verificación',$blueStyle), 
                     WriterEntityFactory::createCell('Supuestos',$blueStyle),
                     WriterEntityFactory::createCell('Area Responsable',$blueStyle),
-                    WriterEntityFactory::createCell('Programa presupuestario',$blueStyle),
-                    
-
                    
                 ];
 
@@ -197,7 +203,6 @@ class C_rmir extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vMedioVerifica),
                     WriterEntityFactory::createCell($rec->vSupuesto),
                     WriterEntityFactory::createCell($rec->vAreaResponsable),
-                    WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                    
                     
                 ];
