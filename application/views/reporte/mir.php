@@ -72,6 +72,17 @@
             echo '<input type="hidden" name="selDep" id="selDep" value="' . $_SESSION[PREFIJO . '_iddependencia'] . '" >';
           }
           ?>
+          <div class="col">
+                  <div class="form-group">
+                      <label class="control-label">Programa Presupuestario</label>
+                      <select name="selPP" id="selPP" class="form-control" >
+                          <option value="0">--Todos--</option>
+                          <?php foreach($PP as $pp){ ?>
+                            <option value="<?= $pp->iIdProgramaPresupuestario ?>"><?= $pp->vProgramaPresupuestario ?></option>
+                          <?php } ?>
+                      </select>
+                  </div>
+              </div>
           <div class="col mb-4">
             <div class="form-group">
               <label readonly for="tipo">Tipo<span class="text-danger">*</span></label>

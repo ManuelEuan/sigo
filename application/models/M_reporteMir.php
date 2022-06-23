@@ -328,7 +328,7 @@ return $resultado;
 
 
 
-    public function reporte_pat($anio,$eje, $dep, $whereString=null)
+    public function reporte_pat($anio,$eje, $dep, $whereString=null, $pp)
     {
       $select ='SELECT DISTINCT
       "PED2019Eje"."vEje", 
@@ -350,6 +350,7 @@ return $resultado;
       "DetalleActividad"."nPresupuestoAutorizado",
       "DetalleActividad"."nPresupuestoModificado",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
+      "ProgramaPresupuestario"."iIdProgramaPresupuestario",
       "Entregable"."vEntregable" ,
       "Entregable"."vMedioVerifica" ,
       "Reto"."vDescripcion" as reto,
@@ -374,7 +375,7 @@ return $resultado;
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
 
-      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep;
+      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep.' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
@@ -424,6 +425,23 @@ return $resultado;
           $sql = 'SELECT * FROM "UnidadMedida" WHERE "iActivo" = 1 ORDER BY "iIdUnidadMedida"'; 
         }
         return $this->db->query($sql);
+    }
+
+    function obtenerPP(){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $query = $this->db->get()->result();
+
+      return $query;
+    }
+
+    function obtenerPPporId($id){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $this->db->where('iIdProgramaPresupuestario', $id);
+      $query = $this->db->get()->row();
+
+      return $query;
     }
 }
 
