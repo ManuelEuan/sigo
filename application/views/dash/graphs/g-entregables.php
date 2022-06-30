@@ -4,14 +4,6 @@
     </div>
 </div>
 
- <div class="row">
-    <div class="col-lg-6 text-center">
-        <div id="g-avan-ent" style="max-width: 400px; max-width:100%"></div>
-    </div>
-    <div class="col-lg-6 text-center">
-        <div id="g-ejer-ent" style="max-width: 400px; max-width:100%"></div>
-    </div>
-</div>
 
 <div class="row">
     <div class="col-lg-6 text-center">

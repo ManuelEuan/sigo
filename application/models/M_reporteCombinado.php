@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
                         
-class M_reporteAct extends CI_Model {
+class M_reporteCombinado extends CI_Model {
 
     function __construct(){
     parent::__construct();
@@ -340,62 +340,68 @@ class M_reporteAct extends CI_Model {
         return $this->db->query($sql);
     }
 
-    public function reporte_pat($anio, $eje, $dep, $tabla = array(),$whereString=null)
+    public function reporte_pat($anio, $dep, $eje, $whereString=null, $mes, $pp)
     {
-      $select = 'SELECT eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado"';
+        $mes = "'month'";  
+        $coma = "','";
+        $select = 'select nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+        umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
+        (SELECT "NivelMIR"."vNivelMIR" as nivel,
+                "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
+                "Actividad"."vtipoactividad" as tipo,
+                "DimensionIndicador"."vDescripcion" as dimension,
+                "Actividad"."vActividad" as accion,
+                "Actividad"."iIdActividad" as clave,
+                "Entregable"."vEntregable" as indicador,
+                "Entregable"."nLineaBase" as meta,
+                "Periodicidad"."vPeriodicidad" as frecuencia,
+                "FormaIndicador"."vDescripcion" as operacion,
+                        string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                "UnidadMedida"."vUnidadMedida" as unidadmedida,
+                "Entregable"."vFormula" as formula,
+                "Entregable"."vMedioVerifica" as umedioverifica,
+                date_part('.$mes.',"Avance"."dFecha") as fecha,
+                "Avance"."nAvance" as avance,
+                "Dependencia"."iIdDependencia" as dep,
+                "PED2019Eje"."iIdEje" as iideje,
+                        "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
+                        "Avance"."iIdAvance" as iidavance
+                FROM "Actividad"
+                INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+                INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+                left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+                left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+                INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+                INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+                inner join "Reto" on "Actividad"."iReto"="Reto"."iIdReto"
+                inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+                left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+                left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+                LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
+                LEFT JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+                LEFT JOIN "FormaIndicador" ON "FormaIndicador"."iIdFormaInd" = "Entregable"."iIdFormaInd"
+                LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
+                left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
+                LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
 
-      if(isset($tabla['fuentes'])) $select.= ', fin."vFinanciamiento", daf.monto';
-      if(isset($tabla['ubp'])) $select.= ', pp."iNumero" AS clavepp, pp."vProgramaPresupuestario", ubp."vClave" AS claveubp, ubp."vUBP"';
-      if(isset($tabla['ped'])) $select.= ', ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds"';
-      if(isset($tabla['entregables'])) $select.= ', ent."iIdEntregable", det."iIdDetalleEntregable", ent."vEntregable", det."iPonderacion", det."nMeta", det."nMetaModificada", det."iSuspension", u."vUnidadMedida",
-        s."vSujetoAfectado", pe."vPeriodicidad", ent."iMunicipalizacion", ent."iMismosBeneficiarios"';
-      if(isset($tabla['compromisos'])) $select.= ', c."iNumero", c."vCompromiso", comp."vComponente"';
-      if(isset($tabla['metasmun'])) $select.=  ', mun."vMunicipio" municipiometa, dem."nMeta" metamunicipio, dem."nMetaModificada" metamodificadamunicipio';
-      if(isset($tabla['avances'])) $select.= ', av.*';
 
-      $from = ' FROM "Actividad" act
-        INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1
-        INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"
-        INNER JOIN "DependenciaEje" dej ON dej."iIdDependencia" = dep."iIdDependencia" AND dej."iIdEje" = '.$eje;
-
-      if($dep > 0) $from.= ' AND dej."iIdDependencia" = '.$dep;
-      $from.= ' INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje"';
-
-      if(isset($tabla['fuentes'])) $from.= ' LEFT OUTER JOIN "DetalleActividadFinanciamiento" daf ON daf."iIdDetalleActividad" = dat."iIdDetalleActividad" 
-        LEFT OUTER JOIN "Financiamiento" fin ON fin."iIdFinanciamiento" = daf."iIdFinanciamiento"';
-      if(isset($tabla['ubp'])) $from.= '  LEFT OUTER JOIN "DetalleActividadUBP" dup ON dup."iIdDetalleActividad" = dat."iIdDetalleActividad"
-        LEFT OUTER JOIN "UBP" ubp ON ubp."iIdUbp" = dup."iIdUbp"
-        LEFT OUTER JOIN "ProgramaPresupuestario" pp ON pp."iIdProgramaPresupuestario" = ubp."iIdProgramaPresupuestario"'; 
-      if(isset($tabla['ped'])) $from.= ' LEFT OUTER JOIN "ActividadLineaAccion" al ON al."iIdActividad" = act."iIdActividad"
-        LEFT OUTER JOIN "PED2019" ped ON ped."iIdLineaAccion" = al."iIdLineaAccion"';
-      if(isset($tabla['entregables'])) $from.= '  LEFT OUTER JOIN "DetalleEntregable" det ON det."iIdDetalleActividad" = dat."iIdDetalleActividad" AND det."iActivo" = 1
-        LEFT OUTER JOIN "Entregable" ent ON ent."iIdEntregable" = det."iIdEntregable" AND ent."iActivo" = 1
-        LEFT OUTER JOIN "UnidadMedida" u ON u."iIdUnidadMedida" = ent."iIdUnidadMedida" 
-        LEFT OUTER JOIN "SujetoAfectado" s ON s."iIdSujetoAfectado" = ent."iIdSujetoAfectado"
-        LEFT OUTER JOIN "Periodicidad" pe ON pe."iIdPeriodicidad" = ent."iIdPeriodicidad"';
-      if(isset($tabla['compromisos'])) $from.= ' LEFT OUTER JOIN "EntregableComponente" ec ON ec."iIdEntregable" = ent."iIdEntregable"
-        LEFT OUTER JOIN "Componente" comp ON comp."iIdComponente" = ec."iIdComponente"
-        LEFT OUTER JOIN "Compromiso" c ON c."iIdCompromiso" = comp."iIdCompromiso"';
-      if(isset($tabla['metasmun'])) $from.= ' LEFT OUTER JOIN "DetalleEntregableMetaMunicipio" dem ON dem."iIdDetalleEntregable" = det."iIdDetalleEntregable"
-        LEFT OUTER JOIN "Municipio" mun ON mun."iIdMunicipio" = dem."iIdMunicipio"';
-      
-      if(isset($tabla['avances']))
-      {
-         $from.= ' LEFT OUTER JOIN "vAvanceMunicipio" av ON av."iIdDetalleEntregable" = det."iIdDetalleEntregable"';
-      }
-
-      $whereCondition = 'WHERE'. ' dat."iAnio" = '.$anio;
-
-      if(!empty($whereString)){
-        $whereCondition = $whereCondition.' '. $whereString;
-      }
-      
-      $group_by = '';
-      
-      $sql = $select.$from.$whereCondition.$group_by;
-      $query =  $this->db->query($sql);
+          $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio;
+          if($dep != ''){
+            $weherDep = ' AND "Dependencia"."iIdDependencia" = '.$dep;
+            $where = $where.$weherDep;
+          }
+          if($pp != '' && $pp != null){ 
+            $wherePP = ' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
+            $where = $where.$wherePP;
+          }
+          
+          $gropuBy = 'GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
+          group by  nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+          umedioverifica, fecha, dep, iideje';
+        $sql = $select.$where.$gropuBy;
+        $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
-      return $query;
+        return $query;
     }
 
     function catalogos($tipo)
@@ -435,6 +441,50 @@ class M_reporteAct extends CI_Model {
         }
         return $this->db->query($sql);
     }
+
+    public function obtenerDep($dep){
+      $this->db->select('vDependencia', 'vGastoOrden', 'vGrupoPrograma', 'vModalidad', 'vGrupoGasto');
+      $this->db->from('Dependencia');
+      $this->db->where('iIdDependencia', $dep);
+      $query =  $this->db->get();
+		  $resultado = $query->row();
+      return $resultado;
+    }
+
+    public function obtenerEje($eje){
+      $this->db->select();
+      $this->db->from('PED2019Eje');
+      $this->db->where('iIdEje', $eje);
+      $query =  $this->db->get();
+		  $resultado = $query->row();
+      return $resultado;
+    }
+
+    public function obtenerObj($eje){
+      $sql = 'select "vEje", "vObjetivo", "vEstrategia" From "PED2019" Where "iIdEje" = '.$eje;
+      
+      $query =  $this->db->query($sql);
+		  $resultado = $query->row();
+      return $resultado;
+  
+     }
+     function obtenerPP(){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $query = $this->db->get()->result();
+
+      return $query;
+    }
+
+    function obtenerPPporId($id){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $this->db->where('iIdProgramaPresupuestario', $id);
+      $query = $this->db->get()->row();
+
+      return $query;
+    }
+
 }
 
 
