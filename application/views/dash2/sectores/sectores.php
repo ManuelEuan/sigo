@@ -48,25 +48,25 @@
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">$0</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">$<?=number_format($apro_totales, 2)?></h1>
                         <h5 style="font-weight:500;">Autorizados</h5></div>
                 </div>
             </div>
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtGastado">$0</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtGastado">$<?=Decimal($ejer_totales)?></h1>
                         <h5 style="font-weight:500;">Gastados</h5></div>
                 </div>
             </div>
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtPorcentaje">0%</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtPorcentaje"><?=$papro_totales?> %</h1>
                         <h5 style="font-weight:500;">%</h5></div>
                 </div>
             </div>
-        </div>    
+        </div>
         
         <div class="row">
             <?php
@@ -147,27 +147,17 @@
                                     <div class="col-10"><hr style="background-color:#000000;"></div>
                                 </div>
 
+                                
                                 <div class="row text-center mb-2">
-                                    <div class="col-4">
-                                        <h4 class="mb-0" style="font-weight:700"><?=$value['retos']?> </h4>
-                                        <span class="font-14">Retos</span></div>
-
-                                    <div class="col-4">
-
-                                    </div>
-
                                     <div class="col-4">
                                         <h4 class="mb-0" style="font-weight:700"><?=$value['pat']?> </h4>
                                         <span class="font-14">Dependencias y Entidades</span>
                                     </div>
-                                </div>
-                                
-                                <div class="row text-center mb-2">
                                     
-                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
+                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['actividades']?></h4>
                                         <span class="font-14">Acciones</span>
                                     </div>
-                                    <div class="col-6"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
+                                    <div class="col-4"><h4 class="m-b-0" style="font-weight:700"><?=$value['entregables']?> </h4>
                                         <span class="font-14">Indicadores</span>
                                     </div>
                                 </div>
@@ -188,20 +178,16 @@
                                 </div> 
                                 
                                 <div class="row mb-2">
-                                     <div class="col-3 text-center mb-2">
-                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres'])?> </h4>
+                                     <div class="col-4 text-center mb-2">
+                                        <h4 class="m-b-0" style="font-weight:700"><?=number_format($value['hombres'], 0)?> </h4>
                                         <span class="font-14">Hombres</span>
                                     </div>
-                                    <div class="col-3 text-center mb-2">
-                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['mujeres'])?> </h4>
+                                    <div class="col-4 text-center mb-2">
+                                        <h4 class="m-b-0" style="font-weight:700"><?=number_format($value['mujeres'], 0)?> </h4>
                                         <span class="font-14">Mujeres</span>
                                     </div>
-                                    <div class="col-3 text-center mb-2">
-                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['empresas'])?></h4>
-                                        <span class="font-14">Empresas</span>
-                                    </div>
-                                    <div class="col-3 text-center mb-2">
-                                        <h4 class="m-b-0" style="font-weight:700"><?=intval($value['hombres']) + intval($value['mujeres'])?></h4>
+                                    <div class="col-4 text-center mb-2">
+                                        <h4 class="m-b-0" style="font-weight:700"><?=number_format(intval($value['hombres']) + intval($value['mujeres']), 0)?></h4>
                                         <span class="font-14">Totales</span>
                                     </div>
                                 </div>  
@@ -222,7 +208,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        obtenerPOAS();
+        //obtenerPOAS();
         $('.count').each(function () {
             $(this).prop('Counter',0).animate({
                 Counter: $(this).text()

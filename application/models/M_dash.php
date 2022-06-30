@@ -908,12 +908,13 @@ class M_dash extends CI_Model {
 	}
 
 	function avance_por_dependencia($idDePendencia, $anio){
-		$sql = 'SELECT a."nAvance", a."nBeneficiariosH", a."nBeneficiariosM", a."nDiscapacitadosH",a."nDiscapacitadosM",a."nLenguaH",a."nLenguaM",a."nTerceraEdadH",a."nTerceraEdadM",
-			a."nAdolescenteH",a."nAdolescenteM" FROM "Avance" a 
-			INNER JOIN "DetalleEntregable" de on de."iIdDetalleEntregable" = a."iIdDetalleEntregable" 
-			INNER JOIN "DetalleActividad" da on da."iIdDetalleActividad" =  de."iIdDetalleActividad" AND da."iActivo" = 1 AND da."iSuspendida" = 0 AND da."iAnio" = '.$anio.'
-			INNER JOIN "Actividad" act on act."iIdActividad" = da."iIdActividad"
-			where a."iActivo" = 1 AND a."iAprobado" = 1 AND act."iIdDependencia" ='.$idDePendencia;
+			$sql = 'SELECT sum(a."nAvance") as nAvance, max(a."nBeneficiariosH") as nBeneficiariosH, max(a."nBeneficiariosM") as nBeneficiariosM, max(a."nDiscapacitadosH") as nDiscapacitadosH,max(a."nDiscapacitadosM") as nDiscapacitadosM,max(a."nLenguaH") nLenguaH ,max(a."nLenguaM") nLenguaM,max(a."nTerceraEdadH") nTerceraEdadH,max(a."nTerceraEdadM") nTerceraEdadM,
+            max(a."nAdolescenteH") nAdolescenteH,max(a."nAdolescenteM") nAdolescenteM, da."iIdActividad" FROM "Avance" a
+            INNER JOIN "DetalleEntregable" de on de."iIdDetalleEntregable" = a."iIdDetalleEntregable"
+            INNER JOIN "DetalleActividad" da on da."iIdDetalleActividad" =  de."iIdDetalleActividad" AND da."iActivo" = 1 AND da."iSuspendida" = 0 AND da."iAnio" = '.$anio.'
+            INNER JOIN "Actividad" act on act."iIdActividad" = da."iIdActividad"
+            where a."iActivo" = 1 AND a."iAprobado" = 1 AND act."iIdDependencia" ='.$idDePendencia.'
+			GROUP BY da."iIdActividad"';
 			return $this->db->query($sql)->result();
 	}
 

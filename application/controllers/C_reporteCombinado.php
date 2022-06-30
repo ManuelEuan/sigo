@@ -4,16 +4,19 @@ require_once APPPATH."/third_party/Spout/Autoloader/autoload.php";
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Row;
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Common\Entity\Style\Color;
 
 
-class C_reporte extends CI_Controller {
+class C_reporteCombinado extends CI_Controller {
     public function __construct()
     {
         parent::__construct();
         session_start();
         $this->load->library('excel');
         $this->load->helper('url');
-        $this->load->model('M_reporteAct');
+        $this->load->model('M_reporteCombinado');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
     }
@@ -42,14 +45,14 @@ class C_reporte extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
-        $this->load->view('PAT/inicio_PAT', $data);
-        //$this->load->view('reporte/actividad', $data);
+        $data['PP'] = $this->M_reporteCombinado->obtenerPP();
+        $this->load->view('reporte/reporteCombinado', $data);
     }
 
     public function dependencias(){
         if($_REQUEST['id']){
             $id = $this->input->post('id',true);
-            $respuesta = $this->M_reporteAct->dependencias($id);
+            $respuesta = $this->M_reportePOA->dependencias($id);
             echo '<option value="0">Seleccione..</option>';
             if($respuesta!=false)
             {
@@ -65,11 +68,11 @@ class C_reporte extends CI_Controller {
         ini_set('max_execution_time', 600); // 5 Minutos máximo
         $anio = $this->input->post('anio',true);
         $eje = $this->input->post('selEje',true);
-        $dep = $this->input->post('selDep',true);
+        $mes = $this->input->post('mes',true);
+        $dep = $this->input->post('selDep',true) ?: 0;
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
-
-	
+        $pp = $this->input->post('selPP',true);
 
         if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
         if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
@@ -81,207 +84,457 @@ class C_reporte extends CI_Controller {
         $group = $this->input->post('agrupar',true);
         $whereString = '';
         if((int)$this->input->post('mes')  > 0){
-            $whereString = $whereString.'AND EXTRACT(MONTH from dat."dInicio")='. (int)$this->input->post('mes',true);
+            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
         }
         
 
-        $mrep = new M_reporteAct();
-        
-        $query = $mrep->reporte_pat($anio,$eje,$dep,$tabla,$whereString);
+        $mrep = new M_reporteCombinado();
+        if($pp == 0){
+            $ppFinal = '';
+        }else{
+            $ppFinal = $pp;
+        }
+        $query = $mrep->reporte_pat($anio,$dep,$eje,$whereString, $mes, $ppFinal);
+        $proPre = $mrep->obtenerPPporId($pp);
+
+        $fechaactual = date('m-d-Y h:i:s a');
 
         if($query->num_rows() > 0)
         {
 
             $records = $query->result(); 
-            $ruta = 'public/reportes/actividadesBD.xlsx';
+            $ruta = 'public/reportes/reporteCombinado.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
-            $writer->openToFile($ruta);            
+            $writer->openToFile($ruta); 
+
+            $obtenerDep = $mrep->obtenerDep($dep);
+
+            $obtenerEje = $mrep->obtenerObj($eje); 
+            
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+            
+            $tituloexcel = (new StyleBuilder())
+            ->setBackgroundColor(Color::WHITE)
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(20)
+            ->build();
+
+            $azulStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+            $cells =[
+                WriterEntityFactory::createCell('Organismo',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vDependencia),              
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$titulo);
+            $writer->addRow($singleRow); 
+
+            $cells =[
+                WriterEntityFactory::createCell('Programa Presupuestario',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario),           
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow); 
+
+            $rowStyle = (new StyleBuilder())
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
+                            ->build();
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Gasto)',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vGrupoGasto), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Programa)',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vGrupoPrograma), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Modalidad)',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vModalidad), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Gasto de Orden',$azulStyle),
+                WriterEntityFactory::createCell($obtenerDep->vGastoOrden), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Eje',$azulStyle),
+                WriterEntityFactory::createCell($obtenerEje->vEje),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Objetivo de Gobierno',$azulStyle),
+                WriterEntityFactory::createCell($obtenerEje->vObjetivo),
+                
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+
+            $cells =[
+                WriterEntityFactory::createCell(' ',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Estrategia',$azulStyle),
+                
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell(' ',$azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Fecha',$azulStyle),
+                WriterEntityFactory::createCell($fechaactual),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell(''),
+                WriterEntityFactory::createCell('Reporte Combinado',$tituloexcel),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell(''),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell('Elementos', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell('Avance', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+                WriterEntityFactory::createCell(' ', $azulStyle),
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $writer->addRow($singleRow);
+            
 			
             $cells = [
-                    WriterEntityFactory::createCell('Eje'),
-                    WriterEntityFactory::createCell('Dependencia'),
-                    WriterEntityFactory::createCell('ID Actividad'),
-                    WriterEntityFactory::createCell('Año'),
-                    WriterEntityFactory::createCell('Actividad'),
-                    WriterEntityFactory::createCell('Descripción'),
-                    WriterEntityFactory::createCell('Objetivo'),
-                    WriterEntityFactory::createCell('Población objetivo'),
-                    WriterEntityFactory::createCell('Fecha de inicio'),
-                    WriterEntityFactory::createCell('Fecha de fin'),
-                    WriterEntityFactory::createCell('% de cumplimiento'),
-                    WriterEntityFactory::createCell('Ayuda a reactivar la economía'),
-                    WriterEntityFactory::createCell('Presupuesto modificado'),
-                    WriterEntityFactory::createCell('Presupuesto Autorizado por la Secretaría de Finanzas ')
+                    WriterEntityFactory::createCell('Nivel'),
+                    WriterEntityFactory::createCell('Resumen Presupuestario'),
+                    WriterEntityFactory::createCell('Tipo'),
+                    WriterEntityFactory::createCell('Dimension'),
+                    WriterEntityFactory::createCell('Accion'),
+                    WriterEntityFactory::createCell('Clave'),
+                    WriterEntityFactory::createCell('Indicador'),
+                    WriterEntityFactory::createCell('Meta'),
+                    WriterEntityFactory::createCell('Frecuencia'),
+                    WriterEntityFactory::createCell('Operacion'),
+                    WriterEntityFactory::createCell('Variable'),
+                    WriterEntityFactory::createCell('Unidad de medida (Variable)'),
+                    WriterEntityFactory::createCell('Formula'),
+                    WriterEntityFactory::createCell('Medio Verificacion'),
+                    WriterEntityFactory::createCell('ENE'),
+                    WriterEntityFactory::createCell('FEB'),
+                    WriterEntityFactory::createCell('MAR'),
+                    WriterEntityFactory::createCell('ABR'),
+                    WriterEntityFactory::createCell('MAY'),
+                    WriterEntityFactory::createCell('JUN'),
+                    WriterEntityFactory::createCell('JUL'),
+                    WriterEntityFactory::createCell('AGO'),
+                    WriterEntityFactory::createCell('SEP'),
+                    WriterEntityFactory::createCell('OCT'),
+                    WriterEntityFactory::createCell('NOV'),
+                    WriterEntityFactory::createCell('DIC'),
+                    WriterEntityFactory::createCell('Total acomulado'),
                 ];
 
-            if(isset($tabla['fuentes']))
-            {
-                $cells[] = WriterEntityFactory::createCell('Fuente de financiamiento');
-                $cells[] = WriterEntityFactory::createCell('Monto de financimiento');
-            }
-
-
-            if(isset($tabla['ubp']))
-            {
-                $cells[] = WriterEntityFactory::createCell('Clave PP');
-                $cells[] = WriterEntityFactory::createCell('Nombre PP');
-                $cells[] = WriterEntityFactory::createCell('Clave UBP');
-                $cells[] = WriterEntityFactory::createCell('Nombre UBP');
-            }
-
-            if(isset($tabla['ped']))
-            {
-                $cells[] = WriterEntityFactory::createCell('Eje');
-                $cells[] = WriterEntityFactory::createCell('Tema');
-                $cells[] = WriterEntityFactory::createCell('Objetivo');
-                $cells[] = WriterEntityFactory::createCell('Estrategia');
-                $cells[] = WriterEntityFactory::createCell('Línea de acción');
-            }
-
-            if(isset($tabla['entregables']))
-            {
-                $cells[] = WriterEntityFactory::createCell('ID Entregable');
-                $cells[] = WriterEntityFactory::createCell('ID Detalle Entregable');
-                $cells[] = WriterEntityFactory::createCell('Entregable');
-                $cells[] = WriterEntityFactory::createCell('Ponderación');
-                $cells[] = WriterEntityFactory::createCell('Meta');
-                $cells[] = WriterEntityFactory::createCell('Meta modificada');
-                $cells[] = WriterEntityFactory::createCell('Unidad de medida');
-                $cells[] = WriterEntityFactory::createCell('Suspendido');
-                $cells[] = WriterEntityFactory::createCell('Sujeto afectado');
-                $cells[] = WriterEntityFactory::createCell('Periodicidad');
-                $cells[] = WriterEntityFactory::createCell('Municipalizable');
-                $cells[] = WriterEntityFactory::createCell('Entrega a los mismos beneficiarios');
-            }
-
-            if(isset($tabla['compromisos']))
-            {
-                $cells[] = WriterEntityFactory::createCell('# Compromiso');
-                $cells[] = WriterEntityFactory::createCell('Compromiso');
-                $cells[] = WriterEntityFactory::createCell('Componente');
-            }
-
-            if(isset($tabla['metasmun']))
-            {
-                $cells[] = WriterEntityFactory::createCell('Municipio');
-                $cells[] = WriterEntityFactory::createCell('Meta municipio');
-                $cells[] = WriterEntityFactory::createCell('Meta modificada municipio');
-            }
-
-            if(isset($tabla['avances']))
-            {
-                $cells[] = WriterEntityFactory::createCell('Municipio del avance');
-                $cells[] = WriterEntityFactory::createCell('Fecha');
-                $cells[] = WriterEntityFactory::createCell('Aprobado');
-                $cells[] = WriterEntityFactory::createCell('Avance');
-                $cells[] = WriterEntityFactory::createCell('Ejercido');
-                $cells[] = WriterEntityFactory::createCell('Beneficiarios H');
-                $cells[] = WriterEntityFactory::createCell('Beneficiarios M');
-                $cells[] = WriterEntityFactory::createCell('Discapacitados H');
-                $cells[] = WriterEntityFactory::createCell('Discapacitados M');
-                $cells[] = WriterEntityFactory::createCell('Mayahablentes H');
-                $cells[] = WriterEntityFactory::createCell('Mayahablantes M');
-            }
-		
 	
             // Agregamos la fila de encabezados
             $rowStyle = (new StyleBuilder())
-                            ->setFontBold()
+                            ->setBackgroundColor(Color::BLUE)
+                            ->setFontColor(Color::WHITE)
+                            ->setFontItalic()
                             ->build();
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
+            //avances por mes
+            $ENE = 0;
+            $FEB = 0;
+            $MAR = 0;
+            $ABR = 0;
+            $MAY = 0;
+            $JUN = 0;
+            $JUL = 0;
+            $AGO = 0;
+            $SEP = 0;
+            $OCT = 0;
+            $NOV = 0;
+            $DIC = 0;
+
             foreach ($records as $rec)
             {
                 $cells = [
-                    WriterEntityFactory::createCell($rec->ejedependencia),
-                    WriterEntityFactory::createCell($rec->vDependencia),
-                    WriterEntityFactory::createCell((int)$rec->iIdActividad),
-                    WriterEntityFactory::createCell((int)$rec->iAnio),
-                    WriterEntityFactory::createCell($rec->vActividad),
-                    WriterEntityFactory::createCell($rec->vDescripcion),
-                    WriterEntityFactory::createCell($rec->objetivoact),
-                    WriterEntityFactory::createCell($rec->vPoblacionObjetivo),
-                    WriterEntityFactory::createCell($rec->dInicio),
-                    WriterEntityFactory::createCell($rec->dFin),
-                    WriterEntityFactory::createCell((int)round($rec->nAvance)),
-                    WriterEntityFactory::createCell($rec->iReactivarEconomia),
-                    WriterEntityFactory::createCell((float)$rec->nPresupuestoModificado),
-                    WriterEntityFactory::createCell((float)$rec->nPresupuestoAutorizado)
+                    WriterEntityFactory::createCell($rec->nivel),
+                    WriterEntityFactory::createCell($rec->resumennarrativo),
+                    WriterEntityFactory::createCell($rec->tipo),
+                    WriterEntityFactory::createCell($rec->dimension),
+                    WriterEntityFactory::createCell($rec->accion),
+                    WriterEntityFactory::createCell($rec->clave),
+                    WriterEntityFactory::createCell($rec->indicador),
+                    WriterEntityFactory::createCell($rec->meta),
+                    WriterEntityFactory::createCell($rec->frecuencia),
+                    WriterEntityFactory::createCell($rec->operacion),
+                    WriterEntityFactory::createCell($rec->vvariable),
+                    WriterEntityFactory::createCell($rec->unidadmedida),
+                    WriterEntityFactory::createCell($rec->formula),
+                    WriterEntityFactory::createCell($rec->umedioverifica),
                 ];
+                
+                if($rec->fecha == 1){
+                    $ENE = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
 
-                if(isset($tabla['fuentes']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->vFinanciamiento);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->monto);
                 }
-
-                if(isset($tabla['ubp']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->clavepp);
-                    $cells[] = WriterEntityFactory::createCell($rec->vProgramaPresupuestario);
-                    $cells[] = WriterEntityFactory::createCell($rec->claveubp);
-                    $cells[] = WriterEntityFactory::createCell($rec->vUBP);
+                if($rec->fecha == 2){
+                    $FEB = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell($rec->avance);
                 }
+                if($rec->fecha == 3){
+                    $MAR = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
 
-                if(isset($tabla['ped']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->vEje);
-                    $cells[] = WriterEntityFactory::createCell($rec->vTema);
-                    $cells[] = WriterEntityFactory::createCell($rec->vObjetivo);
-                    $cells[] = WriterEntityFactory::createCell($rec->vEstrategia);
-                    $cells[] = WriterEntityFactory::createCell($rec->vLineaAccion);
                 }
-
-                if(isset($tabla['entregables']))
-                {
-                    $rec->iSuspension = ($rec->iSuspension == 1) ? 'Sí':'No';
-                    $rec->iMunicipalizacion = ($rec->iMunicipalizacion == 1) ? 'Sí':'No';
-                    $rec->iMismosBeneficiarios = ($rec->iMismosBeneficiarios == 1) ? 'Sí':'No';
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->iIdEntregable);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->iIdDetalleEntregable);
-                    $cells[] = WriterEntityFactory::createCell($rec->vEntregable);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->iPonderacion);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->nMeta);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->nMetaModificada);
-                    $cells[] = WriterEntityFactory::createCell($rec->vUnidadMedida);
-                    $cells[] = WriterEntityFactory::createCell($rec->iSuspension);
-                    $cells[] = WriterEntityFactory::createCell($rec->vSujetoAfectado);
-                    $cells[] = WriterEntityFactory::createCell($rec->vPeriodicidad);
-                    $cells[] = WriterEntityFactory::createCell($rec->iMunicipalizacion);
-                    $cells[] = WriterEntityFactory::createCell($rec->iMismosBeneficiarios);
+                if($rec->fecha == 4){
+                    $ABR = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
                 }
-
-                if(isset($tabla['compromisos']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->iNumero);
-                    $cells[] = WriterEntityFactory::createCell($rec->vCompromiso);
-                    $cells[] = WriterEntityFactory::createCell($rec->vComponente);
+                if($rec->fecha == 5){
+                    $MAY = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
                 }
-
-                if(isset($tabla['metasmun']))
-                {
-                    $cells[] = WriterEntityFactory::createCell($rec->municipiometa);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->metamunicipio);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->metamodificadamunicipio);
+                if($rec->fecha == 6){
+                    $JUN = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
                 }
-
-                if(isset($tabla['avances']))
-                {
-                    $rec->aprobado = ($rec->aprobado == 1) ? 'Sí':'No';
-                    $cells[] = WriterEntityFactory::createCell($rec->municipioavance);
-                    $cells[] = WriterEntityFactory::createCell($rec->fecha);
-                    $cells[] = WriterEntityFactory::createCell($rec->aprobado);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->ejercido);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->benh);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->benm);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->disch);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->discm);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->lengh);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->lengm);
+                if($rec->fecha == 7){
+                    $JUL = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
                 }
-
+                if($rec->fecha == 8){
+                    $AGO = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                }
+                if($rec->fecha == 9){
+                    $SEP = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                }
+                if($rec->fecha == 10){
+                    $OCT = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                }
+                if($rec->fecha == 11){
+                    $NOV = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                }
+                if($rec->fecha == 12){
+                    $DIC = (float)$rec->avance;
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell('');
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
+                }
+                //$total = $ENE + $FEB + $MAR + $ABR + $MAY + $JUN + $JUL + $AGO + $SEP + $OCT + $NOV + $DIC;
+                
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
             }

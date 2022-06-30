@@ -308,22 +308,19 @@ class C_dash2 extends CI_Controller {
                 foreach($dependencias as $dependencia){
                     $beneficiarios   =  $this->M_dash->avance_por_dependencia($dependencia->iIdDependencia, $an);
                     foreach($beneficiarios as $beneficiario){
-                        $data['hombres'] = $data['hombres']  
-                            + $beneficiario->nBeneficiariosH
-                            + $beneficiario->nDiscapacitadosH
-                            + $beneficiario->nLenguaH
-                            + $beneficiario->nTerceraEdadH
-                            + $beneficiario->nAdolescenteH;
+                        $data['hombres'] = $data['hombres'] 
+                            + $beneficiario->nbeneficiariosh
+                            + $beneficiario->ndiscapacitadosh
+                            + $beneficiario->nlenguah
+                            + $beneficiario->nterceraedadh
+                            + $beneficiario->nadolescenteh;
 
                         $data['mujeres'] = $data['mujeres'] 
-                            + $beneficiario->nBeneficiariosM
-                            + $beneficiario->nDiscapacitadosM
-                            + $beneficiario->nLenguaM
-                            + $beneficiario->nTerceraEdadM
-                            + $beneficiario->nAdolescenteM;
-
-
-
+                            + $beneficiario->nbeneficiariosm
+                            + $beneficiario->ndiscapacitadosm
+                            + $beneficiario->nlenguam
+                            + $beneficiario->nterceraedadm
+                            + $beneficiario->nadolescentem;
                     }
                 }
                 $retos = $this->M_dash->retos_por_eje($info->iIdEje);

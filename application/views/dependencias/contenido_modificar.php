@@ -42,6 +42,60 @@
 
                 <div class="form-row">
                     <div class="col-12">
+                        <label for="validationCustom04">Gasto de Orden</label>
+                        <select class="form-control" name="gastoOrden" id="gastoOrden" required>
+                            <option value="">--Selecccione--</option>
+                            <option value="Social" <?php if($consulta->vGastoOrden == 'Social') echo 'selected'; ?> >Social</option>
+                            <option value="Administrativo" <?php if($consulta->vGastoOrden == 'Administrativo') echo 'selected'; ?> >Administrativo</option>
+                        </select> 
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>                     
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <label for="validationCustom04">Grupo de Programa</label>
+                        <select class="form-control" name="grupoPrograma" id="grupoPrograma" required>
+                            <option value="">--Selecccione--</option>
+                            <option value="Desempeño de las Funciones" <?php if($consulta->vGrupoPrograma == 'Desempeño de las Funciones') echo 'selected'; ?>>Desempeño de las Funciones</option>
+                        </select> 
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>                     
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <label for="validationCustom04">Grupo de Gasto</label>
+                        <select class="form-control" name="grupoGasto" id="grupoGasto" required>
+                            <option value="">--Selecccione--</option>
+                            <option value="Programable" <?php if($consulta->vGrupoGasto == 'Programable') echo 'selected'; ?>>Programable</option>
+                        </select> 
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>                     
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12">
+                        <label for="validationCustom04">Modalidad</label>
+                        <select class="form-control" name="modalidad" id="modalidad" required>
+                            <option value="">--Selecccione--</option>
+                            <option value="B - Procesión de bienes públicos" <?php if($consulta->vModalidad == 'B - Procesión de bienes públicos') echo 'selected'; ?>>B - Procesión de bienes públicos</option>
+                            <option value="E - Presentación de servicios públicos" <?php if($consulta->vModalidad == 'E - Presentación de servicios públicos') echo 'selected'; ?>>E - Presentación de servicios públicos</option>
+                            <option value="F - Programación y fomento" <?php if($consulta->vModalidad == 'F - Programación y fomento') echo 'selected'; ?>>F - Programación y fomento</option>
+                            <option value="G - Regulación y supervisión" <?php if($consulta->vModalidad == 'G - Regulación y supervisión') echo 'selected'; ?>>G - Regulación y supervisión </option>
+                            <option value="P - Planeación, formulación, implementación, seguimiento y evaluación de políticas públicas" <?php if($consulta->vModalidad == 'P - Planeación, formulación, implementación, seguimiento y evaluación de políticas públicas') echo 'selected'; ?>>P - Planeación, formulación, implementación, seguimiento y evaluación de políticas públicas</option>
+                        </select> 
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>                     
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-12">
                         <label for="">Área responsable</label>
                         <div class="row">
                             <div class="col-11">
