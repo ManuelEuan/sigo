@@ -44,6 +44,7 @@ class C_rclinica extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
+        $data['PP'] = $this->M_reporteClinicas->obtenerPP();
         $this->load->view('reporte/clinica', $data);
     }
 
@@ -67,6 +68,7 @@ class C_rclinica extends CI_Controller {
         $anio = $this->input->post('anio',true);
         $eje = $this->input->post('selEje',true);
         $dep = $this->input->post('selDep',true);
+        $pp = $this->input->post('selPP',true);
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
@@ -122,7 +124,10 @@ class C_rclinica extends CI_Controller {
             $obtenerDep = $mrep->obtenerDep($dep);
 
             $obtenerEje = $mrep->obtenerEje($eje); 
-                
+
+            $proPre = $mrep->obtenerPPporId($pp);
+            
+
             $rowStyle = (new StyleBuilder())
                             ->setBackgroundColor(Color::BLUE)
                             ->setFontColor(Color::WHITE)
@@ -155,9 +160,10 @@ class C_rclinica extends CI_Controller {
                             ->build();
 
             $cells =[
-                WriterEntityFactory::createCell('Programa Presupuestario'),
+                WriterEntityFactory::createCell('Programa Presupuestario',$rowStyle),
+                WriterEntityFactory::createCell($proPre->vProgramaPresupuestario),
             ];
-            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
@@ -194,7 +200,6 @@ class C_rclinica extends CI_Controller {
            
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
-                    WriterEntityFactory::createCell('Pograma Presupuestario',$blueStyle),
                     WriterEntityFactory::createCell('Descripción del PP',$blueStyle),
                     WriterEntityFactory::createCell('Resumen Narrativo',$blueStyle),
                     WriterEntityFactory::createCell('Acción o Proyecto',$blueStyle),
@@ -222,7 +227,6 @@ class C_rclinica extends CI_Controller {
 
                     $cells = [
                         WriterEntityFactory::createCell($resultado[0]->vNivelMIR),
-                        WriterEntityFactory::createCell($resultado[0]->vProgramaPresupuestario),
                         WriterEntityFactory::createCell($resultado[0]->vDescripcion),
                         WriterEntityFactory::createCell($resultado[0]->vNombreResumenNarrativo),
                         WriterEntityFactory::createCell($resultado[0]->vActividad),
