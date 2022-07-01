@@ -98,6 +98,7 @@ class C_reporteCombinado extends CI_Controller {
         $proPre = $mrep->obtenerPPporId($pp);
 
         $fechaactual = date('m-d-Y h:i:s a');
+        $obtenerDep = $mrep->obtenerDep($dep);
 
         if($query->num_rows() > 0)
         {
@@ -107,7 +108,7 @@ class C_reporteCombinado extends CI_Controller {
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta); 
 
-            $obtenerDep = $mrep->obtenerDep($dep);
+            
 
             $obtenerEje = $mrep->obtenerObj($eje); 
             
