@@ -443,7 +443,7 @@ class M_reporteCombinado extends CI_Model {
     }
 
     public function obtenerDep($dep){
-      $this->db->select('vDependencia', 'vGastoOrden', 'vGrupoPrograma', 'vModalidad', 'vGrupoGasto');
+      $this->db->select();
       $this->db->from('Dependencia');
       $this->db->where('iIdDependencia', $dep);
       $query =  $this->db->get();
