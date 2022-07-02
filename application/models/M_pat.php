@@ -828,9 +828,17 @@ class M_pat extends CI_Model
 
 	function obtenerSeleccionados($id){
 		if($id != ''){
-			$sql = 'SELECT "vClavePOA" FROM "DetalleActividad" WHERE "iIdDetalleActividad" ='.$id;
+			$sql = 'SELECT * FROM "DetalleActividad" detAct
+            INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
+			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
+			INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"  
+			WHERE detAct."iIdDetalleActividad" = '.$id.'
+			LIMIT 1';
 		}else{
-			$sql = 'SELECT "vClavePOA" FROM "DetalleActividad" WHERE "vClavePOA" IS NOT NULL';
+			$sql = 'SELECT * FROM "DetalleActividad" detAct
+            INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
+			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
+			INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"';
 		}
 		return $this->db->query($sql)->result();
 	}
