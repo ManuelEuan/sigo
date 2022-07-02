@@ -228,17 +228,16 @@ class C_pat extends CI_Controller
             $dependencia            = $arrayDependencias[0]->vDependencia;
 
 
-            $catalogosPOA   = $this->validarListaPOAEdit();
+            $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
             $dependencia    = $this->eliminar_tildes($dependencia);
             
-            foreach ($catalogosPOA as $value) {
-                $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
+            foreach ($catalogosPOA->datos as $value) {
+                $valorFinanzas = $this->eliminar_tildes($value->dependenciaEjecutora);
                 if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
-                    $selected =  $value['numeroProyecto'] == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
-                    $catPoas .= '<option value="'.$value['numeroProyecto'].'" '.$selected.'>'.$value['nombreProyecto'].'</option>'; 
+                    $selected =  $value->numeroProyecto == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
+                    $catPoas .= '<option value="'.$value->numeroProyecto.'" '.$selected.'>'.$value->nombreProyecto.'</option>'; 
                 }
             }
-            
             $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
             $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
             $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
@@ -247,6 +246,7 @@ class C_pat extends CI_Controller
            
             $seg = new Class_seguridad();
             $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
+            $data3['catalogosPOA']  = $catalogosPOA;
             $data3['catPoas']       = $catPoas;
             $this->load->view('PAT/editar_actividad', $data3);
         }
