@@ -255,7 +255,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                         <div id="divCatPoasEdit" class="col-sm-4 col-sm-3">
                                             <input type="hidden" id="valueTipo" value=" <?= $consulta[0]->vtipoactividad ?>">
                                             <label for="tipoActividad">POAS <span class="text-danger">*</span></label>
-                                            <select class="form-control" aria-invalid="false" id="catPoas" required onchange="setMontoPOA(this)">
+                                            <select class="form-control" aria-invalid="false" id="catPoas" name="catPoas" required onchange="setMontoPOA(this)">
                                                 <option value="">--Seleccione--</option>
                                                 <?= $catPoas ?>
                                             </select>
@@ -1143,4 +1143,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             }
         }
     }
+
+    
 </script>

@@ -42,8 +42,7 @@ class C_reporte extends CI_Controller {
         {
             $dep = $_SESSION[PREFIJO.'_iddependencia'];
         }
-        $this->load->view('PAT/inicio_PAT', $data);
-        //$this->load->view('reporte/actividad', $data);
+        $this->load->view('reporte/actividad', $data);
     }
 
     public function dependencias(){
