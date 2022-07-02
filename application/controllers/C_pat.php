@@ -2062,7 +2062,6 @@ class C_pat extends CI_Controller
                     'dependenciaEjecutora' => $value['dependenciaEjecutora'],
                     'nombreProyecto' => $value['nombreProyecto'],
                     'fechaAprobacion' => $value['fechaAprobacion']]);
-                    break;
                 }
             }
             
@@ -2120,7 +2119,6 @@ class C_pat extends CI_Controller
                     'dependenciaEjecutora' => $value['dependenciaEjecutora'],
                     'nombreProyecto' => $value['nombreProyecto'],
                     'fechaAprobacion' => $value['fechaAprobacion']]);
-                    break;
                 }
             }
             
