@@ -247,7 +247,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                            
                                         <option value="">--Seleccione--</option>
                                             <option value="gestion" <?php if($consulta[0]->vtipoactividad == 'gestion') echo("selected") ?> >Gestion</option>
-                                            <option value="poa" <?php if($consulta[0]->vtipoactividad == 'poa') echo("selected") ?>>POA</option>
+                                            <option value="poa" <?php if($consulta[0]->vtipoactividad == 'poa') echo("selected") ?>>Estrategia</option>
                                         </select>
                                     </div>
 
@@ -255,7 +255,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                         <div id="divCatPoasEdit" class="col-sm-4 col-sm-3">
                                             <input type="hidden" id="valueTipo" value=" <?= $consulta[0]->vtipoactividad ?>">
                                             <label for="tipoActividad">POAS <span class="text-danger">*</span></label>
-                                            <select class="form-control" aria-invalid="false" id="catPoas" required onchange="setMontoPOA(this)">
+                                            <select class="form-control" aria-invalid="false" id="catPoas" name="catPoas" required onchange="setMontoPOA(this)">
                                                 <option value="">--Seleccione--</option>
                                                 <?= $catPoas ?>
                                             </select>
@@ -1085,8 +1085,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 dependenciaID   = $('#iddependenciaSesion').val();
             }
 
-            console.log("dependenciaID",dependenciaID);
-            console.log("arrayDep",arrayDep);
             arrayDep.forEach(element => {
                 if(element.id == dependenciaID) {
                     nombreDep =  removeAccents(element.valor);
@@ -1096,7 +1094,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             $("#mostrarPOAS").addClass("col-sm-4");
             html = `<div id="divCatPoas">
                         <label for="tipoActividad">POAS <span class="text-danger">*</span></label>
-                        <select class="form-control" aria-invalid="false" id="catPoas" required onchange="setMontoPOA(this)">
+                        <select class="form-control" aria-invalid="false" id="catPoas" name="catPoas" required onchange="setMontoPOA(this)">
                             <option value="">--Seleccione--</option>
                         </select>
                         <div class="invalid-feedback">Este campo no puede estar vacio.</div>
@@ -1105,16 +1103,18 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             $("#mostrarPOAS").html(html);
             
             if(peticion){
+                var id = $('#id').val();
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>C_pat/getCatalogoPOA",
+                    url: "<?= base_url() ?>C_pat/validarListaPOA",
+                    data: {id:id},
                     success: function(resp) {
                         //console.log("respuesta",resp);
                          //console.log("respuesta", $("#catPoas"));
                         let response = JSON.parse(resp);
-                        proyectos    = response.datos;
+                        proyectos    = response;
     
-                        response.datos.forEach((value) => {
+                        response.forEach((value) => {
                             let nombreFinanzas = removeAccents(value.dependenciaEjecutora);
                             //console.log("nombreFinanzas",nombreFinanzas);
                          //console.log("nombreDep", nombreDep);
