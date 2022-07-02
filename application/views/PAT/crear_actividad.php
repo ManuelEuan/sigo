@@ -1026,7 +1026,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $("#mostrarPOAS").addClass("col-sm-4");
             html = `<div id="divCatPoas">
                         <label for="tipoActividad">POAS <span class="text-danger">*</span></label>
-                        <select class="form-control" aria-invalid="false" id="catPoas" required onchange="setMontoPOA(this)">
+                        <select class="form-control" aria-invalid="false" id="catPoas" name="catPoas" required onchange="setMontoPOA(this)">
                             <option value="">--Seleccione--</option>
                         </select>
                         <div class="invalid-feedback">Este campo no puede estar vacio.</div>
@@ -1037,12 +1037,12 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             if(peticion){
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>C_pat/getCatalogoPOA",
+                    url: "<?= base_url() ?>C_pat/validarListaPOA",
                     success: function(resp) {
                         let response = JSON.parse(resp);
-                        proyectos    = response.datos;
+                        proyectos    = response;
     
-                        response.datos.forEach((value) => {
+                        response.forEach((value) => {
                             let nombreFinanzas = removeAccents(value.dependenciaEjecutora);
                             if(nombreFinanzas.toUpperCase() == nombreDep.toUpperCase() ){
                                 $("#catPoas").append('<option value='+value.numeroProyecto+'>'+value.nombreProyecto+'</option>');

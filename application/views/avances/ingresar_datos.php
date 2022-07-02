@@ -175,7 +175,7 @@
          <div class="form-row">
             <div class="col-md-12 mb-3">
                 <label>Observaciones</label>
-                <textarea class="form-control" id="observaciones" name="observaciones" aria-invalid="false" placeholder="Ingresar observación" maxlength="50"></textarea>
+                <textarea class="form-control" id="observaciones" name="observaciones" aria-invalid="false" placeholder="Ingresar observación" maxlength="50" required></textarea>
                 <div class="invalid-feedback">
                     Este campo no puede estar vacio.
                 </div>

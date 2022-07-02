@@ -825,4 +825,13 @@ class M_pat extends CI_Model
 		
 		return $this->db->query($sql)->result();
 	}
+
+	function obtenerSeleccionados($id){
+		if($id != ''){
+			$sql = 'SELECT "vClavePOA" FROM "DetalleActividad" WHERE "iIdDetalleActividad" ='.$id;
+		}else{
+			$sql = 'SELECT "vClavePOA" FROM "DetalleActividad" WHERE "vClavePOA" IS NOT NULL';
+		}
+		return $this->db->query($sql)->result();
+	}
 }

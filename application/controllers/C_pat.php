@@ -228,16 +228,17 @@ class C_pat extends CI_Controller
             $dependencia            = $arrayDependencias[0]->vDependencia;
 
 
-            $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
+            $catalogosPOA   = $this->validarListaPOAEdit();
             $dependencia    = $this->eliminar_tildes($dependencia);
             
-            foreach ($catalogosPOA->datos as $value) {
-                $valorFinanzas = $this->eliminar_tildes($value->dependenciaEjecutora);
+            foreach ($catalogosPOA as $value) {
+                $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
                 if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
-                    $selected =  $value->numeroProyecto == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
-                    $catPoas .= '<option value="'.$value->numeroProyecto.'" '.$selected.'>'.$value->nombreProyecto.'</option>'; 
+                    $selected =  $value['numeroProyecto'] == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
+                    $catPoas .= '<option value="'.$value['numeroProyecto'].'" '.$selected.'>'.$value['nombreProyecto'].'</option>'; 
                 }
             }
+            
             $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
             $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
             $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
@@ -246,7 +247,6 @@ class C_pat extends CI_Controller
            
             $seg = new Class_seguridad();
             $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
-            $data3['catalogosPOA']  = $catalogosPOA;
             $data3['catPoas']       = $catPoas;
             $this->load->view('PAT/editar_actividad', $data3);
         }
@@ -509,6 +509,7 @@ class C_pat extends CI_Controller
                     'dUltActAvance'             => null, //$this->input->post('fINICIO',true),
                     'dUltActTexto'              => null, //$this->input->post('fINICIO',true),
                     'dFechaElim'                => null, //$this->input->post('fINICIO',true),
+                    'vClavePOA'                 => $this->input->post('catPoas',true) ?: '',
 
                 );
                 $insert = $this->pat->agregarDetAct($data1);
@@ -607,7 +608,8 @@ class C_pat extends CI_Controller
                 'dFin' => $this->input->post('fFIN',true),
                 'iReactivarEconomia' => (isset($_POST['iReactivarEconomia'])) ? 1:0,
                 'nPresupuestoModificado' => floatval(EliminaComas($this->input->post('nPresupuestoModificado',true))),
-                'nPresupuestoAutorizado' => floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true)))
+                'nPresupuestoAutorizado' => floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true))),
+                'vClavePOA' => $this->input->post('catPoas',true) ?: null,
             );
             $where1['iIdDetalleActividad'] = $id;
             $this->mseg->actualiza_registro('DetalleActividad', $where1, $data1, $con);
@@ -2018,5 +2020,125 @@ class C_pat extends CI_Controller
     
         return $cadena;
     }
+
+    function validarListaPOA(){
+        $catalogosPOA   = $this->getCatalogoPOA(false);
+        $datos = json_decode($catalogosPOA, true);
+        
+        $arrayResultados = array();
+        $arrayElegidos = array();
+
+        $arrayidElegido = array();
+
+        $idelegido = (int)$this->input->post('id',true)?:'';
+
+        $respuestaElegidosID = $this->pat->obtenerSeleccionados($idelegido);
+
+        
+        if($idelegido != '' && $respuestaElegidosID[0]->vClavePOA != null){
+
+            foreach ($respuestaElegidosID as $key => $value) {
+                array_push($arrayidElegido, $value->vClavePOA);
+            }
+
+            foreach ($datos['datos'] as $key => $value) {
+                if(in_array($value['numeroProyecto'], $arrayidElegido)){
+                    array_push($arrayResultados,
+                    ['numeroProyecto' => $value['numeroProyecto'],
+                    'aprobado' => $value['aprobado'],
+                    'pagado' => $value['pagado'],
+                    'dependenciaEjecutora' => $value['dependenciaEjecutora'],
+                    'nombreProyecto' => $value['nombreProyecto'],
+                    'fechaAprobacion' => $value['fechaAprobacion']]);
+                    break;
+                }
+            }
+            
+        }
+
+        //json_encode($datos['datos']);
+
+        $respuestaElegidos = $this->pat->obtenerSeleccionados('');
+
+        foreach ($respuestaElegidos as $key => $value) {
+            array_push($arrayElegidos, $value->vClavePOA);
+        }
+        
+
+        foreach ($datos['datos'] as $key => $value) {
+            if(!in_array($value['numeroProyecto'], $arrayElegidos)){
+                array_push($arrayResultados,
+                ['numeroProyecto' => $value['numeroProyecto'],
+                'aprobado' => $value['aprobado'],
+                'pagado' => $value['pagado'],
+                'dependenciaEjecutora' => $value['dependenciaEjecutora'],
+                'nombreProyecto' => $value['nombreProyecto'],
+                'fechaAprobacion' => $value['fechaAprobacion']]);
+            }
+        }
+        
+        echo json_encode($arrayResultados);
+    }
+
+
+    function validarListaPOAEdit(){
+        $catalogosPOA   = $this->getCatalogoPOA(false);
+        $datos = json_decode($catalogosPOA, true);
+        
+        $arrayResultados = array();
+        $arrayElegidos = array();
+
+        $arrayidElegido = array();
+
+        $idelegido = (int)$this->input->post('id',true)?:'';
+
+        $respuestaElegidosID = $this->pat->obtenerSeleccionados($idelegido);
+
+        
+        if($idelegido != '' && $respuestaElegidosID[0]->vClavePOA != null){
+
+            foreach ($respuestaElegidosID as $key => $value) {
+                array_push($arrayidElegido, $value->vClavePOA);
+            }
+
+            foreach ($datos['datos'] as $key => $value) {
+                if(in_array($value['numeroProyecto'], $arrayidElegido)){
+                    array_push($arrayResultados,
+                    ['numeroProyecto' => $value['numeroProyecto'],
+                    'aprobado' => $value['aprobado'],
+                    'pagado' => $value['pagado'],
+                    'dependenciaEjecutora' => $value['dependenciaEjecutora'],
+                    'nombreProyecto' => $value['nombreProyecto'],
+                    'fechaAprobacion' => $value['fechaAprobacion']]);
+                    break;
+                }
+            }
+            
+        }
+
+        //json_encode($datos['datos']);
+
+        $respuestaElegidos = $this->pat->obtenerSeleccionados('');
+
+        foreach ($respuestaElegidos as $key => $value) {
+            array_push($arrayElegidos, $value->vClavePOA);
+        }
+        
+
+        foreach ($datos['datos'] as $key => $value) {
+            if(!in_array($value['numeroProyecto'], $arrayElegidos)){
+                array_push($arrayResultados,
+                ['numeroProyecto' => $value['numeroProyecto'],
+                'aprobado' => $value['aprobado'],
+                'pagado' => $value['pagado'],
+                'dependenciaEjecutora' => $value['dependenciaEjecutora'],
+                'nombreProyecto' => $value['nombreProyecto'],
+                'fechaAprobacion' => $value['fechaAprobacion']]);
+            }
+        }
+        
+        return $arrayResultados;
+    }
+
 }
 ?>
