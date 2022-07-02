@@ -247,7 +247,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                            
                                         <option value="">--Seleccione--</option>
                                             <option value="gestion" <?php if($consulta[0]->vtipoactividad == 'gestion') echo("selected") ?> >Gestion</option>
-                                            <option value="poa" <?php if($consulta[0]->vtipoactividad == 'poa') echo("selected") ?>>POA</option>
+                                            <option value="poa" <?php if($consulta[0]->vtipoactividad == 'poa') echo("selected") ?>>Estrategico</option>
                                         </select>
                                     </div>
 
@@ -1105,16 +1105,18 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             $("#mostrarPOAS").html(html);
             
             if(peticion){
+                var id = $('#id').val();
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>C_pat/getCatalogoPOA",
+                    url: "<?= base_url() ?>C_pat/validarListaPOA",
+                    data: {id:id},
                     success: function(resp) {
                         //console.log("respuesta",resp);
                          //console.log("respuesta", $("#catPoas"));
                         let response = JSON.parse(resp);
-                        proyectos    = response.datos;
+                        proyectos    = response;
     
-                        response.datos.forEach((value) => {
+                        response.forEach((value) => {
                             let nombreFinanzas = removeAccents(value.dependenciaEjecutora);
                             //console.log("nombreFinanzas",nombreFinanzas);
                          //console.log("nombreDep", nombreDep);
@@ -1129,6 +1131,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         //console.log(XMLHHttRequest);
                     }
                 });
+                
             }
             else {
                 proyectos.forEach((value) => {

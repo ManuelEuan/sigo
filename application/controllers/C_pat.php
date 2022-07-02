@@ -228,7 +228,7 @@ class C_pat extends CI_Controller
             $dependencia            = $arrayDependencias[0]->vDependencia;
 
 
-            $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
+            /*$catalogosPOA   = json_decode($this->getCatalogoPOA(false));
             $dependencia    = $this->eliminar_tildes($dependencia);
             
             foreach ($catalogosPOA->datos as $value) {
@@ -237,7 +237,19 @@ class C_pat extends CI_Controller
                     $selected =  $value->numeroProyecto == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
                     $catPoas .= '<option value="'.$value->numeroProyecto.'" '.$selected.'>'.$value->nombreProyecto.'</option>'; 
                 }
+            }*/
+            
+            $catalogosPOA   = $this->validarListaPOAEdit($id);
+            $dependencia    = $this->eliminar_tildes($dependencia);
+            
+            foreach ($catalogosPOA as $value) {
+                $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
+                if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
+                    $selected =  $value['numeroProyecto'] == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
+                    $catPoas .= '<option value="'.$value['numeroProyecto'].'" '.$selected.'>'.$value['nombreProyecto'].'</option>'; 
+                }
             }
+
             $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
             $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
             $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
@@ -2035,10 +2047,10 @@ class C_pat extends CI_Controller
         $respuestaElegidosID = $this->pat->obtenerSeleccionados($idelegido);
 
         
-        if($idelegido != '' && $respuestaElegidosID[0]->vClavePOA != null){
+        if($idelegido != '' && $respuestaElegidosID[0]->vcattipoactividad != null){
 
             foreach ($respuestaElegidosID as $key => $value) {
-                array_push($arrayidElegido, $value->vClavePOA);
+                array_push($arrayidElegido, $value->vcattipoactividad);
             }
 
             foreach ($datos['datos'] as $key => $value) {
@@ -2061,7 +2073,7 @@ class C_pat extends CI_Controller
         $respuestaElegidos = $this->pat->obtenerSeleccionados('');
 
         foreach ($respuestaElegidos as $key => $value) {
-            array_push($arrayElegidos, $value->vClavePOA);
+            array_push($arrayElegidos, $value->vcattipoactividad);
         }
         
 
@@ -2081,7 +2093,7 @@ class C_pat extends CI_Controller
     }
 
 
-    function validarListaPOAEdit(){
+    function validarListaPOAEdit($id){
         $catalogosPOA   = $this->getCatalogoPOA(false);
         $datos = json_decode($catalogosPOA, true);
         
@@ -2090,15 +2102,13 @@ class C_pat extends CI_Controller
 
         $arrayidElegido = array();
 
-        $idelegido = (int)$this->input->post('id',true)?:'';
-
-        $respuestaElegidosID = $this->pat->obtenerSeleccionados($idelegido);
+        $respuestaElegidosID = $this->pat->obtenerSeleccionados($id);
 
         
-        if($idelegido != '' && $respuestaElegidosID[0]->vClavePOA != null){
+        if($respuestaElegidosID[0]->vcattipoactividad != null || $respuestaElegidosID[0]->vcattipoactividad != ''){
 
             foreach ($respuestaElegidosID as $key => $value) {
-                array_push($arrayidElegido, $value->vClavePOA);
+                array_push($arrayidElegido, $value->vcattipoactividad);
             }
 
             foreach ($datos['datos'] as $key => $value) {
@@ -2121,7 +2131,7 @@ class C_pat extends CI_Controller
         $respuestaElegidos = $this->pat->obtenerSeleccionados('');
 
         foreach ($respuestaElegidos as $key => $value) {
-            array_push($arrayElegidos, $value->vClavePOA);
+            array_push($arrayElegidos, $value->vcattipoactividad);
         }
         
 
