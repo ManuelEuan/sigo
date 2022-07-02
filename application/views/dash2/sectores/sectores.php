@@ -15,6 +15,32 @@
 <section>
 
     <div class="" style="background-color: #f2f4f5;">
+    <h3 class="font-weight-bold text-center">AVANCE PICASO&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3>
+        <div class="row">
+            <div class="col-4 mb-4">
+                <hr style="border:6px; background-color:#000080 !important;">
+                <div class="row">
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">$0</h1>
+                        <h5 style="font-weight:500;">Autorizados</h5></div>
+                </div>
+            </div>
+            <div class="col-4 mb-4">
+                <hr style="border:6px; background-color:#000080 !important;">
+                <div class="row">
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtGastado">$0</h1>
+                        <h5 style="font-weight:500;">Gastados</h5></div>
+                </div>
+            </div>
+            <div class="col-4 mb-4">
+                <hr style="border:6px; background-color:#000080 !important;">
+                <div class="row">
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtPorcentaje">%</h1>
+                        <h5 style="font-weight:500;">%</h5></div>
+                </div>
+            </div>
+        </div>
+
+
         <h3 class="font-weight-bold text-center">AVANCE POR EJE RECTOR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <a  ><button class="btn btn-info" onclick="downloadPDF()">PDF</button></a></h3>
         <!--<div class="row">
             <div class="col-4 mb-4">
@@ -44,25 +70,26 @@
                 </div>
             </div>
         </div>-->
+
         <div class="row">
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtAutizado">$<?=number_format($apro_totales, 2)?></h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;">$<?=number_format($apro_totales, 2)?></h1>
                         <h5 style="font-weight:500;">Autorizados</h5></div>
                 </div>
             </div>
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtGastado">$<?=Decimal($ejer_totales)?></h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;">$<?=Decimal($ejer_totales)?></h1>
                         <h5 style="font-weight:500;">Gastados</h5></div>
                 </div>
             </div>
             <div class="col-4 mb-4">
                 <hr style="border:6px; background-color:#000080 !important;">
                 <div class="row">
-                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;" id="txtPorcentaje"><?=$papro_totales?> %</h1>
+                    <div class="col-12 text-center"><h1 style="font-weight:700;color:#000080;"><?=$papro_totales?> %</h1>
                         <h5 style="font-weight:500;">%</h5></div>
                 </div>
             </div>
@@ -208,7 +235,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        //obtenerPOAS();
+        obtenerPOAS();
         $('.count').each(function () {
             $(this).prop('Counter',0).animate({
                 Counter: $(this).text()
