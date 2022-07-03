@@ -903,13 +903,22 @@ class M_dash extends CI_Model {
 		return $this->db->query($sql)->result();
 	}
 
-	function list_actividades($anio,$dep) {
-		$sql = 'SELECT act."iIdActividad", act."vActividad", dat."nAvance", dat."iIdDetalleActividad"
+	function list_actividades($anio,$dep, $eje) {
+		if($eje != '' || $eje != null || $eje != 0){
+			$sql = 'SELECT act."iIdActividad", act."vActividad", dat."nAvance", dat."iIdDetalleActividad"
 				FROM "Dependencia" dep
 				INNER JOIN "Actividad" act ON act."iIdDependencia" = dep."iIdDependencia"
-				INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1 AND dat."iAnio" = '.$anio.'
+				INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1 AND dat."iAnio" = '.$anio.' AND act."iideje" = '.$eje.'
 				WHERE act."iIdDependencia" = '.$dep.'
 				ORDER BY act."vActividad"';
+		}else{
+			$sql = 'SELECT act."iIdActividad", act."vActividad", dat."nAvance", dat."iIdDetalleActividad"
+			FROM "Dependencia" dep
+			INNER JOIN "Actividad" act ON act."iIdDependencia" = dep."iIdDependencia"
+			INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1 AND dat."iAnio" = '.$anio.'
+			WHERE act."iIdDependencia" = '.$dep.'
+			ORDER BY act."vActividad"';
+		}
 		return $this->db->query($sql)->result();
 	}
 
