@@ -83,7 +83,7 @@ $db['default'] = array(
 	'username' => 'postgres',
 	'password' => '',*/
 
-	'database' => 's13',
+	'database' => 'sigodespliega',
 
 	//'database' => 'sigoqueretarodev',
 	'dbdriver' => 'postgre',

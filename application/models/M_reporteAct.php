@@ -342,7 +342,25 @@ class M_reporteAct extends CI_Model {
 
     public function reporte_pat($anio, $eje, $dep, $tabla = array(),$whereString=null)
     {
-      $select = 'SELECT eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", act."vcattipoactividad", dat."iAnio", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado"';
+      $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
+coalesce(bh, 0) as bh,
+coalesce(bm, 0) as bm,
+coalesce(bdh, 0) as bdh,
+coalesce(bdm, 0) as bdm,
+coalesce(blh, 0) as blh,
+coalesce(blm, 0) as blm,
+coalesce(bth, 0) as bth,
+coalesce(btm, 0) as btm,
+coalesce(bah, 0) as bah,
+coalesce(bam, 0) as bam
+         ';
+
+
+
+
+
+
+
 
       if(isset($tabla['fuentes'])) $select.= ', fin."vFinanciamiento", daf.monto';
       if(isset($tabla['ubp'])) $select.= ', pp."iNumero" AS clavepp, pp."vProgramaPresupuestario", ubp."vClave" AS claveubp, ubp."vUBP"';
@@ -354,12 +372,13 @@ class M_reporteAct extends CI_Model {
       if(isset($tabla['avances'])) $select.= ', av.*';
 
       $from = ' FROM "Actividad" act
+
+        INNER JOIN "Reto" on act."iReto"="Reto"."iIdReto"
         INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1
         INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"
-        INNER JOIN "DependenciaEje" dej ON dej."iIdDependencia" = dep."iIdDependencia" AND dej."iIdEje" = '.$eje;
-
-      if($dep > 0) $from.= ' AND dej."iIdDependencia" = '.$dep;
-      $from.= ' INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje"';
+        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje" and act."iideje"='.$eje;
+      if($dep > 0) $from.= ' AND act."iIdDependencia" = '.$dep;
+      $from.= ' INNER JOIN "PED2019Eje" eje2 ON eje2."iIdEje" = act."iideje"';
 
       if(isset($tabla['fuentes'])) $from.= ' LEFT OUTER JOIN "DetalleActividadFinanciamiento" daf ON daf."iIdDetalleActividad" = dat."iIdDetalleActividad" 
         LEFT OUTER JOIN "Financiamiento" fin ON fin."iIdFinanciamiento" = daf."iIdFinanciamiento"';
@@ -383,6 +402,22 @@ class M_reporteAct extends CI_Model {
       {
          $from.= ' LEFT OUTER JOIN "vAvanceMunicipio" av ON av."iIdDetalleEntregable" = det."iIdDetalleEntregable"';
       }
+
+
+        $from.= 'LEFT JOIN ( SELECT de."iIdDetalleActividad",
+        count(DISTINCT de."iIdDetalleEntregable") AS entregables,
+        max(av_1."nEjercido") AS ejercido, 
+        sum(av_1."nBeneficiariosH") as bh, sum(av_1."nBeneficiariosM") as bm,
+        sum(av_1."nDiscapacitadosH") as bdh, sum(av_1."nDiscapacitadosM") as bdm,
+        sum(av_1."nLenguaH") as blh, sum(av_1."nLenguaM") as blm,
+        sum(av_1."nTerceraEdadH") as bth, sum(av_1."nTerceraEdadM") as btm,
+        sum(av_1."nAdolescenteH") as bah, sum(av_1."nAdolescenteM") as bam
+        FROM "DetalleEntregable" de
+        LEFT JOIN "Avance" av_1 ON av_1."iIdDetalleEntregable" = de."iIdDetalleEntregable" AND av_1."iAprobado" = 1 AND         av_1."iActivo" = 1
+          WHERE de."iActivo" = 1
+          GROUP BY de."iIdDetalleActividad") ava ON ava."iIdDetalleActividad" = dat."iIdDetalleActividad" ';
+
+
 
       $whereCondition = 'WHERE'. ' dat."iAnio" = '.$anio;
 
