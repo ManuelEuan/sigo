@@ -112,31 +112,13 @@ class C_reportePicaso extends CI_Controller {
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
-
-
-        if($dep != 0){
-
-            $obtenerDep = $this->mp->obtenerDep($dep);
-
-            $dependencia = $this->eliminar_tildes($obtenerDep[0]->vDependencia);
-        }
-
         $catalogosPOA   = $this->getCatalogoPOA(false);
         $datos = json_decode($catalogosPOA, true);
 
-        $arrayResultadosDep = array();
 
-        foreach ($datos['datos'] as $value) {
-            $sintilde = $this->eliminar_tildes($value['dependenciaEjecutora']);
-            $depMayus = strtoupper($sintilde);
-            array_push($arrayResultadosDep,$depMayus);
-        }
 
         //iIdDetalleActividad
-        if($dep != 0){
 
-            if(in_array(strtoupper($dependencia), $arrayResultadosDep))
-            {
 
                 $ruta = 'public/reportes/Reporte Picaso.xlsx';
                 $writer = WriterEntityFactory::createXLSXWriter();
@@ -161,7 +143,7 @@ class C_reportePicaso extends CI_Controller {
 
                 foreach ($datos['datos'] as $value) {
                     $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
-                    if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
+
                         $cells = [
                             WriterEntityFactory::createCell($value['numeroProyecto']),
                             WriterEntityFactory::createCell($value['aprobado']),
@@ -174,59 +156,14 @@ class C_reportePicaso extends CI_Controller {
         
                         $singleRow = WriterEntityFactory::createRow($cells);
                         $writer->addRow($singleRow);
-                    }
+                    
                 }
 
                 $writer->close();
             
                 $resp['resp'] = true;
                 $resp['url'] = base_url().$ruta;    
-            } else {
-                $resp['error_message'] = 'Sin registros';
-            }
-
-        }else{
-            $ruta = 'public/reportes/Reporte Picaso.xlsx';
-                $writer = WriterEntityFactory::createXLSXWriter();
-                $writer->openToFile($ruta);            
-                
-                $cells = [
-                        WriterEntityFactory::createCell('Numero de proyecto'),
-                        WriterEntityFactory::createCell('Aprobado'),
-                        WriterEntityFactory::createCell('Pagado'),
-                        WriterEntityFactory::createCell('Dependencia Ejecutora'),
-                        WriterEntityFactory::createCell('Nombre Proyecto'),
-                        WriterEntityFactory::createCell('Fecha Aprobacion'),
-                    ];
-            
-        
-                // Agregamos la fila de encabezados
-                $rowStyle = (new StyleBuilder())
-                                ->setFontBold()
-                                ->build();
-                $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
-                $writer->addRow($singleRow);
-
-                foreach ($datos['datos'] as $value) {
-                    $cells = [
-                        WriterEntityFactory::createCell($value['numeroProyecto']),
-                        WriterEntityFactory::createCell($value['aprobado']),
-                        WriterEntityFactory::createCell($value['pagado']),
-                        WriterEntityFactory::createCell($value['dependenciaEjecutora']),
-                        WriterEntityFactory::createCell($value['nombreProyecto']),
-                        WriterEntityFactory::createCell($value['fechaAprobacion']),
-                    ];
     
-    
-                    $singleRow = WriterEntityFactory::createRow($cells);
-                    $writer->addRow($singleRow);
-                }
-
-                $writer->close();
-            
-                $resp['resp'] = true;
-                $resp['url'] = base_url().$ruta;   
-        }
         
         echo json_encode($resp);
     }

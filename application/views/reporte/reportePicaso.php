@@ -15,72 +15,10 @@
   <form id="frmReport">
     <div class="card" style="padding: 2%;">
       <form id="form" name="form" class="">
-        <h5>Filtrar por:</h5>
         <hr>
 
         <div class="row">
-          <div class="col">
-            <div class="form-group">
-              <label readonly for="anio">Año<span class="text-danger">*</span></label>
-              <input required="required" type="text" name="anio" id="anio" class="form-control" value="<?php echo date('Y'); ?>">
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-group">
-              <label class="control-label">Mes</label>
-              <select class="form-control" name="mes" id="mes">
-                <option value="0">--Todos--</option>
-                <option value="1">Enero</option>
-                <option value="2">Febrero</option>
-                <option value="3">Marzo</option>
-                <option value="4">Abril</option>
-                <option value="5">Mayo</option>
-                <option value="6">Junio</option>
-                <option value="7">Julio</option>
-                <option value="8">Agosto</option>
-                <option value="9">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
-              </select>
-            </div>
-          </div>
-          <?php
-          if (isset($ejes)) {
-            echo '<div class="col">
-                <div class="form-group">
-                    <label class="control-label">Eje Rector<span class="text-danger">*</span></label>
-                    <select name="selEje" id="selEje" class="form-control" onChange="dependencia();" >
-                        <option value="0">--Todos--</option>' . $ejes . '
-                    </select>
-                </div>
-            </div>';
-          } else {
-            echo '<input type="hidden" name="selEje" id="selEje" value="' . $_SESSION[PREFIJO . '_ideje'] . '" >';
-          }
-
-          if (isset($dependencias)) {
-            echo '<div class="col">
-                  <div class="form-group">
-                      <label class="control-label">Dependencia responsabe</label>
-                      <select name="selDep" id="selDep" class="form-control" >
-                          <option value="0">--Todos--</option>' . $dependencias . '
-                      </select>
-                  </div>
-              </div>';
-          } else {
-            echo '<input type="hidden" name="selDep" id="selDep" value="' . $_SESSION[PREFIJO . '_iddependencia'] . '" >';
-          }
-          ?>
-
-          <div class="col mb-4">
-            <div class="form-group">
-              <label readonly for="tipo">Tipo<span class="text-danger">*</span></label>
-              <select class="form-control" name="tipo" id="tipo" onchange="showChecks();">
-                <option value="0">Base de datos (.xlsx)</option>
-              </select>
-            </div>
-          </div>
+        
         </div>
 
         <!--<div id="divChecks">
@@ -129,7 +67,7 @@
           </div>
           <div class="col-md-4"></div>
           <div class="col-md-4">
-            <button onclick="espera(1);" type="button" class="btn waves-effect waves-light btn-block btn-danger">Generar</button>
+            <button onclick="generarExcel();" type="button" class="btn waves-effect waves-light btn-block btn-danger">Generar</button>
           </div>
         </div>
 
@@ -143,8 +81,7 @@
 
   function espera(id) {
     document.getElementById("descarga").style.display = "none";
-    if ($("#tipo").val() == 0) generarExcel();
-    if ($("#tipo").val() == 1) generarFichas();
+    if ($("#tipo").val() == 1) generarExcel();
   }
 
   function showChecks() {
@@ -272,15 +209,9 @@
     var anio = $("#anio").val();
     var mes = $('#mes').val();
 
-    if (anio == '' || anio == 0 || anio == null) {
-      alerta('Por favor indique un año', 'warning');
-    } else if (eje == 0) {
-      alerta('Por favor indique un eje', 'warning');
-    } else {
       $.ajax({
         type: "POST",
         url: "<?= base_url() ?>index.php/C_reportePicaso/generarrepo",
-        data: $("#frmReport").serialize(),
         beforeSend: function(xhr) {
           Swal.fire({
             position: 'center',
@@ -317,6 +248,6 @@
 
         }
       });
-    }
+    
   }
 </script>

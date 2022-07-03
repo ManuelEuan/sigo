@@ -987,7 +987,7 @@ class C_dash extends CI_Controller {
         $data['eje'] = $this->input->post('eje',true);
         $data['dep'] = $this->input->post('dep',true);
 
-        $data['query'] = $this->M_dash->list_actividades($data['anio'],$data['dep']);
+        $data['query'] = $this->M_dash->list_actividades($data['anio'],$data['dep'], $data['eje']);
 
         foreach($data['query'] as $query){
             $avances        =  $this->M_dash->avance_por_detalle($query->iIdDetalleActividad);
@@ -1718,7 +1718,7 @@ class C_dash extends CI_Controller {
         $data['background'] = $background;
         $data['series'] = $series;
 
-        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep);
+        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep, '');
         $data['compromisos'] = $this->M_dash2->compromisos_by_dep($idDep);
         $data['est_compromiso'] = $this->M_dash2->compromisos_estatus_by_dep($idDep);
         $data['obras'] = '';
@@ -1775,7 +1775,7 @@ class C_dash extends CI_Controller {
         $data['background'] = $background;
         $data['series'] = $series;
 
-        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep);
+        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep, '');
 
         $this->load->view('dash2/avan_anio',$data);
     }
