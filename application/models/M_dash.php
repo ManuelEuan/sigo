@@ -879,13 +879,27 @@ class M_dash extends CI_Model {
 
 	function deps_anio_eje($anio,$eje) {
 		$sql = 'SELECT dep."iIdDependencia", dep."vNombreCorto", dep."vDependencia", COUNT(act."vActividad") numact, SUM(dat."nAvance") sumavance
+
+		FROM "Dependencia" dep
+
+		INNER JOIN "Actividad" act ON act."iIdDependencia" = dep."iIdDependencia"
+
+		INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1 AND dat."iSuspendida" = 0 AND dat."iAnio" = '.$anio.'
+
+		WHERE act."iideje" = '.$eje.' and dep."iActivo" = 1
+
+		GROUP BY dep."iIdDependencia", dep."vNombreCorto", dep."vDependencia"
+
+		ORDER BY dep."vNombreCorto"';
+
+		/*$sql = 'SELECT dep."iIdDependencia", dep."vNombreCorto", dep."vDependencia", COUNT(act."vActividad") numact, SUM(dat."nAvance") sumavance
 				FROM "Dependencia" dep
 				INNER JOIN "DependenciaEje" dej ON dej."iIdDependencia" = dep."iIdDependencia" AND dep."iActivo" = 1
 				INNER JOIN "Actividad" act ON act."iIdDependencia" = dep."iIdDependencia"
 				INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1 AND dat."iSuspendida" = 0 AND dat."iAnio" = '.$anio.'
 				WHERE dej."iIdEje" = '.$eje.'
 				GROUP BY dep."iIdDependencia", dep."vNombreCorto", dep."vDependencia"
-				ORDER BY dep."vNombreCorto"';
+				ORDER BY dep."vNombreCorto"';*/
 		return $this->db->query($sql)->result();
 	}
 

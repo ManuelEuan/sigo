@@ -16,12 +16,6 @@ class C_reporte extends CI_Controller {
         $this->load->model('M_reporteAct');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
-
-         //Parametros para la conexion al sistema de finanzas
-         $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
-         $this->userFinanzas   = 'ws_user';
-         $this->passFinanzas   = 'usr.sws.951';
-         $this->authFinanzas   = $this->userFinanzas.":".$this->passFinanzas;
     }
 
     public function index()
@@ -65,39 +59,6 @@ class C_reporte extends CI_Controller {
         }
     }
 
-    function getCatalogoPOA($print = true) {
-        $url    = $this->urlFinanzas.'proyectos/listado';
-
-        try{
-            $ch = curl_init($url);
-            $headers = array(
-                'Content-Type: application/json',
-                'Authorization: Basic '. base64_encode("$this->userFinanzas:$this->passFinanzas")
-            );
-
-            $headers = array();
-            $headers[] = 'Cache-Control: no-cache';
-            $headers[] = 'Content-Type: application/json; charset= utf-8';
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-            curl_setopt($ch, CURLOPT_USERPWD, $this->authFinanzas);
-            
-            if(!$print)
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            
-            $result = curl_exec($ch);
-            curl_close($ch);
-
-            if(!$print)
-                return $result;
-            
-            $datos = json_decode(json_encode($result));
-            print_r($datos->datos);
-        }catch(Exception $ex){
-            print_r($ex);
-        }
-    }
-
     public function generarrepo()
     {
         ini_set('max_execution_time', 600); // 5 Minutos máximo
@@ -127,20 +88,11 @@ class C_reporte extends CI_Controller {
         
         $query = $mrep->reporte_pat($anio,$eje,$dep,$tabla,$whereString);
 
-        $catalogosPOA   = $this->getCatalogoPOA(false);
-        $datos = json_decode($catalogosPOA, true);
-
-        $arrayResultados = array();
-
-        
-
-        //iIdDetalleActividad
-
         if($query->num_rows() > 0)
         {
 
             $records = $query->result(); 
-            $ruta = 'public/reportes/Reporte Programa Operativo Anua.xlsx';
+            $ruta = 'public/reportes/actividadesBD.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);            
 			
@@ -152,30 +104,14 @@ class C_reporte extends CI_Controller {
                     WriterEntityFactory::createCell('Actividad'),
                     WriterEntityFactory::createCell('Descripción'),
                     WriterEntityFactory::createCell('Objetivo'),
-                    WriterEntityFactory::createCell('Estrategia'),
-                    WriterEntityFactory::createCell('Reto'),
+                    WriterEntityFactory::createCell('Población objetivo'),
                     WriterEntityFactory::createCell('Fecha de inicio'),
                     WriterEntityFactory::createCell('Fecha de fin'),
                     WriterEntityFactory::createCell('% de cumplimiento'),
-                    WriterEntityFactory::createCell('Proyectos'),
-                    WriterEntityFactory::createCell('Presupuesto Autorizado '),
-                    WriterEntityFactory::createCell('Presupuesto Pagado '),
-                    WriterEntityFactory::createCell('Benef H '),
-                    WriterEntityFactory::createCell('Benef M '),
-                    WriterEntityFactory::createCell('Benef H Discapacidad '),
-                    WriterEntityFactory::createCell('Benef M Discapacidad '),
-                    WriterEntityFactory::createCell('Benef H Indígena '),
-                    WriterEntityFactory::createCell('Benef M Indígena '),
-                    WriterEntityFactory::createCell('Benef H Tercera Edad '),
-                    WriterEntityFactory::createCell('Benef M Tercera Edad '),
-                    WriterEntityFactory::createCell('Benef H Adolescentes '),
-                    WriterEntityFactory::createCell('Benef M Adolescentes ')
+                    WriterEntityFactory::createCell('Ayuda a reactivar la economía'),
+                    WriterEntityFactory::createCell('Presupuesto modificado'),
+                    WriterEntityFactory::createCell('Presupuesto Autorizado por la Secretaría de Finanzas ')
                 ];
-
-
-
-
-
 
             if(isset($tabla['fuentes']))
             {
@@ -183,14 +119,14 @@ class C_reporte extends CI_Controller {
                 $cells[] = WriterEntityFactory::createCell('Monto de financimiento');
             }
 
-/*
+
             if(isset($tabla['ubp']))
             {
                 $cells[] = WriterEntityFactory::createCell('Clave PP');
                 $cells[] = WriterEntityFactory::createCell('Nombre PP');
                 $cells[] = WriterEntityFactory::createCell('Clave UBP');
                 $cells[] = WriterEntityFactory::createCell('Nombre UBP');
-            }*/
+            }
 
             if(isset($tabla['ped']))
             {
@@ -256,13 +192,6 @@ class C_reporte extends CI_Controller {
 
             foreach ($records as $rec)
             {
-                $proyecto = '';
-                foreach ($datos['datos'] as $key => $value) {
-                    if($rec->vcattipoactividad == $value['numeroProyecto']){
-                        $proyecto = $value['nombreProyecto'];
-                    }
-                }
-                
                 $cells = [
                     WriterEntityFactory::createCell($rec->ejedependencia),
                     WriterEntityFactory::createCell($rec->vDependencia),
@@ -271,36 +200,13 @@ class C_reporte extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vActividad),
                     WriterEntityFactory::createCell($rec->vDescripcion),
                     WriterEntityFactory::createCell($rec->objetivoact),
-                    WriterEntityFactory::createCell($rec->estrategiaact),
-                    WriterEntityFactory::createCell($rec->vreto),
+                    WriterEntityFactory::createCell($rec->vPoblacionObjetivo),
                     WriterEntityFactory::createCell($rec->dInicio),
                     WriterEntityFactory::createCell($rec->dFin),
                     WriterEntityFactory::createCell((int)round($rec->nAvance)),
-                    
-
-
-                    
-
-                    WriterEntityFactory::createCell($proyecto),
-                    WriterEntityFactory::createCell($rec->pauth),
-
-
-                    WriterEntityFactory::createCell($rec->ejercido),
-
-                    WriterEntityFactory::createCell($rec->bh),
-                    WriterEntityFactory::createCell($rec->bm),
-                    WriterEntityFactory::createCell($rec->bdh),
-                    WriterEntityFactory::createCell($rec->bdm),
-                    WriterEntityFactory::createCell($rec->blh),
-                    WriterEntityFactory::createCell($rec->blm),
-                    WriterEntityFactory::createCell($rec->bth),
-                    WriterEntityFactory::createCell($rec->btm),
-                    WriterEntityFactory::createCell($rec->bah),
-                    WriterEntityFactory::createCell($rec->bam)
-
-
-
-                    //WriterEntityFactory::createCell((float)$rec->pauth)
+                    WriterEntityFactory::createCell($rec->iReactivarEconomia),
+                    WriterEntityFactory::createCell((float)$rec->nPresupuestoModificado),
+                    WriterEntityFactory::createCell((float)$rec->nPresupuestoAutorizado)
                 ];
 
                 if(isset($tabla['fuentes']))
@@ -309,7 +215,6 @@ class C_reporte extends CI_Controller {
                     $cells[] = WriterEntityFactory::createCell((float)$rec->monto);
                 }
 
-/*
                 if(isset($tabla['ubp']))
                 {
                     $cells[] = WriterEntityFactory::createCell($rec->clavepp);
@@ -317,7 +222,6 @@ class C_reporte extends CI_Controller {
                     $cells[] = WriterEntityFactory::createCell($rec->claveubp);
                     $cells[] = WriterEntityFactory::createCell($rec->vUBP);
                 }
-                */
 
                 if(isset($tabla['ped']))
                 {
