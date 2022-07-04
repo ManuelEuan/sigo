@@ -503,12 +503,12 @@ class M_reporteClinicas extends CI_Model {
       (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
       "vMedioVerifica",
       "vSupuesto"
-      from vistaMir4';
+      from vistaMir4
+      ';
 
-      $where = '
-      where "iIdEje" = '.$eje;
+      $where = 'where "iIdEje" = '.$eje;
 
-      if($dep != '' || $dep != null || $dep != 0){
+      if($dep != 0){
         $where = $where.' AND "iIdDependencia" = '.$dep;
       }
 
