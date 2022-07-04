@@ -136,12 +136,14 @@ class C_rmir extends CI_Controller {
 
 
             $cells =[
-                WriterEntityFactory::createCell('Clasificación Programática',$blueStyle)
+                WriterEntityFactory::createCell('Clasificación Programática',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
             $cells =[
-                WriterEntityFactory::createCell('Gasto de orden',$blueStyle)
+                WriterEntityFactory::createCell('Gasto de orden',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vGrupoPrograma), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
@@ -153,7 +155,7 @@ class C_rmir extends CI_Controller {
             $writer->addRow($singleRow);
             $cells =[
                 WriterEntityFactory::createCell('Objetivo del gobierno',$blueStyle),
-                WriterEntityFactory::createCell($obtenerObj->vObjetivo)
+                WriterEntityFactory::createCell($obtenerObj[0]->vObjetivoGobierno)
 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 

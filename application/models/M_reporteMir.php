@@ -284,9 +284,9 @@ return $resultado;
     $this->db->where('iIdEje',$eje);
     $query = $this->db->get();
     $resultado = $query->row();*/
-    $sql = 'SELECT "vObjetivo" from "PED2019" WHERE "iIdEje" = '.$eje;
+    $sql = 'SELECT "vObjetivoGobierno" from "PED2019Eje" WHERE "iIdEje" ='.$eje;
     $query =  $this->db->query($sql)->result();
-    return $this->db->error();
+    return $query;
    }
 
    /******************** Funciones Jorge E ************************/
