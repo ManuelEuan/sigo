@@ -151,28 +151,28 @@ class C_reporteCombinado extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Gasto)',$azulStyle),
-                WriterEntityFactory::createCell($obtenerDep->vGrupoGasto), 
+                WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Programa)',$azulStyle),
-                WriterEntityFactory::createCell($obtenerDep->vGrupoPrograma), 
+                WriterEntityFactory::createCell($proPre->vGrupoPrograma), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programatica (Modalidad)',$azulStyle),
-                WriterEntityFactory::createCell($obtenerDep->vModalidad), 
+                WriterEntityFactory::createCell($proPre->vModalidad), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Gasto de Orden',$azulStyle),
-                WriterEntityFactory::createCell($obtenerDep->vGastoOrden), 
+                WriterEntityFactory::createCell($proPre->vGastoOrden), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
