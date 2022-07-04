@@ -166,7 +166,7 @@
             </div>
             <div class="col-md-3 mb-3">
                 <label>Total</label>
-                <input type="text" class="form-control" id="total" name="total" placeholder="0" onkeypress="return filterFloat(event,this);">
+                <input type="number" class="form-control" id="txtTotal" name="txtTotal" placeholder="0">
                 <div class="invalid-feedback">
                     Este campo no puede estar vacio.
                 </div>
