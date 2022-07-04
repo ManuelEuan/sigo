@@ -279,12 +279,14 @@ return $resultado;
     return $resultado;
    }
    public function obtenerObj($eje){
-    $this->db->select('vObjetivo');
+    /*$this->db->select('vObjetivo');
     $this->db->from('PED2019Eje');
     $this->db->where('iIdEje',$eje);
     $query = $this->db->get();
-    $resultado = $query->row();
-    return $resultado;
+    $resultado = $query->row();*/
+    $sql = 'SELECT "vObjetivo" from "PED2019" WHERE "iIdEje" = '.$eje;
+    $query =  $this->db->query($sql)->result();
+    return $this->db->error();
    }
 
    /******************** Funciones Jorge E ************************/
@@ -375,7 +377,16 @@ return $resultado;
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
 
-      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Dependencia"."iIdDependencia" ='.$dep.' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
+      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio;
+      //
+
+      if($dep != 0){
+        $whereCondition = $whereCondition.' AND "Dependencia"."iIdDependencia" ='.$dep;
+      }
+
+      if($pp != 0){
+        $whereCondition = $whereCondition.' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
+      }
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
