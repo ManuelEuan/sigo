@@ -81,7 +81,7 @@ $db['default'] = array(
 
 	/*'hostname' => 'localhost',
 	'username' => 'postgres',
-	'password' => 'TunChe.43',*/
+	'password' => '',*/
 
 	'database' => 'sigodespliega',
 
