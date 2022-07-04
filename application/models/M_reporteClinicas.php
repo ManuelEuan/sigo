@@ -459,6 +459,67 @@ class M_reporteClinicas extends CI_Model {
       $query =  $this->db->query($sql)->result();
       return $query;
     }
+
+    public function obtenerVista($eje, $dep){
+      $coma = "','";
+
+      /*$select = 'select "iIdActividad", "vActividad",
+      "vNivelMIR",
+      "vProgramaPresupuestario",
+      "vDescripcion",
+      "vNombreResumenNarrativo",
+      "vEntregable",
+      "iValor",
+      "nLineaBase",
+      "nMeta",
+      "vPeriodicidad",
+      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
+      (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
+      "vMedioVerifica",
+      "vSupuesto"
+      from vistaMir4';
+
+      $where = 'where "iIdEje" = '.$eje;
+
+      if($dep != '' || $dep != null || $dep != 0){
+        $where = $where.' AND "iIdDependencia" = '.$dep;
+      }
+
+      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+
+      $sql = $select.$where.$group;*/
+
+      $select = 'select "iIdActividad", "vActividad",
+      "vNivelMIR",
+      "vProgramaPresupuestario",
+      "vDescripcion",
+      "vNombreResumenNarrativo",
+      "vEntregable",
+      "iValor",
+      "nLineaBase",
+      "nMeta",
+      "vPeriodicidad",
+      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
+      (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
+      "vMedioVerifica",
+      "vSupuesto"
+      from vistaMir4';
+
+      $where = '
+      where "iIdEje" = '.$eje;
+
+      if($dep != '' || $dep != null || $dep != 0){
+        $where = $where.' AND "iIdDependencia" = '.$dep;
+      }
+
+      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+
+      $sql = $select.$where.$group;
+
+      $query =  $this->db->query($sql);
+      return $query;
+    }
+
 }
 
                         

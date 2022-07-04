@@ -385,7 +385,7 @@ class M_reporteCombinado extends CI_Model {
                 LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
 
 
-          $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio;
+          $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';
           if($dep != ''){
             $weherDep = ' AND "Dependencia"."iIdDependencia" = '.$dep;
             $where = $where.$weherDep;
