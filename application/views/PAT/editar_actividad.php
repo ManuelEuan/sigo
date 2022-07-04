@@ -506,6 +506,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 url: "<?= base_url() ?>C_pat/obtenerRetosEje",
                 data:{iIdEje:iIdEje},
                 success: function(resp) {
+                    $("#iReto").empty()
                     var parsedData = JSON.parse(resp);
                     $('#iReto').append('<option value="">--Seleccione--</option>')
                     for(let i = 0; i <= parsedData.length; i++){
@@ -530,6 +531,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 url: "<?= base_url() ?>C_pat/obtenerDependenciaEje",
                 data:{iIdEje:iIdEje},
                 success: function(resp) {
+                    $("#depAct").empty()
                     var parsedData = JSON.parse(resp);
                     $('#depAct').append('<option value="">--Seleccione--</option>')
                     for(let i = 0; i <= parsedData.length; i++){
