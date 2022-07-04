@@ -170,6 +170,7 @@ class C_rclinica extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programática​'),
+                WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
             $writer->addRow($singleRow);

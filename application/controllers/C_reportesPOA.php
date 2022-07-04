@@ -147,12 +147,14 @@ class C_reportesPOA extends CI_Controller {
             $writer->addRow($singleRow);
             $cells =[
                 WriterEntityFactory::createCell('Clasificación Programatica',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
                 WriterEntityFactory::createCell('Gasto de Orden',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vGastoOrden), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
