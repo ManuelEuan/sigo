@@ -125,7 +125,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         <label for="validationCustom04">Dependencia responsable</label>
                         <select class="form-control select-lectura" aria-invalid="false" name="depAct" id="depAct" onchange="cargarOptions('retos',this);" required>
                             <option value="">--Seleccione--</option>
-                            <?=$dependencias?>
+                            <!-- <?=$dependencias?> -->
                         </select>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
@@ -154,7 +154,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         <label for="validationCustom04">Reto</label>
                           <select class="form-control select-lectura" aria-invalid="false" name="iReto" id="iReto" required>
                             <option value="">--Seleccione--</option>
-                            <?=$retos?>
+                            <!-- <?=$retos?> -->
                         </select>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
@@ -613,7 +613,72 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         }
     });
 
-    
+    $('#RetoAct').change(function(){
+            // var idEje = $("#idEje").val();
+            iIdEje = $(this).val();
+            if(iIdEje >= 1){
+                
+                $("#iReto").empty()
+                obtenerRetoseje(iIdEje) 
+                $("#depAct").empty()
+                obtenerDependenciaeje(iIdEje) 
+                
+            }else{
+                console.log('No se ha seleccinado algo')
+
+                
+            }
+            
+        });
+        
+        function obtenerRetoseje(iIdEje){
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>C_pat/obtenerRetosEje",
+                data:{iIdEje:iIdEje},
+                success: function(resp) {
+                    var parsedData = JSON.parse(resp);
+                    $('#iReto').append('<option value="">--Seleccione--</option>')
+                    for(let i = 0; i <= parsedData.length; i++){
+                        if(parsedData[i]?.vDescripcion != undefined){
+                            $('#iReto').append('<option value="'+parsedData[i]?.iIdReto+'"  >'+parsedData[i]?.vDescripcion+'</option>')
+                        }
+                    }
+                    // $('.selectpicker').selectpicker('refresh');
+                    
+                    console.log(resp)
+                    
+                    
+                },
+                error: function(XMLHHttRequest, textStatus, errorThrown) {
+                    console.log(XMLHHttRequest);
+                }
+            });
+    }
+        function obtenerDependenciaeje(iIdEje){
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url() ?>C_pat/obtenerDependenciaEje",
+                data:{iIdEje:iIdEje},
+                success: function(resp) {
+                    var parsedData = JSON.parse(resp);
+                    $('#depAct').append('<option value="">--Seleccione--</option>')
+                    for(let i = 0; i <= parsedData.length; i++){
+                        if(parsedData[i]?.vDependencia != undefined){
+                            $('#depAct').append('<option value="'+parsedData[i]?.iIdDependencia+'"  >'+parsedData[i]?.vDependencia+'</option>')
+                        }
+                    }
+                    // $('.selectpicker').selectpicker('refresh');
+                    
+                    console.log(resp)
+                    
+                    
+                },
+                error: function(XMLHHttRequest, textStatus, errorThrown) {
+                    console.log(XMLHHttRequest);
+                }
+            });
+    }
     $('#checkODS').click(function(){
         if($(this).is(':checked')){
             document.getElementById("selectODS").disabled = false;

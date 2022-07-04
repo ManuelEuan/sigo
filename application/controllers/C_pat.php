@@ -310,7 +310,16 @@ class C_pat extends CI_Controller
         $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
         $this->load->view('PAT/crear_actividad', $data3);
     }
-
+    public function obtenerRetosEje(){
+        $iIdEje = isset($_POST['iIdEje']) ? $_POST['iIdEje'] : '';
+        $depr = $this->pat->obtenerRetosEje($iIdEje);
+        echo json_encode($depr);
+    }
+    public function obtenerDependenciaEje(){
+        $iIdEje = isset($_POST['iIdEje']) ? $_POST['iIdEje'] : '';
+        $depr = $this->pat->obtenerDependenciaEje($iIdEje);
+        echo json_encode($depr);
+    }
     public function pintarT_selectores($id)
     {
         $_SESSION['carritoSelec'] = $this->pat->getCarritoSelec($id);

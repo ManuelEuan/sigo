@@ -60,7 +60,20 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-
+	public function obtenerRetosEje($id){
+		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "EjeRetos" 
+		INNER JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
+		WHERE "EjeRetos"."iIdEje" ='.$id;
+		$query =  $this->db->query($sql);
+		return $query->result();
+	}
+	public function obtenerDependenciaEje($id){
+		$sql = 'SELECT "Dependencia"."iIdDependencia", "Dependencia"."vDependencia" FROM "DependenciaEje" 
+		INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "DependenciaEje"."iIdDependencia"
+		WHERE "DependenciaEje"."iIdEje" ='.$id;
+		$query =  $this->db->query($sql);
+		return $query->result();
+	}
 
 	/* Mostrar Ejes */
 	public function mostrarReto()
