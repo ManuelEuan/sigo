@@ -20,7 +20,7 @@ class C_dash2 extends CI_Controller {
     public function main_dependencia()
     {
         $opt = new Class_options();
-        $data['depencencias'] = $opt->options_tabla('Dependencia');
+        $data['depencencias'] = $opt->options_tabla('dependenciaSelector');
         $this->load->view('dash2/main_dependencia',$data);
     }
 
