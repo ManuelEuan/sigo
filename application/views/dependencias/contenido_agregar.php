@@ -38,60 +38,6 @@
                         </div>                     
                     </div>
                 </div>
-                
-                <div class="form-row">
-                    <div class="col-12">
-                        <label for="validationCustom04">Gasto de Orden</label>
-                        <select class="form-control" name="gastoOrden" id="gastoOrden" required>
-                            <option value="">--Selecccione--</option>
-                            <option value="Social">Social</option>
-                            <option value="Administrativo">Administrativo</option>
-                        </select> 
-                        <div class="invalid-feedback">
-                            Este campo no puede estar vacio.
-                        </div>                     
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-12">
-                        <label for="validationCustom04">Grupo de Programa</label>
-                        <select class="form-control" name="grupoPrograma" id="grupoPrograma" required>
-                            <option value="">--Selecccione--</option>
-                            <option value="Desempeño de las Funciones">Desempeño de las Funciones</option>
-                        </select> 
-                        <div class="invalid-feedback">
-                            Este campo no puede estar vacio.
-                        </div>                     
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-12">
-                        <label for="validationCustom04">Grupo de Gasto</label>
-                        <select class="form-control" name="grupoGasto" id="grupoGasto" required>
-                            <option value="">--Selecccione--</option>
-                            <option value="Programable">Programable</option>
-                        </select> 
-                        <div class="invalid-feedback">
-                            Este campo no puede estar vacio.
-                        </div>                     
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="col-12">
-                        <label for="validationCustom04">Modalidad</label>
-                        <select class="form-control" name="modalidad" id="modalidad" required>
-                            <option value="">--Selecccione--</option>
-                            <option value="B - Procesión de bienes públicos">B - Procesión de bienes públicos</option>
-                            <option value="E - Presentación de servicios públicos">E - Presentación de servicios públicos</option>
-                            <option value="F - Programación y fomento">F - Programación y fomento</option>
-                            <option value="G - Regulación y supervisión ">G - Regulación y supervisión </option>
-                            <option value="P - Planeación, formulación, implementación, seguimiento y evaluación de políticas públicas">P - Planeación, formulación, implementación, seguimiento y evaluación de políticas públicas</option>
-                        </select> 
-                        <div class="invalid-feedback">
-                            Este campo no puede estar vacio.
-                        </div>                     
-                    </div>
-                </div>
 
                 <div class="form-row">
                     <div class="col-12">

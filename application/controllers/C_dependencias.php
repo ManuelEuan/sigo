@@ -47,11 +47,6 @@ class C_dependencias extends CI_Controller {
                 $data['vDependencia'] = $this->input->post('dependencia',true);
                 $data['vNombreCorto'] = $this->input->post('nombrecorto',true);
 
-                $data['vGastoOrden'] = $this->input->post('gastoOrden',true);
-                $data['vGrupoPrograma'] = $this->input->post('grupoPrograma',true);
-                $data['vModalidad'] = $this->input->post('modalidad',true);
-                $data['vGrupoGasto'] = $this->input->post('grupoGasto',true);
-
                 $ejes = $this->input->post('ejes',true);
                 $TnombreArea = $this->input->post('TnombreArea', true);
                 $data['iActivo']= 1;
@@ -120,12 +115,6 @@ class C_dependencias extends CI_Controller {
             $id = $this->input->post('id',true);
             $data['vDependencia'] = $this->input->post('dependencia',true);
             $data['vNombreCorto'] = $this->input->post('nombrecorto',true);
-
-            $data['vGastoOrden'] = $this->input->post('gastoOrden',true);
-            $data['vGrupoPrograma'] = $this->input->post('grupoPrograma',true);
-            $data['vModalidad'] = $this->input->post('modalidad',true);
-            $data['vGrupoGasto'] = $this->input->post('grupoGasto',true);
-
             $ejes = $this->input->post('ejes',true);
             $TnombreArea = $this->input->post('TnombreArea', true);
             
