@@ -272,10 +272,8 @@ class M_catalogos extends CI_Model {
 		$this->db->order_by('vDependencia');
         $this->db->select('d.iIdDependencia AS id , d.vDependencia AS valor');
 		$this->db->from('Dependencia d');
-		$this->db->join('DependenciaEje de','de.iIdDependencia = d.iIdDependencia','INNER');	
 		$this->db->where('d.iActivo',1);	
 		if($where != '') $this->db->where($where);
-
 		return $this->db->get();
 	}
 
