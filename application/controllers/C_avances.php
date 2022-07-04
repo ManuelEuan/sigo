@@ -178,6 +178,7 @@ class C_avances extends CI_Controller {
                         $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
                         $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+                        $data['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
 
                         $idInsertado = $this->ma->guardado_general($table,$data);
                         
@@ -209,6 +210,7 @@ class C_avances extends CI_Controller {
                     $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
                     $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+                    $data['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
 
                     $idInsertado = $this->ma->guardado_general($table,$data);
 
