@@ -803,10 +803,7 @@ class M_pat extends CI_Model
 	}
 
 	public function getReto($retoID){
-
-		$sql = 'SELECT * FROM "Retos" WHERE "iIdReto" ='.$retoID;
-
-		$sql = 'SELECT * FROM "Retos" r WHERE "iIdReto" ='.$retoID;
+		$sql = 'SELECT "iIdReto", "iIdEje" FROM "EjeRetos" WHERE "iIdReto" ='.$retoID;
 
 		return $this->db->query($sql)->result();
 	}

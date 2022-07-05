@@ -586,7 +586,7 @@ class C_pat extends CI_Controller
             if (isset($_POST['RetoAct'])) {
                 $idEje =  $this->input->post('RetoAct', true);
             }else{
-                $objReto = $this->pat->getReto($this->input->post('iReto',true));
+                $objReto = $this->pat->getRetosPorDEP($this->input->post('iReto',true));
                 $idEje = $objReto[0]->iIdEje;
             }
             $id             = $this->input->post('id',true);    //$iIdDetalleActividad
