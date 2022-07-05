@@ -301,7 +301,6 @@
           });
         },
         success: function(r) {
-            console.log(r)
           var resp = JSON.parse(r);
           if (resp.resp) {
             $("#descarga").attr("href", resp.url);

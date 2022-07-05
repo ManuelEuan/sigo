@@ -307,22 +307,10 @@ class C_reporteCombinado extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
-            //avances por mes
-            $ENE = 0;
-            $FEB = 0;
-            $MAR = 0;
-            $ABR = 0;
-            $MAY = 0;
-            $JUN = 0;
-            $JUL = 0;
-            $AGO = 0;
-            $SEP = 0;
-            $OCT = 0;
-            $NOV = 0;
-            $DIC = 0;
-
             foreach ($records as $rec)
             {
+                $total = 0;
+                $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
                 $cells = [
                     WriterEntityFactory::createCell($rec->nivel),
                     WriterEntityFactory::createCell($rec->resumennarrativo),
@@ -338,203 +326,20 @@ class C_reporteCombinado extends CI_Controller {
                     WriterEntityFactory::createCell($rec->unidadmedida),
                     WriterEntityFactory::createCell($rec->formula),
                     WriterEntityFactory::createCell($rec->umedioverifica),
+                    WriterEntityFactory::createCell($rec->enero),
+                    WriterEntityFactory::createCell($rec->febrero),
+                    WriterEntityFactory::createCell($rec->marzo),
+                    WriterEntityFactory::createCell($rec->abril),
+                    WriterEntityFactory::createCell($rec->mayo),
+                    WriterEntityFactory::createCell($rec->junio),
+                    WriterEntityFactory::createCell($rec->julio),
+                    WriterEntityFactory::createCell($rec->agosto),
+                    WriterEntityFactory::createCell($rec->septiembre),
+                    WriterEntityFactory::createCell($rec->octubre),
+                    WriterEntityFactory::createCell($rec->noviembre),
+                    WriterEntityFactory::createCell($rec->diciembre),
+                    WriterEntityFactory::createCell($total),
                 ];
-                
-                if($rec->fecha == 1){
-                    $ENE = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-
-                }
-                if($rec->fecha == 2){
-                    $FEB = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell($rec->avance);
-                }
-                if($rec->fecha == 3){
-                    $MAR = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-
-                }
-                if($rec->fecha == 4){
-                    $ABR = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 5){
-                    $MAY = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 6){
-                    $JUN = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 7){
-                    $JUL = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 8){
-                    $AGO = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 9){
-                    $SEP = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 10){
-                    $OCT = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 11){
-                    $NOV = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                if($rec->fecha == 12){
-                    $DIC = (float)$rec->avance;
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell('');
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->avance);
-                }
-                //$total = $ENE + $FEB + $MAR + $ABR + $MAY + $JUN + $JUL + $AGO + $SEP + $OCT + $NOV + $DIC;
                 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
