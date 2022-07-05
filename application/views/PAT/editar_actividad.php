@@ -565,6 +565,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
             obtenerAreasResp(idDependenciaGuardado);
             obtenerActividades(idDependenciaGuardado)
+            
 
         <?php if($consulta[0]->iAglomeraMIR == 1){ ?>
             $('#idActividad').show();
