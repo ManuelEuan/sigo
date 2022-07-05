@@ -312,8 +312,8 @@ class C_pat extends CI_Controller
     }
     public function obtenerRetosEje(){
         $iIdEje = isset($_POST['iIdEje']) ? $_POST['iIdEje'] : '';
-        $depr = $this->pat->obtenerRetosEje($iIdEje);
-        echo json_encode($depr);
+        $retosD = $this->pat->obtenerRetosEje($iIdEje);
+        echo json_encode($retosD);
     }
     public function obtenerDependenciaEje(){
         $iIdEje = isset($_POST['iIdEje']) ? $_POST['iIdEje'] : '';
