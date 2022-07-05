@@ -154,6 +154,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         <label for="validationCustom04">Reto</label>
                           <select class="form-control select-lectura" aria-invalid="false" name="iReto" id="iReto" required>
                             <option value="">--Seleccione--</option>
+                            <?=$retos?>
                            
                         </select>
                         <div class="invalid-feedback">
@@ -490,6 +491,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         sumaMontoFin();
         
         idDependenciaGuardado = <?php echo $idDependencia ?>;
+        
         obtenerAreasResp(idDependenciaGuardado)
         obtenerActividades(idDependenciaGuardado)
 

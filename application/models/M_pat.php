@@ -804,11 +804,19 @@ class M_pat extends CI_Model
 
 	public function getReto($retoID){
 		$sql = 'SELECT "iIdReto", "iIdEje" FROM "EjeRetos" WHERE "iIdReto" ='.$retoID;
+
 		return $this->db->query($sql)->result();
 	}
 
 	public function getRetosPorDependencia($dependenciaID){
 		$sql = 'SELECT * FROM "Reto" r WHERE "iIdDependencia" ='.$dependenciaID;
+		return $this->db->query($sql)->result();
+	}
+	public function getRetosDependencia($dependenciaID = 0){
+		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "DependenciaEje"
+		LEFT JOIN "EjeRetos" ON "EjeRetos"."iIdEje" = "DependenciaEje"."iIdEje"
+		LEFT JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
+		WHERE "DependenciaEje"."iIdDependencia" = '.$dependenciaID;
 		return $this->db->query($sql)->result();
 	}
 
