@@ -340,7 +340,7 @@ class M_reporteAct extends CI_Model {
         return $this->db->query($sql);
     }
 
-    public function reporte_pat($anio, $eje, $dep, $tabla = array(),$whereString=null)
+    public function reporte_pat($anio, $eje, $dep, $tabla = array(),$whereString=null, $rol)
     {
       $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", act."vcattipoactividad", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
 coalesce(bh, 0) as bh,
@@ -354,13 +354,6 @@ coalesce(btm, 0) as btm,
 coalesce(bah, 0) as bah,
 coalesce(bam, 0) as bam
          ';
-
-
-
-
-
-
-
 
       if(isset($tabla['fuentes'])) $select.= ', fin."vFinanciamiento", daf.monto';
       if(isset($tabla['ubp'])) $select.= ', pp."iNumero" AS clavepp, pp."vProgramaPresupuestario", ubp."vClave" AS claveubp, ubp."vUBP"';
@@ -376,7 +369,10 @@ coalesce(bam, 0) as bam
         INNER JOIN "Reto" on act."iReto"="Reto"."iIdReto"
         INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1
         INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"
-        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje" and act."iideje"='.$eje;
+        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje"';
+      if($rol == 1){
+        $from.= ' and act."iideje"='.$eje;
+      } 
       if($dep > 0) $from.= ' AND act."iIdDependencia" = '.$dep;
       $from.= ' INNER JOIN "PED2019Eje" eje2 ON eje2."iIdEje" = act."iideje"';
 
@@ -469,6 +465,12 @@ coalesce(bam, 0) as bam
           $sql = 'SELECT * FROM "UnidadMedida" WHERE "iActivo" = 1 ORDER BY "iIdUnidadMedida"'; 
         }
         return $this->db->query($sql);
+    }
+
+    function getRol($id){
+      $sql = 'SELECT * FROM "Usuario" WHERE "iIdUsuario" = '.$id;
+
+      return $this->db->query($sql)->result();
     }
 }
 
