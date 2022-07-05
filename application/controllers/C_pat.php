@@ -179,8 +179,9 @@ class C_pat extends CI_Controller
             $retos          = '';
             $catPoas        = '';
 
-            $objReto        = $this->pat->getReto($data3['consulta'][0]->iReto);
-            $arrRetos       = $this->pat->getRetosPorDependencia($objReto[0]->iIdDependencia);
+            // $objReto        = $this->pat->getReto($data3['consulta'][0]->iReto);
+            $arrRetos       = $this->pat->getRetosDependencia($_SESSION[PREFIJO.'_iddependencia']);
+            var_dump($arrRetos);
             $arrDependencias= [];
             $dependencia    = '';
 
@@ -202,6 +203,7 @@ class C_pat extends CI_Controller
                 $selected =  $value->iIdReto == $data3['consulta'][0]->iReto ? 'selected' : '';
                 $retos .= '<option value="'.$value->iIdReto.'" '.$selected.'>'.$value->vDescripcion.'</option>';
             }
+            
 
             $iIdActividad       = $data3['consulta'][0]->iIdActividad;   // Obtenemos el Id de l actividad
             $data3['finan']     = $this->pat->mostrarFinanciamiento($data3['consulta'][0]->iAnio);
@@ -215,6 +217,10 @@ class C_pat extends CI_Controller
                 $data3['ejes']          = $ejes;
                 $data3['dependencias']  = $dependencias;
                 $data3['retos']         = $retos;
+                var_dump('No eres dependencia');
+            }else{
+                var_dump(' eres dependencia');
+
             }
             $data3['retos']         = $retos;
 
@@ -262,6 +268,7 @@ class C_pat extends CI_Controller
             $data3['catPoas']       = $catPoas;
             $this->load->view('PAT/editar_actividad', $data3);
         }
+        // var_dump('HOLA');
     }
     public function obtenerResumenNarrativo(){
         $nivelMIR = isset($_POST['nivelMIR']) ? $_POST['nivelMIR'] : '';
@@ -283,8 +290,6 @@ class C_pat extends CI_Controller
         $data3['eje'] = $this->pat->mostrarEje();
         $seg = new Class_seguridad();
         $opt = new Class_options();
-
-        
         $all_sec = $seg->tipo_acceso(9,$_SESSION[PREFIJO.'_idusuario']);
         $all_dep = $seg->tipo_acceso(10,$_SESSION[PREFIJO.'_idusuario']);
         $data3['per_ods'] = $seg->tipo_acceso(41,$_SESSION[PREFIJO.'_idusuario']);
@@ -292,10 +297,20 @@ class C_pat extends CI_Controller
         if($all_sec > 0 && $all_dep > 0) {
             $data3['ejes'] = $opt->options_tabla('eje',null);
             $data3['dependencias'] = $opt->options_tabla('dependencia', null,null);
-            $data3['retos'] = $opt->options_tabla('retos',null);
+            // $data3['retos'] = $opt->options_tabla('retos',null);
             $data3['objDependencias'] = json_encode($this->pat->getDataTable('dependencia', null));
         }else{
-            $data3['retos'] = $opt->options_tabla('retos', null, 'iIdDependencia = '.$_SESSION[PREFIJO.'_iddependencia']);
+        }
+        if($all_sec > 0 && $all_dep > 0) {
+           
+        }else{
+            $arrRetos       = $this->pat->getRetosDependencia($_SESSION[PREFIJO.'_iddependencia']);
+            foreach ($arrRetos as $value) {
+                $selected =  $value->iIdReto == $data3['consulta'][0]->iReto ? 'selected' : '';
+                $retos .= '<option value="'.$value->iIdReto.'" '.$selected.'>'.$value->vDescripcion.'</option>';
+            }
+            $data3['retos'] = $retos;
+
         }
         $dependencia = $this->pat->getDependenciaById($_SESSION[PREFIJO.'_iddependencia']);
         $data3['vDependencia']  = $dependencia[0]->vDependencia;
@@ -306,6 +321,7 @@ class C_pat extends CI_Controller
         $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
         $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
         $data3['ODS']    = $this->pat->obtenerODS();
+        
         $seg = new Class_seguridad();
         $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
         $this->load->view('PAT/crear_actividad', $data3);
