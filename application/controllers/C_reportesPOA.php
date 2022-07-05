@@ -145,19 +145,41 @@ class C_reportesPOA extends CI_Controller {
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
+
             $cells =[
-                WriterEntityFactory::createCell('Clasificación Programatica',$azulStyle),
-                WriterEntityFactory::createCell($proPre->vGrupoGasto), 
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Gasto)',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vGrupoGasto)
+
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Programa)',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vGrupoPrograma)
+
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells);
+            $writer->addRow($singleRow);
+
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Modalidad)',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vModalidad)
+
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
-                WriterEntityFactory::createCell('Gasto de Orden',$azulStyle),
-                WriterEntityFactory::createCell($proPre->vGastoOrden), 
+                WriterEntityFactory::createCell('Gasto de orden',$azulStyle),
+                WriterEntityFactory::createCell($proPre->vGastoOrden)
+
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
+ 
 
             $cells =[
                 WriterEntityFactory::createCell('Eje',$azulStyle),
@@ -215,10 +237,12 @@ class C_reportesPOA extends CI_Controller {
 			
             $cells = [
                     WriterEntityFactory::createCell('Nivel'),
-                    WriterEntityFactory::createCell('Clave'),
                     WriterEntityFactory::createCell('Resumen Narrativo'),
+                    WriterEntityFactory::createCell('Clave'),
                     WriterEntityFactory::createCell('Inidcadores'),
+                    WriterEntityFactory::createCell('Linea Base'),
                     WriterEntityFactory::createCell('Meta'),
+                    WriterEntityFactory::createCell('Fecuencia'),
                     WriterEntityFactory::createCell('Unidad de Medida'),
                 ];
 
@@ -236,10 +260,12 @@ class C_reportesPOA extends CI_Controller {
             {
                 $cells = [
                     WriterEntityFactory::createCell($rec->vNivelMIR),
-                    WriterEntityFactory::createCell($rec->clave),
                     WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                    WriterEntityFactory::createCell($rec->clave),
                     WriterEntityFactory::createCell($rec->indicador),
+                    WriterEntityFactory::createCell($rec->lineabase),
                     WriterEntityFactory::createCell($rec->meta),
+                    WriterEntityFactory::createCell($rec->frecuencia),
                     WriterEntityFactory::createCell($rec->unidadmedida),
                 ];
 

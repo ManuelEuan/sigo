@@ -136,17 +136,33 @@ class C_rmir extends CI_Controller {
 
 
             $cells =[
-                WriterEntityFactory::createCell('Clasificación Programática',$blueStyle),
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Gasto)',$blueStyle),
                 WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
             $cells =[
-                WriterEntityFactory::createCell('Gasto de orden',$blueStyle),
+                WriterEntityFactory::createCell('Clasificación Programatica (Grupo de Programa)',$blueStyle),
                 WriterEntityFactory::createCell($proPre->vGrupoPrograma), 
             ];
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Clasificación Programatica (Modalidad)',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vModalidad), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+
+            $cells =[
+                WriterEntityFactory::createCell('Gasto de orden',$blueStyle),
+                WriterEntityFactory::createCell($proPre->vGastoOrden), 
+            ];
+            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
+            $writer->addRow($singleRow);
+            
             $cells =[
                 WriterEntityFactory::createCell('Eje',$blueStyle),
                 WriterEntityFactory::createCell($obtenerEje->vEje)

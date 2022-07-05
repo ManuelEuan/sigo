@@ -374,7 +374,9 @@ class M_reportePOA extends CI_Model {
             "Dependencia"."iIdDependencia",
             "DetalleEntregable"."dFechaInicio",
             "ResumenNarrativo"."vNombreResumenNarrativo",
-	        "DetalleEntregable"."dFechaFin"
+	          "DetalleEntregable"."dFechaFin",
+            "Entregable"."nLineaBase" as lineabase,
+            "Periodicidad"."vPeriodicidad" as frecuencia
             FROM "Dependencia"
             INNER JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
             INNER JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
@@ -385,7 +387,8 @@ class M_reportePOA extends CI_Model {
             INNER JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
             INNER JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
             INNER JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
-            INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"';
+            INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
+            INNER JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"';
         
             $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.'AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iAnio" ='.$anio ;
             if($dep != 0){
