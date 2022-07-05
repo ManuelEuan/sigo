@@ -172,6 +172,7 @@ class C_pat extends CI_Controller
             $opt    = new Class_options();
             $id     = $this->input->post('id',true); // iIdDetalleActividad
             $data3['consulta']  = $this->pat->preparar_update($id);
+            $obtenerRol = $this->pat->getRol($_SESSION[PREFIJO.'_idusuario']);
 
             //Obtengo el select de los ejes
             $ejes           = '';
@@ -179,8 +180,14 @@ class C_pat extends CI_Controller
             $retos          = '';
             $catPoas        = '';
 
-            $objReto        = $this->pat->getReto($data3['consulta'][0]->iReto);
-            $arrRetos       = $this->pat->getRetosPorDependencia($objReto[0]->iIdDependencia);
+            $objReto        = $this->pat->getReto((int)$data3['consulta'][0]->iReto);
+            //$arrRetos       = $this->pat->getRetosPorDependencia($objReto[0]->iIdDependencia);
+            if($obtenerRol[0]->iIdRol == 1){
+                $arrRetos = $this->pat->obtenerRetosEje($data3['consulta'][0]->iideje);
+            }else{
+                $arrRetos  = $this->pat->getRetosPorDEP($_SESSION[PREFIJO.'_iddependencia']);
+            }
+            
             $arrDependencias= [];
             $dependencia    = '';
 
