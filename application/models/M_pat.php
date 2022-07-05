@@ -803,11 +803,15 @@ class M_pat extends CI_Model
 	}
 
 	public function getReto($retoID){
+
 		$sql = 'SELECT * FROM "Retos" WHERE "iIdReto" ='.$retoID;
+
+		$sql = 'SELECT * FROM "Retos" r WHERE "iIdReto" ='.$retoID;
+
 		return $this->db->query($sql)->result();
 	}
 
-	public function getRetosPorDependencia($dependenciaID = 0){
+	public function getRetosPorDependencia($dependenciaID){
 		$sql = 'SELECT * FROM "Reto" r WHERE "iIdDependencia" ='.$dependenciaID;
 		return $this->db->query($sql)->result();
 	}
@@ -862,4 +866,24 @@ class M_pat extends CI_Model
 		}
 		return $this->db->query($sql)->result();
 	}
+
+	function getRetosPorDEP($dependenciaID){
+		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "DependenciaEje"
+
+        LEFT JOIN "EjeRetos" ON "EjeRetos"."iIdEje" = "DependenciaEje"."iIdEje"
+
+        LEFT JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
+
+        WHERE "DependenciaEje"."iIdDependencia" = '.$dependenciaID.'
+		ORDER BY "Retos"."vDescripcion"';
+
+		return $this->db->query($sql)->result();
+	}
+
+	function getRol($id){
+		$sql = 'SELECT * FROM "Usuario" WHERE "iIdUsuario" = '.$id;
+  
+		return $this->db->query($sql)->result();
+	  }
+	  
 }

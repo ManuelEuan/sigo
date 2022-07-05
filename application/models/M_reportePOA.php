@@ -387,8 +387,10 @@ class M_reportePOA extends CI_Model {
             INNER JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
             INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"';
         
-            $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio. ' AND "Dependencia"."iIdDependencia" = '. $dep;
-        
+            $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.'AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iAnio" ='.$anio ;
+            if($dep != 0){
+              $whereCondition = $whereCondition.' AND "Dependencia"."iIdDependencia" = '. $dep;
+            }
       /*if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
       }
