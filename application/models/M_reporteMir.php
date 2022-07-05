@@ -377,7 +377,7 @@ return $resultado;
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
 
-      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio;
+      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio. ' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "Avance"."iActivo" = 1';
       //
 
       if($dep != 0){
