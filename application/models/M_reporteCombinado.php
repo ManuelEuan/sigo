@@ -388,7 +388,7 @@ class M_reporteCombinado extends CI_Model {
                         left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
                         INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
                         INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-                        inner join "Reto" on "Actividad"."iReto"="Reto"."iIdReto"
+                        inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
                         inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
                         left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
                         left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
