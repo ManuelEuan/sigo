@@ -122,10 +122,11 @@ class C_reporte extends CI_Controller {
             $whereString = $whereString.'AND EXTRACT(MONTH from dat."dInicio")='. (int)$this->input->post('mes',true);
         }
         
+       
 
         $mrep = new M_reporteAct();
-        
-        $query = $mrep->reporte_pat($anio,$eje,$dep,$tabla,$whereString);
+        $obtenerRol = $mrep->getRol($_SESSION[PREFIJO.'_idusuario']);
+        $query = $mrep->reporte_pat($anio,$eje,$dep,$tabla,$whereString, $obtenerRol[0]->iIdRol);
 
         $catalogosPOA   = $this->getCatalogoPOA(false);
         $datos = json_decode($catalogosPOA, true);
