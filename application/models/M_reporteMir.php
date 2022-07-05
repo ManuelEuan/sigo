@@ -355,7 +355,7 @@ return $resultado;
       "ProgramaPresupuestario"."iIdProgramaPresupuestario",
       "Entregable"."vEntregable" ,
       "Entregable"."vMedioVerifica" ,
-      "Reto"."vDescripcion" as reto,
+      "Retos"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
       "Dependencia"."iIdDependencia", 
       "ResumenNarrativo"."vNombreResumenNarrativo",
@@ -370,7 +370,7 @@ return $resultado;
       left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
       INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
       INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-      inner join "Reto" on "Actividad"."iReto"="Reto"."iIdReto"
+      inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
       inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
       left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
