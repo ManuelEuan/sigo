@@ -113,7 +113,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 <div class="form-row">
                     <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Eje Rector</label>
-                        <select class="custom-select select-lectura" name="RetoAct" id="RetoAct" onchange="cargarOptions('dependencias_act',this);" required>
+                        <select class="custom-select select-lectura" name="RetoAct" id="RetoAct"  required>
                             <option value="">--Seleccione--</option>
                             <?=$ejes?>
                         </select>
@@ -123,9 +123,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                     <div class="col-md-6 mb-6">
                         <label for="validationCustom04">Dependencia responsable</label>
-                        <select class="form-control select-lectura" aria-invalid="false" name="depAct" id="depAct" onchange="cargarOptions('retos',this);" required>
+                        <select class="form-control select-lectura" aria-invalid="false" name="depAct" id="depAct"  required>
                             <option value="">--Seleccione--</option>
-                            <!-- <?=$dependencias?> -->
+                         
                         </select>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
@@ -154,7 +154,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         <label for="validationCustom04">Reto</label>
                           <select class="form-control select-lectura" aria-invalid="false" name="iReto" id="iReto" required>
                             <option value="">--Seleccione--</option>
-                            <!-- <?=$retos?> -->
+                           
                         </select>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.

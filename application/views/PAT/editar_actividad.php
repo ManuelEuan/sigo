@@ -112,7 +112,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                     <div class="form-row">
                         <div class="col-md-6 mb-6">
                             <label for="validationCustom04">Eje Rector</label>
-                            <select class="custom-select select-lectura" required name="RetoAct" id="RetoAct" onchange="cargarOptions('dependencias_act',this);">
+                            <select class="custom-select select-lectura" required name="RetoAct" id="RetoAct" >
                                 <option value="">--Seleccione--</option>    
                                 <?=$ejes?>
                             </select>
@@ -122,7 +122,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                         <div class="col-md-6 mb-6">
                             <label for="validationCustom04">Dependencia responsable</label>
-                            <select class="form-control select-lectura" aria-invalid="false" name="depAct" id="depAct" required onchange="cargarOptions('retos',this);">
+                            <select class="form-control select-lectura" aria-invalid="false" name="depAct" id="depAct" required >
                                 <option value="">--Seleccione--</option>
                                 <?=$dependencias?>
                             </select>
