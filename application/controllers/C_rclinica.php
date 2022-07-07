@@ -6,6 +6,9 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Row;
+require_once APPPATH."/libraries/dompdf/autoload.inc.php";
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 
 class C_rclinica extends CI_Controller {
@@ -260,6 +263,144 @@ class C_rclinica extends CI_Controller {
         }
         
         echo json_encode($resp);
+    }
+    public function generarrepoPDF()
+    {   $anio = $this->input->post('anio',true);
+        $eje = $this->input->post('selEje',true);
+        $dep = $this->input->post('selDep',true);
+        $pp = $this->input->post('selPP',true);
+        $resp = array('resp' => false, 'error_message' => '', 'url' => '');
+        $tabla = array();
+
+	
+
+        if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
+        if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
+        if(isset($_POST['ped'])) $tabla['ped'] = 1;
+        if(isset($_POST['entregables'])) $tabla['entregables'] = 1;
+        if(isset($_POST['compromisos'])) $tabla['compromisos'] = 1;
+        if(isset($_POST['metasmun'])) $tabla['metasmun'] = 1;
+        if(isset($_POST['avances'])) $tabla['avances'] = 1;
+        $group = $this->input->post('agrupar',true);
+        $whereString = '';
+        if((int)$this->input->post('mes')  > 0){
+            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
+        }
+        $mrep = new M_reporteClinicas();
+        
+        //$query = $mrep->reporte_pat($anio,$dep,$whereString);
+        $query = $mrep->obtenerVista($eje,$dep);
+        
+
+        $fechaactual = date('m-d-Y h:i:s a');
+      
+        
+        $porcentaje = ($totalAvance/$totalMeta)*100;
+            $porcentajeRedondeado = round($porcentaje, 0);
+            
+            $obtenerDep = $mrep->obtenerDep($dep);
+
+            $obtenerEje = $mrep->obtenerEje($eje); 
+
+            $proPre = $mrep->obtenerPPporId($pp);
+            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+        if($query->num_rows() > 0){
+            $records = $query->result();
+
+   
+        
+
+        $html= "
+        <html>
+        <body>
+          <div >
+            <img src='$url' width='350' height=90 alt='LOGO'>
+            <h2 >REPORTE DE AVANCE MIR</h2>
+            <div >
+             <p>Organismo:{$obtenerDep->vDependencia}</p>
+             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
+             <p>Clasificacion Programática:{$proPre->vGrupoGasto} </p>
+             <p>Eje:{$obtenerEje->vEje} </p>
+             <p>Fecha: {$fechaactual}</p>
+            </div>
+            <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
+              <thead>
+            
+                <tr>
+                  <th  style='font-size:13px;width:15px;margin:0px;'>Nivel</th>
+                  <th style='font-size:13px; width:15px;margin:0px;'>Descripción del PP</th>
+                  <th style='font-size:13px;'>Resumen <br> Narrativo</th>
+                  <th style='width:15px;margin:0px;font-size:13px'>Acción o <br> Proyecto </th>
+                  <th colspan='1'  style='font-size:13px;text-align:center;width:15%;'>Indicador</th>
+                  <th style='font-size:13px;'>Variables</th>
+                  <th style='font-size:13px;width:5%;'>Datos de la variable</th>
+                  <th style='font-size:13px;'>Linea Base</th>
+                  <th style='font-size:13px;'>Meta</th>
+                  <th style='font-size:13px;'>Frecuencia</th>
+                  <th style='font-size:13px;'>Avance</th>
+                  <th style='font-size:13px;width:15px;margin:0px;text-align:center;'>Medio de verificación</th>
+                  <th style='font-size:13px;'>Supuesto</th>
+                </tr>
+              </thead>
+              <tbody>
+                
+               
+              ";
+              
+        foreach($records as $key => $rec) {
+            $html .= "<tr>
+            <td  style='font-size:12px;'>{$rec->vNivelMIR}</td>
+            <td  style='font-size:12px;'>{$rec->vProgramaPresupuestario}</td>
+            <td colspan='1' style='font-size:12px;width:35px;'>{$rec->vNombreResumenNarrativo}</td>
+            <td  style='font-size:12px; '>{$rec->vActividad}</td>
+            <td  style='font-size:12px;'>{$rec->vEntregable}</td>
+            <td  style='font-size:12px; text-align:center;'>{$rec->vnombrevariable}</td>
+            <td  style='font-size:12px;  text-align:center;'>{$rec->iValor}</td>
+            <td  style='font-size:12px;  text-align:center;'>{$rec->nLineaBase}</td>
+            <td  style='font-size:12px;text-align:center;'>100%</td>
+            <td  style='font-size:12px; text-align:center;'>{$rec->vPeriodicidad}</td>
+            <td  style='font-size:12px; text-align:center;'>{$rec->porcentajeavance}%</td>
+            <td  style='font-size:12px; text-align:center;'>{$rec->vMedioVerifica}</td>
+            <td  style='font-size:12px; text-align:center;'>{$rec->vSupuesto}</td>
+            
+          </tr>";     
+           
+          }
+        $html .= '</tbody>
+        </table>
+        </div>
+        </body>
+        </html>';
+        $options = new Options();
+        $options->setIsRemoteEnabled(true);
+        $options->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml(utf8_decode($html));
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+ 
+        
+        $searchString = " ";
+        $replaceString = "";
+        $originalString = $obtenerEje->vEje; 
+        
+        $outputString = str_replace($searchString, $replaceString, $originalString); 
+            // Forzar descarga del PDF
+        // $dompdf->set_paper ('a4','landscape');
+        $contenido = $dompdf->output();
+        $nombreDelDocumento = "public/reportes/reporte.pdf";
+        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
+        $resp['resp'] = true;
+        $resp['url'] = base_url().$nombreDelDocumento;  
+        }else {
+            $resp['error_message'] = 'Sin registros';
+        }
+        echo json_encode($resp); 
+        
+        
+        // $dompdf->stream("mypdf.pdf", [ "Attachment" => true]);
     }
 
     public function generarrepo_()

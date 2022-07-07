@@ -6,6 +6,10 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Row;
+require_once APPPATH."/libraries/dompdf/autoload.inc.php";
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 
 
 class C_rmir extends CI_Controller {
@@ -238,6 +242,131 @@ class C_rmir extends CI_Controller {
             $resp['error_message'] = 'Sin registros';
         }
         echo json_encode($resp);
+    }
+    public function generarrepoPDF()
+    {   
+        ini_set('max_execution_time', 600); // 5 Minutos máximo
+        $anio = $this->input->post('anio',true);
+        $eje = $this->input->post('selEje',true);
+        $dep = $this->input->post('selDep',true);
+        $pp = $this->input->post('selPP',true);
+        $resp = array('resp' => false, 'error_message' => '', 'url' => '');
+        $tabla = array();
+        if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
+        if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
+        if(isset($_POST['ped'])) $tabla['ped'] = 1;
+        if(isset($_POST['entregables'])) $tabla['entregables'] = 1;
+        if(isset($_POST['compromisos'])) $tabla['compromisos'] = 1;
+        if(isset($_POST['metasmun'])) $tabla['metasmun'] = 1;
+        if(isset($_POST['avances'])) $tabla['avances'] = 1;
+        $group = $this->input->post('agrupar',true);
+        $whereString = '';
+        if((int)$this->input->post('mes')  > 0){
+            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
+        }
+        $mrep = new M_reporteMir();
+        $obtenerDep = $mrep->obtenerDep($dep);
+        $obtenerEje = $mrep->obtenerEje($eje);
+        $obtenerObj = $mrep->obtenerObj($eje);
+        $proPre = $mrep->obtenerPPporId($pp);
+
+        
+        $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString, $pp);
+        $fechaactual = date('m-d-Y h:i:s a');
+            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+        if($query->num_rows() > 0){
+            $records = $query->result();
+
+   
+        
+
+        $html= "
+        <html>
+        <body>
+          <div >
+            <img src='$url' width='350' height=90 alt='LOGO'>
+            <h2 >REPORTE MIR</h2>
+            <div >
+             <p>Organismo:{$obtenerDep->vDependencia}</p>
+             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
+             <p>Clasificación Programática(Grupo de Gasto):{$proPre->vGrupoGasto} </p>
+             <p>Clasificación Programática(Grupo de Programa):{$proPre->vGrupoPrograma} </p>
+             <p>Clasificación Programática(Modalidad):{$proPre->vModalidad} </p>
+             <p>Gasto de Orden:{$proPre->vGastoOrden} </p>
+             <p>Eje:{$obtenerEje->vEje} </p>
+             <p>Objetivo del Gobierno: {$obtenerObj[0]->vObjetivoGobierno} </p>
+             <p>Año:{$anio} </p>
+             <p>Fecha: {$fechaactual}</p>
+            </div>
+            <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
+              <thead>
+            
+                <tr>
+                  <th  >Nivel</th>
+                  <th >Clave</th>
+                  <th >Resumen </th>
+                  <th >Indicadores</th>
+                  <th >Medios de verificación</th>
+                  <th >Supuestos</th>
+                  <th>Area Responsable</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                
+               
+              ";
+              
+        foreach($records as $key => $rec) {
+            $html .= "<tr>
+            <td  style='font-size:14px;text-align:center;'>{$rec->vNivelMIR}</td>
+            <td  style='font-size:14px;text-align:center;'>{$rec->iIdActividad}</td>
+            <td style='font-size:14px;text-align:center;'>{$rec->vNombreResumenNarrativo}</td>
+            <td  style='font-size:14px;text-align:justify;'>{$rec->vEntregable}</td>
+            <td  style='font-size:14px;text-align:center;'>{$rec->vMedioVerifica}</td>
+            <td style='font-size:14px;text-align:center;' >{$rec->vSupuesto}</td>
+            <td  style='font-size:14px;text-align:justify;'>{$rec->vAreaResponsable}</td>
+          
+            
+          </tr>";     
+           
+          }
+            $html .= '</tbody>
+            </table>
+        </div>
+        </body>
+        </html>';
+        $options = new Options();
+        $options->setIsRemoteEnabled(true);
+        $options->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml(utf8_decode($html));
+        // $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+ 
+        
+        $searchString = " ";
+        $replaceString = "";
+        $originalString = $obtenerEje->vEje; 
+        
+        $outputString = str_replace($searchString, $replaceString, $originalString); 
+            // Forzar descarga del PDF
+        // $dompdf->set_paper ('a4','landscape');
+        $contenido = $dompdf->output();
+        $nombreDelDocumento = "public/reportes/reportemir.pdf";
+        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
+        $resp['resp'] = true;
+        $resp['url'] = base_url().$nombreDelDocumento;  
+        }
+        else {
+            $resp['error_message'] = 'Sin registros';
+        }
+        echo json_encode($resp); 
+        
+        
+        // $dompdf->stream("mypdf.pdf", [ "Attachment" => true]);
     }
 
     public function generarrepo_()

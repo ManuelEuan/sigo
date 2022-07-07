@@ -7,7 +7,9 @@ use Box\Spout\Common\Entity\Row;
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Common\Entity\Style\Color;
-
+require_once APPPATH."/libraries/dompdf/autoload.inc.php";
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class C_reporteCombinado extends CI_Controller {
     public function __construct()
@@ -354,7 +356,212 @@ class C_reporteCombinado extends CI_Controller {
         }
         echo json_encode($resp);
     }
+    public function generarrepoPDF()
+    {   
+        ini_set('max_execution_time', 600); // 5 Minutos máximo
+        $anio = $this->input->post('anio',true);
+        $eje = $this->input->post('selEje',true);
+        $mes = $this->input->post('mes',true);
+        $dep = $this->input->post('selDep',true) ?: 0;
+        $resp = array('resp' => false, 'error_message' => '', 'url' => '');
+        $tabla = array();
+        $pp = $this->input->post('selPP',true);
 
+        if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
+        if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
+        if(isset($_POST['ped'])) $tabla['ped'] = 1;
+        if(isset($_POST['entregables'])) $tabla['entregables'] = 1;
+        if(isset($_POST['compromisos'])) $tabla['compromisos'] = 1;
+        if(isset($_POST['metasmun'])) $tabla['metasmun'] = 1;
+        if(isset($_POST['avances'])) $tabla['avances'] = 1;
+        $group = $this->input->post('agrupar',true);
+        $whereString = '';
+        if((int)$this->input->post('mes')  > 0){
+            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
+        }
+        
+
+        $mrep = new M_reporteCombinado();
+        if($pp == 0){
+            $ppFinal = '';
+        }else{
+            $ppFinal = $pp;
+        }
+        $query = $mrep->reporte_pat($anio,$dep,$eje,$whereString, $mes, $ppFinal);
+        $proPre = $mrep->obtenerPPporId($pp);
+
+        $fechaactual = date('m-d-Y h:i:s a');
+        $obtenerDep = $mrep->obtenerDep($dep);
+        $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+        if($query->num_rows() > 0){
+            $records = $query->result();
+           
+            $obtenerEje = $mrep->obtenerObj($eje); 
+
+   
+        
+
+        $html= "
+        <html>
+        <body>
+          <div >
+            <img src='$url' width='350' height=90 alt='LOGO'>
+            <h2 >REPORTE Combinado</h2>
+            <div >
+             <p>Organismo:{$obtenerDep->vDependencia}</p>
+             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
+             <p>Clasificación Programática(Grupo de Gasto):{$proPre->vGrupoGasto} </p>
+             <p>Clasificación Programática(Grupo de Programa):{$proPre->vGrupoPrograma} </p>
+             <p>Clasificación Programática(Modalidad):{$proPre->vModalidad} </p>
+             <p>Gasto de Orden:{$proPre->vGastoOrden} </p>
+             <p>Eje:{$obtenerEje->vEje} </p>
+             <p>Objetivo del Gobierno: {$obtenerEje->vObjetivoGobierno} </p>
+             <p>Estatrategia:  </p>
+          
+             <p>Fecha: {$fechaactual}</p>
+            </div>
+            <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
+              <thead>
+                <tr>
+                  <th style='font-size:11px;text-align:center;' >Nivel</th>
+                  <th style='font-size:11px;text-align:center;'>Resumen Presupuestario</th>
+                  <th style='font-size:11px;text-align:center;'>Tipo </th>
+                  <th style='font-size:11px;text-align:center;'>Dimension</th>
+                  <th style='font-size:11px;text-align:center;'>Accion</th>
+                  <th style='font-size:11px;text-align:center;'>Clave</th>
+                  <th style='font-size:11px;text-align:center;'>Indicador</th>
+                  <th style='font-size:11px;text-align:center;'>Meta</th>
+                  <th style='font-size:11px;text-align:center;'>Frecuencia</th>
+                  <th style='font-size:11px;text-align:center;'>Unidad de medida (Variable)</th>
+                  <th style='font-size:11px;text-align:center;'>Formula</th>
+                  <th style='font-size:11px;text-align:center;'>Medio Verificacion</th>
+                  <th style='font-size:11px;text-align:center;'>ENE</th>
+                  <th style='font-size:11px;text-align:center;'>FEB</th>
+                  <th style='font-size:11px;text-align:center;'>MAR</th>
+                  <th style='font-size:11px;text-align:center;'>ABR</th>
+                  <th style='font-size:11px;text-align:center;'>MAY</th>
+                  <th style='font-size:11px;text-align:center;'>JUN</th>
+                  <th style='font-size:11px;text-align:center;'>JUL</th>
+                  <th style='font-size:11px;text-align:center;'>AGO</th>
+                  <th style='font-size:11px;text-align:center;'>SEP</th>
+                  <th style='font-size:11px;text-align:center;'>OCT</th>
+                  <th style='font-size:11px;text-align:center;'>NOV</th>
+                  <th style='font-size:11px;text-align:center;'>DIC</th>
+                  <th style='font-size:11px;text-align:center;'>Total acomulado</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                
+               
+              ";
+              
+        foreach($records as $key => $rec) {
+            $total = 0;
+            $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
+            
+            $html .= "<tr>
+            <td  style='font-size:11px;text-align:center;'>{$rec->nivel}</td>
+            <td  style='font-size:11px;text-align:center;'>{$rec->resumennarrativo}</td>
+            <td style='font-size:11px;text-align:center;'>{$rec->tipo}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->dimension}</td>
+            <td  style='font-size:11px;text-align:center;'>{$rec->accion}</td>
+            <td style='font-size:11px;text-align:center;' >{$rec->clave}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->indicador}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->meta}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->frecuencia}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->operacion}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->vvariable}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->unidadmedida}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->formula}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->umedioverifica}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->enero}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->febrero}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->marzo}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->abril}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->mayo}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->junio}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->julio}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->agosto}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->septiembre}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->octubre}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->noviembre}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$rec->diciembre}</td>
+            <td  style='font-size:11px;text-align:justify;'>{$total}</td>
+          
+            
+          </tr>";     
+           
+          }
+            $html .= "</tbody>
+            <tfoot>
+            <thead>
+                <tr>
+                  <th style='font-size:11px;text-align:center;' >Nivel</th>
+                  <th style='font-size:11px;text-align:center;'>Resumen Presupuestario</th>
+                  <th style='font-size:11px;text-align:center;'>Tipo </th>
+                  <th style='font-size:11px;text-align:center;'>Dimension</th>
+                  <th style='font-size:11px;text-align:center;'>Accion</th>
+                  <th style='font-size:11px;text-align:center;'>Clave</th>
+                  <th style='font-size:11px;text-align:center;'>Indicador</th>
+                  <th style='font-size:11px;text-align:center;'>Meta</th>
+                  <th style='font-size:11px;text-align:center;'>Frecuencia</th>
+                  <th style='font-size:11px;text-align:center;'>Unidad de medida (Variable)</th>
+                  <th style='font-size:11px;text-align:center;'>Formula</th>
+                  <th style='font-size:11px;text-align:center;'>Medio Verificacion</th>
+                  <th style='font-size:11px;text-align:center;'>ENE</th>
+                  <th style='font-size:11px;text-align:center;'>FEB</th>
+                  <th style='font-size:11px;text-align:center;'>MAR</th>
+                  <th style='font-size:11px;text-align:center;'>ABR</th>
+                  <th style='font-size:11px;text-align:center;'>MAY</th>
+                  <th style='font-size:11px;text-align:center;'>JUN</th>
+                  <th style='font-size:11px;text-align:center;'>JUL</th>
+                  <th style='font-size:11px;text-align:center;'>AGO</th>
+                  <th style='font-size:11px;text-align:center;'>SEP</th>
+                  <th style='font-size:11px;text-align:center;'>OCT</th>
+                  <th style='font-size:11px;text-align:center;'>NOV</th>
+                  <th style='font-size:11px;text-align:center;'>DIC</th>
+                  <th style='font-size:11px;text-align:center;'>Total acomulado</th>
+                  
+                </tr>
+              </thead>
+            </tfoot>
+            </table>
+        </div>
+        </body>
+        </html>";
+        $options = new Options();
+        $options->setIsRemoteEnabled(true);
+        $options->setIsHtml5ParserEnabled(true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml(utf8_decode($html));
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+
+ 
+        
+        $searchString = " ";
+        $replaceString = "";
+        $originalString = $obtenerEje->vEje; 
+        
+        $outputString = str_replace($searchString, $replaceString, $originalString); 
+            // Forzar descarga del PDF
+        // $dompdf->set_paper ('a4','landscape');
+        $contenido = $dompdf->output();
+        $nombreDelDocumento = "public/reportes/reportecombinado.pdf";
+        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
+        $resp['resp'] = true;
+        $resp['url'] = base_url().$nombreDelDocumento;  
+        }
+        else {
+            $resp['error_message'] = 'Sin registros';
+        }
+        echo json_encode($resp); 
+        
+        
+        // $dompdf->stream("mypdf.pdf", [ "Attachment" => true]);
+    }
     public function generarrepo_()
     {
         $anio = $this->input->get('anio',true);

@@ -156,7 +156,7 @@
   function espera(id) {
     document.getElementById("descarga").style.display = "none";
     if ($("#tipo").val() == 0) generarExcel();
-    // if ($("#tipo").val() == 1) generarFichas();
+    if ($("#tipo").val() == 1) generarPDF();
   }
 
   function showChecks() {
@@ -303,6 +303,59 @@
           });
         },
         success: function(r) {
+          var resp = JSON.parse(r);
+          if (resp.resp) {
+            $("#descarga").attr("href", resp.url);
+            document.getElementById("descarga").style.display = "inline";
+            Swal.fire({
+              position: 'center',
+              type: 'success',
+              title: 'Su reporte se ha generado con exito',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          } else {
+            Swal.fire({
+              position: 'center',
+              type: 'error',
+              title: resp.error_message,
+              showConfirmButton: false,
+              timer: 1500
+            })
+          }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+
+        }
+      });
+    }
+  }
+  function generarPDF() {
+    var eje = parseInt($("#selEje").val());
+    var dep = parseInt($("#selDep").val());
+    var anio = $("#anio").val();
+    var mes = $('#mes').val();
+
+    if (anio == '' || anio == 0 || anio == null) {
+      alerta('Por favor indique un año', 'warning');
+    } else if (eje == 0) {
+      alerta('Por favor indique un eje', 'warning');
+    } else {
+      $.ajax({
+        type: "POST",
+        url: "<?= base_url() ?>index.php/C_rindicadores/generarrepoPDF",
+        data: $("#frmReport").serialize(),
+        // beforeSend: function(xhr) {
+        //   Swal.fire({
+        //     position: 'center',
+        //     type: 'info',
+        //     title: 'Estamos trabajando en ello, espere por favor',
+        //     showConfirmButton: false,
+        //     timer: 2000
+        //   });
+        // },
+        success: function(r) {
+          console.log('Hola mundo');
           var resp = JSON.parse(r);
           if (resp.resp) {
             $("#descarga").attr("href", resp.url);
