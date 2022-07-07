@@ -157,6 +157,23 @@ class C_avances extends CI_Controller {
                 else{
                     $observaciones = ' ';
                 }
+                if(isset($_POST['txtTotal']) && $_POST['txtTotal'] != ''){
+                    $totalAvance = $this->input->post('txtTotal',TRUE);
+                    
+                    $dividirTotalH = $totalAvance / 2;
+                    $totalHround = round($dividirTotalH);
+                    $dividirTotalM = $totalAvance - $totalHround;
+                    $sumah = $totalHround + $dividirTotalM;
+                    if($sumah == $totalAvance){
+                        $beneficiarioH = $totalHround;
+                        $beneficiarioM = $dividirTotalM;
+                    }else{
+                        echo 'Algo fallo';
+                    }
+                }
+                else{
+                    $totalAvance = 0;
+                }
                 $result = false;
                 $table = 'Avance';
                 if(isset($_POST['municipios'])){
@@ -178,7 +195,7 @@ class C_avances extends CI_Controller {
                         $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
 
                         $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
-                        $data['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
+                        $data['iBeneficiariosTotales'] = $totalAvance;
 
                         $idInsertado = $this->ma->guardado_general($table,$data);
                         
