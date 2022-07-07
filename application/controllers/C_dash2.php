@@ -29,7 +29,6 @@ class C_dash2 extends CI_Controller {
         //$text = $this->input->post('text',true);
         $nombredep = $this->input->post('SelDep',true);
         $result = $this->M_dash2->buscar_dep($nombredep);
-
         switch ($result->num_rows())
         {
             case 0:
@@ -41,7 +40,7 @@ class C_dash2 extends CI_Controller {
             default:
                 $this->listado_deps($result);    
                 break;
-        }        
+        }  
     }
 
     public function listado_deps($result = null)
@@ -56,6 +55,7 @@ class C_dash2 extends CI_Controller {
         if($idDep == 0) $idDep = $this->input->post('idDep',true);
         $data['idDep'] = $idDep;
         $result = $this->M_dash2->AniosDep($idDep);
+        
         $data['anios'] = '';
         $anio = 0;
         if($result->num_rows() > 0)
@@ -118,7 +118,7 @@ class C_dash2 extends CI_Controller {
         $data['background'] = $background;
         $data['series'] = $series;
 
-        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep);
+        $data['actividades'] = $this->M_dash->list_actividades($anio,$idDep, '');
         $data['compromisos'] = $this->M_dash2->compromisos_by_dep($idDep);
         $data['est_compromiso'] = $this->M_dash2->compromisos_estatus_by_dep($idDep);
         $data['obras'] = '';
@@ -141,7 +141,7 @@ class C_dash2 extends CI_Controller {
 
             $detalle        = $this->M_dash->getDetalleActividad($query->iIdDetalleActividad);
             $autorizado     = $detalle[0]->nPresupuestoAutorizado == '' ? 0 : $detalle[0]->nPresupuestoAutorizado;
-            $presupuesto    = $autorizado == 0 ? 0 : ($totalPagado * 100)/$autorizado; 
+            $presupuesto    = $autorizado == 0 ? 0 : ($totalPagado * 100)/$autorizado;
             /* echo("autorizado: ".$autorizado);
             echo("###  Pagado: ".$totalPagado);
             echo("<br>"); */
