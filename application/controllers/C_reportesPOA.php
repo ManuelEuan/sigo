@@ -316,7 +316,7 @@ class C_reportesPOA extends CI_Controller {
         $query = $mrep->reporte_pat($anio,$dep,$eje,$whereString, $mes);
 
         $fechaactual = date('m-d-Y h:i:s a');
-            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657236216/logo-queretaro_c4th0a.png';  
         if($query->num_rows() > 0){
             $records = $query->result();
             $obtenerDep = $mrep->obtenerDep($dep);
@@ -328,19 +328,23 @@ class C_reportesPOA extends CI_Controller {
 
         $html= "
         <html>
+        <head>
+        
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        </head>
         <body>
           <div >
-            <img src='$url' width='350' height=90 alt='LOGO'>
-            <h2 >REPORTE POA (SF)</h2>
+            <img src='$url' width='100' height=90 alt='LOGO'>
+            <h2 style='text-align:center;'>REPORTE POA (SF)</h2>
             <div >
-             <p>Organismo:{$obtenerDep->vDependencia}</p>
-             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
-             <p>Clasificación Programática(Grupo de Gasto):{$proPre->vGrupoGasto} </p>
-             <p>Clasificación Programática(Grupo de Programa):{$proPre->vGrupoPrograma} </p>
-             <p>Clasificación Programática(Modalidad):{$proPre->vModalidad} </p>
-             <p>Gasto de Orden:{$proPre->vGastoOrden} </p>
-             <p>Eje:{$obtenerEje->vEje} </p>
-             <p>Objetivo del Gobierno: {$obtenerEje->vObjetivo} </p>
+             <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
+             <p><span style='font-weight: 600;'>Programa presupuestaria: </span> {$proPre->vProgramaPresupuestario}</p>
+             <p><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto): </span>{$proPre->vGrupoGasto} </p>
+             <p><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa): </span>{$proPre->vGrupoPrograma} </p>
+             <p><span style='font-weight: 600;'>Clasificación Programática(Modalidad): </span>{$proPre->vModalidad} </p>
+             <p><span style='font-weight: 600;'>Gasto de Orden: </span>{$proPre->vGastoOrden} </p>
+             <p><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
+             <p><span style='font-weight: 600;'>Objetivo del Gobierno: </span>{$obtenerEje->vObjetivo} </p>
           
              <p>Fecha: {$fechaactual}</p>
             </div>
@@ -387,7 +391,7 @@ class C_reportesPOA extends CI_Controller {
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($options);
-        $dompdf->loadHtml(utf8_decode($html));
+        $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
