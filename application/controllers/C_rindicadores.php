@@ -6,6 +6,8 @@ use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Row;
+require_once APPPATH."/libraries/dompdf/autoload.inc.php";
+use Dompdf\Dompdf;
 
 
 class C_rindicadores extends CI_Controller {
@@ -285,6 +287,19 @@ class C_rindicadores extends CI_Controller {
             $resp['error_message'] = 'Sin registros';
         }
         echo json_encode($resp);
+    }
+    public function generarrepoPDF()
+    {   
+        $dompdf = new Dompdf();
+        $html = '';
+        $dompdf->loadHtml($html);
+        $dompdf->render();
+        $contenido = $dompdf->output();
+        $nombreDelDocumento = "public/reportes/1_hola.pdf";
+        $bytes = file_put_contents($nombreDelDocumento, $contenido);   
+        $resp['resp'] = true;
+        $resp['url'] = base_url().$nombreDelDocumento;   
+        echo json_encode($resp); 
     }
 
     public function generarrepo_()

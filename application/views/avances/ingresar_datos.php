@@ -58,6 +58,12 @@
                 <div class="col-md-3 mb-3">
                     <button type="button" class="btn waves-effect waves-light btn-info" onclick="changeInput();">Calcular</button>
                 </div>
+                <div class="col-md-9 mb-3">
+                <label for="validationCustom04">¿La información se reporta en totales?
+                        SI <input type="checkbox" id="itotal" name="itotal">
+                        <!-- NO <input type="checkbox" id="iavance" name="iProblematica"> -->
+                        </label>
+                </div>
             </div>
 
             <!--<div class="form-row">
@@ -193,7 +199,54 @@
 <script>
     var TipoActividad = 'gestion';
     var monto  = 0;
+    // document.getElementById("beneficiarioH").disabled = true;
+    document.getElementById("txtTotal").disabled = true;
 
+
+    $('#itotal').click(function(){
+    console.log('hola');
+        if($(this).is(':checked')){
+            document.getElementById("beneficiarioH").disabled = true;
+            document.getElementById("beneficiarioM").disabled = true;
+            document.getElementById("nDiscapacitadosH").disabled = true;
+            document.getElementById("nDiscapacitadosM").disabled = true;
+            document.getElementById("nLenguaH").disabled = true;
+            document.getElementById("nLenguaM").disabled = true;
+            document.getElementById("nTerceraEdadH").disabled = true;
+            document.getElementById("nTerceraEdadM").disabled = true;
+            document.getElementById("nAdolescenteH").disabled = true;
+            document.getElementById("nAdolescenteM").disabled = true;
+            document.getElementById("txtTotal").disabled = false;
+            // $('#vProblematica').show();
+            console.log('activo');
+        } else {
+            $('#beneficiarioH').prop('selectedIndex',0);
+            $('#beneficiarioM').prop('selectedIndex',0);
+            $('#nDiscapacitadosH').prop('selectedIndex',0);
+            $('#nDiscapacitadosM').prop('selectedIndex',0);
+            $('#nLenguaH').prop('selectedIndex',0);
+            $('#nLenguaM').prop('selectedIndex',0);
+            $('#nTerceraEdadH').prop('selectedIndex',0);
+            $('#nTerceraEdadM').prop('selectedIndex',0);
+            $('#nAdolescenteH').prop('selectedIndex',0);
+            $('#nAdolescenteM').prop('selectedIndex',0);
+            $('#txtTotal').prop('selectedIndex',0);
+            // $('#vProblematica').hide();
+            console.log('Inactivo');
+
+            document.getElementById("beneficiarioH").disabled = false;
+            document.getElementById("beneficiarioM").disabled = false;
+            document.getElementById("nDiscapacitadosH").disabled = false;
+            document.getElementById("nDiscapacitadosM").disabled = false;
+            document.getElementById("nLenguaH").disabled = false;
+            document.getElementById("nLenguaM").disabled = false;
+            document.getElementById("nTerceraEdadH").disabled = false;
+            document.getElementById("nTerceraEdadM").disabled = false;
+            document.getElementById("nAdolescenteH").disabled = false;
+            document.getElementById("nAdolescenteM").disabled = false;
+            document.getElementById("txtTotal").disabled = true;
+        }
+    });
     $(document).ready(function(){
         $(".select2").select2();
         TipoActividad =  $("#tipoActividad").val();
