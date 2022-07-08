@@ -291,16 +291,16 @@ class C_rmir extends CI_Controller {
             <img src='$url' width='100' height=90 alt='LOGO'>
             <h2 style='text-align:center;'>REPORTE MIR</h2>
             <div >
-             <p ><span style='font-weight: 600;'>Organismo:</span>{$obtenerDep->vDependencia}</p>
-             <p ><span style='font-weight: 600;'>Programa presupuestaria:</span> {$proPre->vProgramaPresupuestario}</p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto):</span>{$proPre->vGrupoGasto} </p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa):</span>{$proPre->vGrupoPrograma} </p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Modalidad):</span>{$proPre->vModalidad} </p>
-             <p ><span style='font-weight: 600;'>Gasto de Orden:</span>{$proPre->vGastoOrden} </p>
+             <p ><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
+             <p ><span style='font-weight: 600;'>Programa presupuestaria: </span> {$proPre->vProgramaPresupuestario}</p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto): </span>{$proPre->vGrupoGasto} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa): </span>{$proPre->vGrupoPrograma} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Modalidad): </span>{$proPre->vModalidad} </p>
+             <p ><span style='font-weight: 600;'>Gasto de Orden: </span>{$proPre->vGastoOrden} </p>
              <p ><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
-             <p ><span style='font-weight: 600;'>Objetivo del Gobierno:</span> {$obtenerObj[0]->vObjetivoGobierno} </p>
-             <p ><span style='font-weight: 600;'>Año:</span>{$anio} </p>
-             <p ><span style='font-weight: 600;'>Fecha:</span> {$fechaactual}</p>
+             <p ><span style='font-weight: 600;'>Objetivo del Gobierno: </span> {$obtenerObj[0]->vObjetivoGobierno} </p>
+             <p ><span style='font-weight: 600;'>Año: </span>{$anio} </p>
+             <p ><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
             </div>
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
@@ -335,11 +335,34 @@ class C_rmir extends CI_Controller {
           </tr>";     
            
           }
-            $html .= '</tbody>
+            $html .= "</tbody>
             </table>
         </div>
+        <br><br>
+         <table class='' cellspacing='1' style='border-collapse: collapse' bordercolor='#111111' width='100%' height='100%'>
+              <thead>
+                <tr>
+                  <th>Elaboró</th>
+                  <th></th>
+                  <th>Revisó</th>
+                  <th></th>
+                  <th>Valida</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style='border-bottom:2px solid #000;'><br><br></td>
+                  <td></td>
+                  <td style='border-bottom:2px solid #000;'></td>
+                  <td></td>
+                  <td style='border-bottom:2px solid #000;'></td>
+                  
+                </tr>
+               
+              </tbody>
+        </table>
         </body>
-        </html>';
+        </html>";
         $options = new Options();
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);

@@ -370,11 +370,34 @@ class C_rclinica extends CI_Controller {
           </tr>";     
            
           }
-        $html .= '</tbody>
+        $html .= "</tbody>
         </table>
         </div>
+        <br><br>
+        <table class='' cellspacing='1' style='border-collapse: collapse' bordercolor='#111111' width='100%' height='100%'>
+             <thead>
+               <tr>
+                 <th>Elaboró</th>
+                 <th></th>
+                 <th>Revisó</th>
+                 <th></th>
+                 <th>Valida</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td style='border-bottom:2px solid #000;'><br><br></td>
+                 <td></td>
+                 <td style='border-bottom:2px solid #000;'></td>
+                 <td></td>
+                 <td style='border-bottom:2px solid #000;'></td>
+                 
+               </tr>
+              
+             </tbody>
+       </table>
         </body>
-        </html>';
+        </html>";
         $options = new Options();
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
