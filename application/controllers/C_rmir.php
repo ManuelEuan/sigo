@@ -285,6 +285,18 @@ class C_rmir extends CI_Controller {
         <head>
         
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <style>
+            footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                height:50px;
+                color:black;
+                text-align: left;
+            }
+            
+
+        </style>
         </head>
         <body>
           <div >
@@ -361,6 +373,7 @@ class C_rmir extends CI_Controller {
                
               </tbody>
         </table>
+        
         </body>
         </html>";
         $options = new Options();
@@ -370,19 +383,13 @@ class C_rmir extends CI_Controller {
         $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(315, 765, "Reporte MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
 
  
-        
-        $searchString = " ";
-        $replaceString = "";
-        $originalString = $obtenerEje->vEje; 
-        
-        $outputString = str_replace($searchString, $replaceString, $originalString); 
-            // Forzar descarga del PDF
-        // $dompdf->set_paper ('a4','landscape');
-        $contenido = $dompdf->output();
+        $pdf = $dompdf->output();
         $nombreDelDocumento = "public/reportes/reportemir.pdf";
-        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
         // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
         $resp['resp'] = true;
         $resp['url'] = base_url().$nombreDelDocumento;  

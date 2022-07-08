@@ -331,14 +331,26 @@ class C_reportesPOA extends CI_Controller {
         <head>
         
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <style>
+            footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                height:50px;
+                color:black;
+                text-align: left;
+            }
+            
+
+        </style>
         </head>
         <body>
           <div >
             <img src='$url' width='100' height=90 alt='LOGO'>
-            <h2 style='text-align:center;'>REPORTE POA (SF)</h2>
+            <h2 style='text-align:center;'> POA (SF)</h2>
             <div >
              <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
-             <p><span style='font-weight: 600;'>Programa presupuestaria: </span> {$proPre->vProgramaPresupuestario}</p>
+             <p><span style='font-weight: 600;'>Programa presupuestario: </span> {$proPre->vProgramaPresupuestario}</p>
              <p><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto): </span>{$proPre->vGrupoGasto} </p>
              <p><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa): </span>{$proPre->vGrupoPrograma} </p>
              <p><span style='font-weight: 600;'>Clasificación Programática(Modalidad): </span>{$proPre->vModalidad} </p>
@@ -357,6 +369,7 @@ class C_reportesPOA extends CI_Controller {
                   <th >Clave </th>
                   <th >Indicadores</th>
                   <th >Linea Base</th>
+                  <th >Meta</th>
                   <th >Frecuencia</th>
                   <th>Unidad de Medida</th>
                   
@@ -376,6 +389,7 @@ class C_reportesPOA extends CI_Controller {
             <td  style='font-size:14px;text-align:justify;'>{$rec->indicador}</td>
             <td  style='font-size:14px;text-align:center;'>{$rec->lineabase}</td>
             <td style='font-size:14px;text-align:center;' >{$rec->meta}</td>
+            <td style='font-size:14px;text-align:center;' >{$rec->frecuencia}</td>
             <td  style='font-size:14px;text-align:justify;'>{$rec->unidadmedida}</td>
           
             
@@ -408,6 +422,7 @@ class C_reportesPOA extends CI_Controller {
                
               </tbody>
         </table>
+       
         </body>
         </html>";
         $options = new Options();
@@ -417,19 +432,14 @@ class C_reportesPOA extends CI_Controller {
         $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(315, 765, "Reporte POA SF,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
 
  
-        
-        $searchString = " ";
-        $replaceString = "";
-        $originalString = $obtenerEje->vEje; 
-        
-        $outputString = str_replace($searchString, $replaceString, $originalString); 
-            // Forzar descarga del PDF
-        // $dompdf->set_paper ('a4','landscape');
-        $contenido = $dompdf->output();
+        $pdf = $dompdf->output();
+
         $nombreDelDocumento = "public/reportes/reportepoa.pdf";
-        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
         // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
         $resp['resp'] = true;
         $resp['url'] = base_url().$nombreDelDocumento;  

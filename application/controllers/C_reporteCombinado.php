@@ -406,11 +406,23 @@ class C_reporteCombinado extends CI_Controller {
         <head>
         
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <style>
+            footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                height:50px;
+                color:black;
+                text-align: left;
+            }
+            
+
+        </style>
         </head>
         <body>
           <div >
             <img src='$url' width='100' height=90 alt='LOGO'>
-            <h2 style='text-align:center;'>REPORTE Combinado</h2>
+            <h2 style='text-align:center;'>Reporte Combinado</h2>
             <div >
              <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
              <p><span style='font-weight: 600;'>Programa presupuestaria: </span>{$proPre->vProgramaPresupuestario}</p>
@@ -427,6 +439,7 @@ class C_reporteCombinado extends CI_Controller {
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
                 <tr>
+             
                   <th style='font-size:11px;text-align:center;' >Nivel</th>
                   <th style='font-size:11px;text-align:center;'>Resumen Presupuestario</th>
                   <th style='font-size:11px;text-align:center;'>Tipo </th>
@@ -436,6 +449,8 @@ class C_reporteCombinado extends CI_Controller {
                   <th style='font-size:11px;text-align:center;'>Indicador</th>
                   <th style='font-size:11px;text-align:center;'>Meta</th>
                   <th style='font-size:11px;text-align:center;'>Frecuencia</th>
+                  <th style='font-size:11px;text-align:center;'>Operacion</th>
+                  <th style='font-size:11px;text-align:center;'>Variable</th>
                   <th style='font-size:11px;text-align:center;'>Unidad de medida (Variable)</th>
                   <th style='font-size:11px;text-align:center;'>Formula</th>
                   <th style='font-size:11px;text-align:center;'>Medio Verificacion</th>
@@ -498,38 +513,7 @@ class C_reporteCombinado extends CI_Controller {
            
           }
             $html .= "</tbody>
-            <tfoot>
-            <thead>
-                <tr>
-                  <th style='font-size:11px;text-align:center;' >Nivel</th>
-                  <th style='font-size:11px;text-align:center;'>Resumen Presupuestario</th>
-                  <th style='font-size:11px;text-align:center;'>Tipo </th>
-                  <th style='font-size:11px;text-align:center;'>Dimension</th>
-                  <th style='font-size:11px;text-align:center;'>Accion</th>
-                  <th style='font-size:11px;text-align:center;'>Clave</th>
-                  <th style='font-size:11px;text-align:center;'>Indicador</th>
-                  <th style='font-size:11px;text-align:center;'>Meta</th>
-                  <th style='font-size:11px;text-align:center;'>Frecuencia</th>
-                  <th style='font-size:11px;text-align:center;'>Unidad de medida (Variable)</th>
-                  <th style='font-size:11px;text-align:center;'>Formula</th>
-                  <th style='font-size:11px;text-align:center;'>Medio Verificacion</th>
-                  <th style='font-size:11px;text-align:center;'>ENE</th>
-                  <th style='font-size:11px;text-align:center;'>FEB</th>
-                  <th style='font-size:11px;text-align:center;'>MAR</th>
-                  <th style='font-size:11px;text-align:center;'>ABR</th>
-                  <th style='font-size:11px;text-align:center;'>MAY</th>
-                  <th style='font-size:11px;text-align:center;'>JUN</th>
-                  <th style='font-size:11px;text-align:center;'>JUL</th>
-                  <th style='font-size:11px;text-align:center;'>AGO</th>
-                  <th style='font-size:11px;text-align:center;'>SEP</th>
-                  <th style='font-size:11px;text-align:center;'>OCT</th>
-                  <th style='font-size:11px;text-align:center;'>NOV</th>
-                  <th style='font-size:11px;text-align:center;'>DIC</th>
-                  <th style='font-size:11px;text-align:center;'>Total acomulado</th>
-                  
-                </tr>
-              </thead>
-            </tfoot>
+            
             </table>
         </div>
         <br><br>
@@ -555,6 +539,7 @@ class C_reporteCombinado extends CI_Controller {
                
               </tbody>
         </table>
+        
         </body>
         </html>";
         $options = new Options();
@@ -562,22 +547,14 @@ class C_reporteCombinado extends CI_Controller {
         $options->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('a3', 'landscape');
         $dompdf->render();
-
- 
-        
-        $searchString = " ";
-        $replaceString = "";
-        $originalString = $obtenerEje->vEje; 
-        
-        $outputString = str_replace($searchString, $replaceString, $originalString); 
-            // Forzar descarga del PDF
-        // $dompdf->set_paper ('a4','landscape');
-        $contenido = $dompdf->output();
+         
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(775, 805, "Reporte Combinado,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
+        $pdf = $dompdf->output();
         $nombreDelDocumento = "public/reportes/reportecombinado.pdf";
-        $bytes = file_put_contents($nombreDelDocumento, $contenido);
-        // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
         $resp['resp'] = true;
         $resp['url'] = base_url().$nombreDelDocumento;  
         }
@@ -588,6 +565,16 @@ class C_reporteCombinado extends CI_Controller {
         
         
         // $dompdf->stream("mypdf.pdf", [ "Attachment" => true]);
+    }
+    function injectPageCount(Dompdf $dompdf): void{
+        /** @var CPDF $canvas */
+        $canvas = $dompdf->getCanvas();
+        $pdf = $canvas->get_cpdf();
+        foreach ($pdf->objects as &$o) {
+            if ($o['t'] === 'contents') {
+                $o['c'] = str_replace('DOMPDF_PAGE_COUNT_PLACEHOLDER', $canvas->get_page_count(), $o['c']);
+            }
+        }
     }
     public function generarrepo_()
     {
