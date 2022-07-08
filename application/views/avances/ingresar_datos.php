@@ -58,12 +58,19 @@
                 <div class="col-md-3 mb-3">
                     <button type="button" class="btn waves-effect waves-light btn-info" onclick="changeInput();">Calcular</button>
                 </div>
-                <div class="col-md-9 mb-3">
-                <label for="validationCustom04">¿La información se reporta en totales?
-                        SI <input type="checkbox" id="itotal" name="itotal">
+                <div class="col-md-6 mb-3" style="align-self: self-end;">
+                <label for="validationCustom04">¿Cuenta con la información desagregada de los beneficiarios?
+                        NO <input type="checkbox" id="itotal" name="itotal">
                         <!-- NO <input type="checkbox" id="iavance" name="iProblematica"> -->
                         </label>
                 </div>
+                <div class="col-md-3 mb-3">
+                <label>Beneficiarios Totales</label>
+                <input type="number" class="form-control" id="txtTotal" name="txtTotal" placeholder="0">
+                <div class="invalid-feedback">
+                    Este campo no puede estar vacio.
+                </div>
+            </div>
             </div>
 
             <!--<div class="form-row">
@@ -170,13 +177,7 @@
                     Este campo no puede estar vacio.
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <label>Total</label>
-                <input type="number" class="form-control" id="txtTotal" name="txtTotal" placeholder="0">
-                <div class="invalid-feedback">
-                    Este campo no puede estar vacio.
-                </div>
-            </div>
+            
         </div>
          <div class="form-row">
             <div class="col-md-12 mb-3">
