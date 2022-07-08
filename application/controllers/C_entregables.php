@@ -249,7 +249,7 @@ class C_entregables extends CI_Controller
 
             $data['vEntregable'] = $this->input->post('entregable',TRUE);
             $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
-            $data['vNombreEntregable'] = $this->input->post('vNombreEntregable',TRUE);
+            $data['vNombreEntregable'] = '.';
 
             //Agregado Saul
             $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
@@ -1044,7 +1044,7 @@ class C_entregables extends CI_Controller
         $d_act['vNombreActividad'] = $this->input->post('vNombreActividad',true);
         $w_act['iIdActividad'] = $this->input->post('iIdActividad',true);
       
-        $d_ent['vNombreEntregable'] = $this->input->post('vNombreEntregable',true);
+        $d_ent['vNombreEntregable'] = '.';
         $d_ent['vNombreEntregableMaya'] = $this->input->post('vNombreEntregableMaya',true);
         $d_ent['iEjeAnexo'] = $this->input->post('iEjeAnexo',true);
         $d_ent['iNumOds'] = $this->input->post('iNumOds',true);
