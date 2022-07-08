@@ -273,7 +273,7 @@ class C_rmir extends CI_Controller {
         
         $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString, $pp);
         $fechaactual = date('m-d-Y h:i:s a');
-            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657236216/logo-queretaro_c4th0a.png';  
         if($query->num_rows() > 0){
             $records = $query->result();
 
@@ -282,21 +282,25 @@ class C_rmir extends CI_Controller {
 
         $html= "
         <html>
+        <head>
+        
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        </head>
         <body>
           <div >
-            <img src='$url' width='350' height=90 alt='LOGO'>
-            <h2 >REPORTE MIR</h2>
+            <img src='$url' width='100' height=90 alt='LOGO'>
+            <h2 style='text-align:center;'>REPORTE MIR</h2>
             <div >
-             <p>Organismo:{$obtenerDep->vDependencia}</p>
-             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
-             <p>Clasificación Programática(Grupo de Gasto):{$proPre->vGrupoGasto} </p>
-             <p>Clasificación Programática(Grupo de Programa):{$proPre->vGrupoPrograma} </p>
-             <p>Clasificación Programática(Modalidad):{$proPre->vModalidad} </p>
-             <p>Gasto de Orden:{$proPre->vGastoOrden} </p>
-             <p>Eje:{$obtenerEje->vEje} </p>
-             <p>Objetivo del Gobierno: {$obtenerObj[0]->vObjetivoGobierno} </p>
-             <p>Año:{$anio} </p>
-             <p>Fecha: {$fechaactual}</p>
+             <p ><span style='font-weight: 600;'>Organismo:</span>{$obtenerDep->vDependencia}</p>
+             <p ><span style='font-weight: 600;'>Programa presupuestaria:</span> {$proPre->vProgramaPresupuestario}</p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto):</span>{$proPre->vGrupoGasto} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa):</span>{$proPre->vGrupoPrograma} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Modalidad):</span>{$proPre->vModalidad} </p>
+             <p ><span style='font-weight: 600;'>Gasto de Orden:</span>{$proPre->vGastoOrden} </p>
+             <p ><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
+             <p ><span style='font-weight: 600;'>Objetivo del Gobierno:</span> {$obtenerObj[0]->vObjetivoGobierno} </p>
+             <p ><span style='font-weight: 600;'>Año:</span>{$anio} </p>
+             <p ><span style='font-weight: 600;'>Fecha:</span> {$fechaactual}</p>
             </div>
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
@@ -340,7 +344,7 @@ class C_rmir extends CI_Controller {
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($options);
-        $dompdf->loadHtml(utf8_decode($html));
+        $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 

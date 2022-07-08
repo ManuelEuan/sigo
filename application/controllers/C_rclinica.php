@@ -303,7 +303,7 @@ class C_rclinica extends CI_Controller {
             $obtenerEje = $mrep->obtenerEje($eje); 
 
             $proPre = $mrep->obtenerPPporId($pp);
-            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657211576/logo-qr_vnkuxq.png';  
+            $url = 'https://res.cloudinary.com/ddbiqyypn/image/upload/v1657236216/logo-queretaro_c4th0a.png';  
         if($query->num_rows() > 0){
             $records = $query->result();
 
@@ -312,16 +312,20 @@ class C_rclinica extends CI_Controller {
 
         $html= "
         <html>
+        <head>
+        
+        <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        </head>
         <body>
           <div >
-            <img src='$url' width='350' height=90 alt='LOGO'>
-            <h2 >REPORTE DE AVANCE MIR</h2>
+            <img src='$url' width='100' height=90 alt='LOGO'>
+            <h2 style='text-align:center;'>REPORTE DE AVANCE MIR</h2>
             <div >
-             <p>Organismo:{$obtenerDep->vDependencia}</p>
-             <p>Programa presupuestaria: {$proPre->vProgramaPresupuestario}</p>
-             <p>Clasificacion Programática:{$proPre->vGrupoGasto} </p>
-             <p>Eje:{$obtenerEje->vEje} </p>
-             <p>Fecha: {$fechaactual}</p>
+             <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
+             <p><span style='font-weight: 600;'>Programa presupuestaria: </span>{$proPre->vProgramaPresupuestario}</p>
+             <p><span style='font-weight: 600;'>Clasificacion Programática: </span>{$proPre->vGrupoGasto} </p>
+             <p><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
+             <p><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
             </div>
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
@@ -375,7 +379,7 @@ class C_rclinica extends CI_Controller {
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($options);
-        $dompdf->loadHtml(utf8_decode($html));
+        $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
