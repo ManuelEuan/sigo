@@ -8,7 +8,7 @@
         <div class="col-10 align-self-center"></div>
         <div class="col-md-2 mb-2 text-right">
             <div class="button-group">
-                <button title="Ir a la pantalla anterior" id="regresarbtnent" type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:35px" onclick="regresarActs();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
+                <button title="Ir a la pantalla anterior" id="regresarbtnent" type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:35px" onclick="recuperar(event);"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
             </div>
         </div>
     </div>
@@ -230,7 +230,7 @@
     
     
     function regresarActs(){
-        console.log('Estas Regresando')
+        console.log('Estas Regresando'+ <?=$dep?>)
         <?php if($eje > 0){ ?>
         var variables = {
             anio: <?=$anio?>,
