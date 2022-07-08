@@ -264,8 +264,127 @@ class C_rclinica extends CI_Controller {
         
         echo json_encode($resp);
     }
+    public function generarrepoPDFs(){
+        $html='<!doctype html>
+        <html lang="en">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+          <title>Reporte de Avance MIR</title>
+          <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+          <style type="text/css">
+            
+             #inferior{
+            
+             }
+            </style>
+        </head>
+        <body>
+          <div class="container mt-5">
+            <h2 class="text-center">REPORTE DE AVANCE MIR</h2>
+            <div class="">
+             <p>Organismo: </p>
+             <p>Programa presupuestaria: </p>
+             <p>Clasificación Programática: </p>
+             <p>Eje: </p>
+             <p>Fecha: </p>
+            </div>
+            <table class="">
+              <thead>
+                <tr>
+                  <th>Nivel</th>
+                  <th>Descripción del PP</th>
+                  <th>Resumen Narrativo</th>
+                  <th>Acción o Proyecto </th>
+                  <th>Indicador</th>
+                  <th>Variables</th>
+                  <th>Datos de la variable</th>
+                  <th>Linea Base</th>
+                  <th>Meta</th>
+                  <th>Frecuencia</th>
+                  <th>Avance</th>
+                  <th>Medio de verificación</th>
+                  <th>Supuesto</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Airi Satou</td>
+                  <td>Accountant</td>
+                  <td>Tokyo</td>
+                  <td>33</td>
+                  <td>2008/11/28</td>
+                  <td>$162,700</td>
+                </tr>
+               
+              </tbody>
+            </table>
+          </div>
+          <div style="color: #FFF;
+          background: #000;
+          position:absolute; /*El div será ubicado con relación a la pantalla*/
+          left:0px; /*A la derecha deje un espacio de 0px*/
+          right:0px; /*A la izquierda deje un espacio de 0px*/
+          bottom:0px; /*Abajo deje un espacio de 0px*/
+          height:120px; /*alto del div*/
+          z-index:0;
+          display: flex;
+          text-align: center;" id="inferior">
+
+            <div style="width: 33%; padding-left: 30px;padding-right: 30px;">Elaboró
+              <hr style="border-top: 1px solid red;margin-top:70px;">
+            </div>
+            <div style="width: 33%;padding-left: 30px;padding-right: 30px;">Revisó
+              <hr style="border-top: 1px solid red;margin-top:70px;">
+            
+            </div>
+            <div style="width: 33%; padding-left: 30px;padding-right: 30px;">Valida
+              <hr style="border-top: 1px solid red;margin-top:70px;">
+            
+            </div>
+
+
+          </div>
+        </body>
+        </html>';
+        // $dompdf = new DOMPDF();
+        // $dompdf->load_html($html);
+        // $dompdf->render();
+        // $canvas = $dompdf->get_canvas();
+        // $canvas->page_script('
+        // if ($pdf->get_page_number() != $pdf->get_page_count()) {
+        //     $font = Font_Metrics::get_font("helvetica", "12");                  
+        //     $pdf->text(500, 770, "Page {PAGE_NUM} - {PAGE_COUNT}", $font, 10, array(0,0,0));
+        //     $pdf->text(260, 770, "Canny Pack", $font, 10, array(0,0,0));
+        //     $pdf->text(43, 770, $date, $font, 10, array(0,0,0));
+        // }
+        // ');
+        
+// instantiate and use the dompdf class
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+
+        // (Optional) Setup the paper size and orientation
+        $dompdf->setPaper('A4');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(72, 18, "Pag: {PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
+// $dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        $pdf = $dompdf->output();
+        $nombreDelDocumento = "public/reportes/reporte.pdf";
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
+        // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
+        $resp['resp'] = true;
+        $resp['url'] = base_url().$nombreDelDocumento; 
+        echo json_encode($resp); 
+
+    }
     public function generarrepoPDF()
-    {   $anio = $this->input->post('anio',true);
+    {   
+        $anio = $this->input->post('anio',true);
         $eje = $this->input->post('selEje',true);
         $dep = $this->input->post('selDep',true);
         $pp = $this->input->post('selPP',true);
@@ -315,18 +434,35 @@ class C_rclinica extends CI_Controller {
         <head>
         
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <style>
+            footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                height:50px;
+                color:black;
+                text-align: left;
+            }
+            
+            
+
+        </style>
         </head>
         <body>
+        <header>
+        <img src='$url' width='100' height=90 alt='LOGO'>
+        <h2 style='text-align:center;'>REPORTE DE AVANCE MIR</h2>
+        <div >
+         <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
+         <p><span style='font-weight: 600;'>Programa presupuestaria: </span>{$proPre->vProgramaPresupuestario}</p>
+         <p><span style='font-weight: 600;'>Clasificacion Programática: </span>{$proPre->vGrupoGasto} </p>
+         <p><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
+         <p><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
+        </div>
+        </header>
+        <main>
           <div >
-            <img src='$url' width='100' height=90 alt='LOGO'>
-            <h2 style='text-align:center;'>REPORTE DE AVANCE MIR</h2>
-            <div >
-             <p><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
-             <p><span style='font-weight: 600;'>Programa presupuestaria: </span>{$proPre->vProgramaPresupuestario}</p>
-             <p><span style='font-weight: 600;'>Clasificacion Programática: </span>{$proPre->vGrupoGasto} </p>
-             <p><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
-             <p><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
-            </div>
+            
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
             
@@ -370,31 +506,73 @@ class C_rclinica extends CI_Controller {
           </tr>";     
            
           }
-        $html .= '</tbody>
+        $html .= "</tbody>
         </table>
         </div>
+        <br><br>
+        <table class='' cellspacing='1' style='border-collapse: collapse' bordercolor='#111111' width='100%' height='100%'>
+             <thead>
+               <tr>
+                 <th>Elaboró</th>
+                 <th></th>
+                 <th>Revisó</th>
+                 <th></th>
+                 <th>Valida</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr>
+                 <td style='border-bottom:2px solid #000;'><br><br></td>
+                 <td></td>
+                 <td style='border-bottom:2px solid #000;'></td>
+                 <td></td>
+                 <td style='border-bottom:2px solid #000;'></td>
+                 
+               </tr>
+              
+             </tbody>
+       </table>
+       </main>
+       
+            ";
+            
+        // $html .='<script type="text/php">';
+        // $html .='</script>';
+           $html .= "
         </body>
-        </html>';
+        </html>";
+       
         $options = new Options();
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
+        // $options->setIsPhpEnabled(true);
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
+        
+
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(525, 555, "Reporte Avance MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
+// $dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
+        $pdf = $dompdf->output();
+        
+        // $dompdf->page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
+        // $canvas = $dompdf->getCanvas();
+        // $pdf = $canvas->get_cpdf();
+        // foreach ($pdf->objects as &$o) {
+        //     if ($o['t'] === 'contents') {
+        //         $o['c'] = str_replace('DOMPDF_PAGE_COUNT_PLACEHOLDER', $canvas->get_page_count(), $o['c']);
+        //     }
+        // }
 
  
         
-        $searchString = " ";
-        $replaceString = "";
-        $originalString = $obtenerEje->vEje; 
-        
-        $outputString = str_replace($searchString, $replaceString, $originalString); 
             // Forzar descarga del PDF
         // $dompdf->set_paper ('a4','landscape');
-        $contenido = $dompdf->output();
+        // $contenido = $dompdf->output();
         $nombreDelDocumento = "public/reportes/reporte.pdf";
-        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
         // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
         $resp['resp'] = true;
         $resp['url'] = base_url().$nombreDelDocumento;  

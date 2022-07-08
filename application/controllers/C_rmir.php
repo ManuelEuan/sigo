@@ -285,22 +285,34 @@ class C_rmir extends CI_Controller {
         <head>
         
         <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+        <style>
+            footer{
+                position:fixed;
+                bottom:0px;
+                left:0px;
+                height:50px;
+                color:black;
+                text-align: left;
+            }
+            
+
+        </style>
         </head>
         <body>
           <div >
             <img src='$url' width='100' height=90 alt='LOGO'>
             <h2 style='text-align:center;'>REPORTE MIR</h2>
             <div >
-             <p ><span style='font-weight: 600;'>Organismo:</span>{$obtenerDep->vDependencia}</p>
-             <p ><span style='font-weight: 600;'>Programa presupuestaria:</span> {$proPre->vProgramaPresupuestario}</p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto):</span>{$proPre->vGrupoGasto} </p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa):</span>{$proPre->vGrupoPrograma} </p>
-             <p ><span style='font-weight: 600;'>Clasificación Programática(Modalidad):</span>{$proPre->vModalidad} </p>
-             <p ><span style='font-weight: 600;'>Gasto de Orden:</span>{$proPre->vGastoOrden} </p>
+             <p ><span style='font-weight: 600;'>Organismo: </span>{$obtenerDep->vDependencia}</p>
+             <p ><span style='font-weight: 600;'>Programa presupuestaria: </span> {$proPre->vProgramaPresupuestario}</p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Gasto): </span>{$proPre->vGrupoGasto} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Grupo de Programa): </span>{$proPre->vGrupoPrograma} </p>
+             <p ><span style='font-weight: 600;'>Clasificación Programática(Modalidad): </span>{$proPre->vModalidad} </p>
+             <p ><span style='font-weight: 600;'>Gasto de Orden: </span>{$proPre->vGastoOrden} </p>
              <p ><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
-             <p ><span style='font-weight: 600;'>Objetivo del Gobierno:</span> {$obtenerObj[0]->vObjetivoGobierno} </p>
-             <p ><span style='font-weight: 600;'>Año:</span>{$anio} </p>
-             <p ><span style='font-weight: 600;'>Fecha:</span> {$fechaactual}</p>
+             <p ><span style='font-weight: 600;'>Objetivo del Gobierno: </span> {$obtenerObj[0]->vObjetivoGobierno} </p>
+             <p ><span style='font-weight: 600;'>Año: </span>{$anio} </p>
+             <p ><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
             </div>
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
@@ -335,11 +347,35 @@ class C_rmir extends CI_Controller {
           </tr>";     
            
           }
-            $html .= '</tbody>
+            $html .= "</tbody>
             </table>
         </div>
+        <br><br>
+         <table class='' cellspacing='1' style='border-collapse: collapse' bordercolor='#111111' width='100%' height='100%'>
+              <thead>
+                <tr>
+                  <th>Elaboró</th>
+                  <th></th>
+                  <th>Revisó</th>
+                  <th></th>
+                  <th>Valida</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style='border-bottom:2px solid #000;'><br><br></td>
+                  <td></td>
+                  <td style='border-bottom:2px solid #000;'></td>
+                  <td></td>
+                  <td style='border-bottom:2px solid #000;'></td>
+                  
+                </tr>
+               
+              </tbody>
+        </table>
+        
         </body>
-        </html>';
+        </html>";
         $options = new Options();
         $options->setIsRemoteEnabled(true);
         $options->setIsHtml5ParserEnabled(true);
@@ -347,19 +383,13 @@ class C_rmir extends CI_Controller {
         $dompdf->loadHtml($html);
         // $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
+        $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
+        $dompdf->getCanvas()->page_text(315, 765, "Reporte MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
 
  
-        
-        $searchString = " ";
-        $replaceString = "";
-        $originalString = $obtenerEje->vEje; 
-        
-        $outputString = str_replace($searchString, $replaceString, $originalString); 
-            // Forzar descarga del PDF
-        // $dompdf->set_paper ('a4','landscape');
-        $contenido = $dompdf->output();
+        $pdf = $dompdf->output();
         $nombreDelDocumento = "public/reportes/reportemir.pdf";
-        $bytes = file_put_contents($nombreDelDocumento, $contenido);
+        $bytes = file_put_contents($nombreDelDocumento, $pdf);
         // $dompdf->stream($nombreDelDocumento, array("Attachment" => 1));   
         $resp['resp'] = true;
         $resp['url'] = base_url().$nombreDelDocumento;  
