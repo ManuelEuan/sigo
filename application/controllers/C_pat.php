@@ -643,7 +643,6 @@ class C_pat extends CI_Controller
                 'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
-            if(isset($_POST['iODS'])) $data['iODS'] = 1;
 
             if($iIdDependencia > 0) $data['iIdDependencia'] = $iIdDependencia;
             $where['iIdActividad'] = $idActividad;
