@@ -466,7 +466,7 @@ class C_reporteCombinado extends CI_Controller {
                   <th style='font-size:11px;text-align:center;'>OCT</th>
                   <th style='font-size:11px;text-align:center;'>NOV</th>
                   <th style='font-size:11px;text-align:center;'>DIC</th>
-                  <th style='font-size:11px;text-align:center;'>Total acomulado</th>
+                  <th style='font-size:11px;text-align:center;'>Total acumulado</th>
                   
                 </tr>
               </thead>
