@@ -296,7 +296,7 @@ class C_reporteCombinado extends CI_Controller {
                     WriterEntityFactory::createCell('OCT'),
                     WriterEntityFactory::createCell('NOV'),
                     WriterEntityFactory::createCell('DIC'),
-                    WriterEntityFactory::createCell('Total acomulado'),
+                    WriterEntityFactory::createCell('Total acumulado'),
                 ];
 
 	
