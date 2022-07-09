@@ -548,12 +548,12 @@ class C_rclinica extends CI_Controller {
         // $options->setIsPhpEnabled(true);
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A3', 'landscape');
         $dompdf->render();
         
 
         $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
-        $dompdf->getCanvas()->page_text(525, 555, "Reporte Avance MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
+        $dompdf->getCanvas()->page_text(775, 805, "Reporte Avance MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
 // $dompdf->stream("dompdf_out.pdf", array("Attachment" => false));
         $pdf = $dompdf->output();
         
