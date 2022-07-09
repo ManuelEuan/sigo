@@ -193,7 +193,7 @@ class C_reportesPOA extends CI_Controller {
 
             $cells =[
                 WriterEntityFactory::createCell('Objetivo de Gobierno',$azulStyle),
-                WriterEntityFactory::createCell($obtenerEje->vObjetivo),
+                WriterEntityFactory::createCell($obtenerEje->vObjetivoGobierno),
                 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
