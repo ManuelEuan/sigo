@@ -356,7 +356,7 @@ class C_reportesPOA extends CI_Controller {
              <p><span style='font-weight: 600;'>Clasificación Programática(Modalidad): </span>{$proPre->vModalidad} </p>
              <p><span style='font-weight: 600;'>Gasto de Orden: </span>{$proPre->vGastoOrden} </p>
              <p><span style='font-weight: 600;'>Eje: </span>{$obtenerEje->vEje} </p>
-             <p><span style='font-weight: 600;'>Objetivo del Gobierno: </span>{$obtenerEje->vObjetivo} </p>
+             <p><span style='font-weight: 600;'>Objetivo del Gobierno: </span>{$obtenerEje->vObjetivoGobierno} </p>
           
              <p>Fecha: {$fechaactual}</p>
             </div>
