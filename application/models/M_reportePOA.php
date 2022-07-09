@@ -463,7 +463,7 @@ class M_reportePOA extends CI_Model {
     }
 
     public function obtenerObj($eje){
-      $sql = 'select "vEje", "vObjetivo", "vEstrategia" From "PED2019" Where "iIdEje" = '.$eje;
+      $sql = 'select "vEje", "vObjetivoGobierno" From "PED2019Eje" Where "iIdEje" = '.$eje;
       
       $query =  $this->db->query($sql);
 		  $resultado = $query->row();
