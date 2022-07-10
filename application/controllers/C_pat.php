@@ -268,10 +268,17 @@ class C_pat extends CI_Controller
                 }
             }
 
+            // var_dump($iIdActividad);
+            // var_dump($data3['consulta'][0]->iIdDependencia );
+
             $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
             $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
             $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
             $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
+            $data3['actividadAglo']    = $this->pat->obtenerActividadAglomerada($iIdActividad);
+            $data3['actividadAgloValue']    = $this->pat->obtenerActividades($data3['consulta'][0]->iIdDependencia);
+            var_dump($data3['actividadAglo'] );
+            // var_dump($data3['actividadAgloValue'] );
             $data3['ODS']    = $this->pat->obtenerODS();
            
             $seg = new Class_seguridad();
@@ -479,7 +486,7 @@ class C_pat extends CI_Controller
         }
     }
 
-    /* Guardar nuevo */
+    // Guardar new activity
     public function guardarNewAct() {
         //$sesion = $_SESSION[PREFIJO.'_iddependencia'];
         $idDep =  $_SESSION[PREFIJO.'_iddependencia'];
@@ -536,7 +543,7 @@ class C_pat extends CI_Controller
                 'vcattipoactividad' => $this->input->post('valCatPoas', true),
                 'iIncluyeMIR' => $valorMIR ?: 0,
                 'iAglomeraMIR' => $valorAglomeraMIR ,
-                'iIdActividadMIR' => $idActividadAglomera ?: null,
+                'iIdActividadMIR' => 0,
                 'iIdNivelMIR' => $idNivelMIR ?: null,
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
@@ -547,6 +554,14 @@ class C_pat extends CI_Controller
             $idAct = $this->pat->agregarAct($data);
             //$data1['iIdActividad'] = $this->pat->agregarAct($data);
             //$this->pat->agregarDetAct($data1);
+            // foreach($idActividadd as $t){
+            //     $this->pat->insertarActividadAgromerada(array('iIdActividadPadre' => 1, 'iIdActividadHija' => $t));
+            // }
+            // $tematicas = $this->input->post('idActividadd', true);
+            foreach($idActividadAglomera as $t){
+                $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
+            }
+
 
             if ($idAct > 0) {
                 $data1 = array(
@@ -569,6 +584,9 @@ class C_pat extends CI_Controller
                     echo 'Error';
                 }
             }
+            
+            
+
         }
     }
 
@@ -635,7 +653,7 @@ class C_pat extends CI_Controller
                 'vcattipoactividad' => $this->input->post('valCatPoas', true),
                 'iIncluyeMIR' => $valorMIR,
                 'iAglomeraMIR' => $valorAglomeraMIR,
-                'iIdActividadMIR' => $idActividadAglomera ?: null,
+                'iIdActividadMIR' => 0,
                 'iIdNivelMIR' => $idNivelMIR ?: null,
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
@@ -647,6 +665,13 @@ class C_pat extends CI_Controller
             if($iIdDependencia > 0) $data['iIdDependencia'] = $iIdDependencia;
             $where['iIdActividad'] = $idActividad;
             $this->mseg->actualiza_registro('Actividad', $where, $data, $con);
+            $this->pat->borrarActividadAgromerada($idActividad);
+
+
+            foreach($idActividadAglomera as $t){
+                $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idActividad, 'iIdActividadHija' => $t));
+            }
+
 
             // Actualizamos la tabla DetalleActividad
             $data1 = array(

@@ -383,10 +383,15 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
 
                         <div class="col-md-8">
-                                <div class="col-md-12">
-                                    <select class="form-control" name="idActividad" id="idActividad">
-                                        <option value="">--Seleccione--</option>
+                        <div class="col-md-12" id="recuadroactividad">
+                                    <select class="form-control selectpicker" name="idActividad[]" id="idActividad" multiple>
+                                        <!-- <option value="">--Seleccione--</option> -->
+                                        
+                                        <?php foreach($actividadAgloValue as $o){ ?>
+                        <option value="<?= $o->iIdActividad ?>" <?php foreach($actividadAglo as $rt){ if($o->iIdActividad == $rt->iIdActividadHija){echo 'selected';} } ?>><?= $o->vDescripcion ?></option>
+                        <?php } ?>       
                                     </select>
+                                    
                                 </div>
                         </div>
 
@@ -568,9 +573,9 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             
 
         <?php if($consulta[0]->iAglomeraMIR == 1){ ?>
-            $('#idActividad').show();
+            $('#recuadroactividad').show();
         <?php }else{ ?>
-            $('#idActividad').hide();
+            $('#recuadroactividad').hide();
         <?php } ?>
 
         <?php if($consulta[0]->iIncluyeMIR == 1){ ?>
@@ -651,30 +656,53 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         let tipo = $("#valueTipo").val();
     });
 
+        // function obtenerActividades(idDependencia){
+
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "<?= base_url() ?>C_pat/obtenerActividades",
+        //         data:{idDependencia:idDependencia},
+        //         success: function(resp) {
+        //             var parsedData = JSON.parse(resp);
+        //             for(let i = 0; i <= parsedData.length; i++){
+        //                 if(parsedData[i]?.vActividad != undefined){
+        //                     $idActividadGuardada = <?php if($consulta[0]->iIdActividadMIR == '.' || $consulta[0]->iIdActividadMIR == ''){ echo 'null'; } else{ echo $consulta[0]->iIdActividadMIR; } ?>;
+        //                     if(parsedData[i]?.iIdActividad == $idActividadGuardada){
+        //                         $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'" selected>'+parsedData[i]?.vActividad+'</option>')
+        //                     }else{
+        //                         $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
+        //                     }
+        //                 }
+        //             }
+                    
+        //         },
+        //         error: function(XMLHHttRequest, textStatus, errorThrown) {
+        //             console.log(XMLHHttRequest);
+        //         }
+        //     });
+
+        // }
         function obtenerActividades(idDependencia){
 
-            $.ajax({
-                type: "POST",
-                url: "<?= base_url() ?>C_pat/obtenerActividades",
-                data:{idDependencia:idDependencia},
-                success: function(resp) {
-                    var parsedData = JSON.parse(resp);
-                    for(let i = 0; i <= parsedData.length; i++){
-                        if(parsedData[i]?.vActividad != undefined){
-                            $idActividadGuardada = <?php if($consulta[0]->iIdActividadMIR == '.' || $consulta[0]->iIdActividadMIR == ''){ echo 'null'; } else{ echo $consulta[0]->iIdActividadMIR; } ?>;
-                            if(parsedData[i]?.iIdActividad == $idActividadGuardada){
-                                $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'" selected>'+parsedData[i]?.vActividad+'</option>')
-                            }else{
-                                $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
-                            }
-                        }
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_pat/obtenerActividades",
+            data:{idDependencia:idDependencia},
+            success: function(resp) {
+                var parsedData = JSON.parse(resp);
+                for(let i = 0; i <= parsedData.length; i++){
+                    if(parsedData[i]?.vActividad != undefined){
+                        $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
                     }
-                    
-                },
-                error: function(XMLHHttRequest, textStatus, errorThrown) {
-                    console.log(XMLHHttRequest);
                 }
-            });
+                $('.selectpicker').selectpicker('refresh');
+
+                
+            },
+            error: function(XMLHHttRequest, textStatus, errorThrown) {
+                console.log(XMLHHttRequest);
+            }
+        });
 
         }
 
@@ -749,12 +777,12 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
         $('#tieneAglomeracion').click(function(){
             if($(this).is(':checked')){
-                document.getElementById("idActividad").disabled = false;
-                $('#idActividad').show();
+                document.getElementById("recuadroactividad").disabled = false;
+                $('#recuadroactividad').show();
             } else {
-                $('#idActividad').prop('selectedIndex',0);
-                $('#idActividad').hide();
-                document.getElementById("idActividad").disabled = true;
+                $('#recuadroactividad').prop('selectedIndex',0);
+                $('#recuadroactividad').hide();
+                document.getElementById("recuadroactividad").disabled = true;
             }
         });
 
@@ -927,20 +955,15 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 url: "<?= base_url() ?>C_pat/guardarAct",
                 data: $(f).serialize()+'&contLA='+contLA,
                 success: function(resp) {
-                    if(fin < inicio){
-                        alerta('La fecha final debe ser mayor que la fecha inicial y viceversa', 'warning');
-                    }
-                    else if(inicio < fin){
-                        if (resp == 'Correcto') {
+                    if (resp == 'Correcto') {
                         //filtrar(e);
                         alerta('Guardado exitosamente', 'success');
                         setTimeout(function(){
                             back();
                         }, 3000);
-                        } else {
-                            alerta('Error al guardar', 'error');
-                            //alert(resp);
-                        }
+                    } else {
+                        alerta('Error al guardar', 'error');
+                        //alert(resp);
                     }
                 },
                 error: function(XMLHHttRequest, textStatus, errorThrown) {}

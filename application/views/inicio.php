@@ -12,11 +12,15 @@
     <!--<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon.png">-->
     <title>SIGO</title>
     <!-- Custom CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+
     <link href="<?=base_url()?>public/assets/libs/chartist/dist/chartist.min.css" rel="stylesheet">
     <link href="<?=base_url()?>public/assets/extra-libs/c3/c3.min.css" rel="stylesheet">
     <link href="<?=base_url()?>public/assets/extra-libs/jvector/jquery-jvectormap-2.0.2.css" rel="stylesheet" />
     <!-- This page plugin CSS -->
     <link href="<?=base_url()?>public/assets/libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= base_url() ?>public/boots/bootstrap/miboostrapt/bootstrap-select.min.css" />
+
     <!-- Custom CSS -->
     <link href="<?=base_url()?>public/dist/css/style.css" rel="stylesheet">
     <link href="<?=base_url()?>public/assets/libs/toastr/build/toastr.min.css" rel="stylesheet">
@@ -247,6 +251,8 @@
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js" integrity="sha512-FHZVRMUW9FsXobt+ONiix6Z0tIkxvQfxtCSirkKc5Sb4TKHmqq1dZa8DphF0XqKb3ldLu/wgMa8mT6uXiLlRlw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script type="text/javascript">
         var moduloInicial = '<?=$modulo_inicial?>';
