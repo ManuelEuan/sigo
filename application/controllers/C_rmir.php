@@ -295,7 +295,12 @@ class C_rmir extends CI_Controller {
                 text-align: left;
             }
             
-
+            #medio .c {
+                overflow-wrap: break-word;
+              }
+              #medio{
+                width:15px !important;
+              }
         </style>
         </head>
         <body>
@@ -314,6 +319,9 @@ class C_rmir extends CI_Controller {
              <p ><span style='font-weight: 600;'>Año: </span>{$anio} </p>
              <p ><span style='font-weight: 600;'>Fecha: </span> {$fechaactual}</p>
             </div>
+            
+            <br><br><br><br><br><br>
+            <br><br><br><br><br><br>
             <table border='1' bordercolor='666633' cellpadding='2' cellspacing='0'>
               <thead>
             
@@ -328,23 +336,25 @@ class C_rmir extends CI_Controller {
                   
                 </tr>
               </thead>
+              
               <tbody>
+              
                 
                
               ";
               
         foreach($records as $key => $rec) {
-            $html .= "<tr>
-            <td  style='font-size:14px;text-align:center;'>{$rec->vNivelMIR}</td>
-            <td  style='font-size:14px;text-align:center;'>{$rec->iIdActividad}</td>
-            <td style='font-size:14px;text-align:center;'>{$rec->vNombreResumenNarrativo}</td>
-            <td  style='font-size:14px;text-align:justify;'>{$rec->vEntregable}</td>
-            <td  style='font-size:14px;text-align:center;'>{$rec->vMedioVerifica}</td>
-            <td style='font-size:14px;text-align:center;' >{$rec->vSupuesto}</td>
-            <td  style='font-size:14px;text-align:justify;'>{$rec->vAreaResponsable}</td>
+            $html .= '<tr>
+            <td  style="font-size:14px;text-align:center;">'.$rec->vNivelMIR.'</td>
+            <td  style="font-size:14px;text-align:center;">'.$rec->iIdActividad.'</td>
+            <td style="font-size:14px;text-align:center;">'.$rec->vNombreResumenNarrativo.'</td>
+            <td  style="font-size:14px;text-align:justify;">'.$rec->vEntregable.'</td>
+            <td id="medio" style="font-size:13px;overflow-wrap: break-word;"><p class="c" style="font-size:13px;">'.$rec->vMedioVerifica.'</p></td>
+            <td style="font-size:14px;text-align:center;" >'.$rec->vSupuesto.'</td> 
+            <td  style="font-size:14px;text-align:justify;">'.$rec->vAreaResponsable.'</td>
           
             
-          </tr>";     
+          </tr>';     
            
           }
             $html .= "</tbody>
@@ -381,10 +391,10 @@ class C_rmir extends CI_Controller {
         $options->setIsHtml5ParserEnabled(true);
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
-        // $dompdf->setPaper('A4', 'landscape');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
         $font = $dompdf->getFontMetrics()->get_font("helvetica", "bold");
-        $dompdf->getCanvas()->page_text(315, 765, "Reporte MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
+        $dompdf->getCanvas()->page_text(525, 555, "Reporte MIR,{$fechaactual} Página: {PAGE_NUM} de {PAGE_COUNT}", $font, 10, array(0,0,0));
 
  
         $pdf = $dompdf->output();

@@ -549,7 +549,22 @@ class M_pat extends CI_Model
 
 		return $query;
 	}
-
+	public function obtenerActividadAglomerada($idActividad){
+	$sql = 'SELECT "ActividadAglomerada"."iIdActividadHija", "Actividad"."vDescripcion" FROM "ActividadAglomerada" 
+	INNER JOIN "Actividad" ON "Actividad"."iIdActividad" = "ActividadAglomerada"."iIdActividadHija"
+	WHERE "ActividadAglomerada"."iIdActividadPadre" = '. $idActividad;
+		$query =  $this->db->query($sql);
+		return $query->result(); 
+	}
+	public function borrarActividadAgromerada($idActidad){
+		$this->db->where('iIdActividadPadre', $idActidad);
+		$this->db->delete('ActividadAglomerada');
+		return true;
+    }
+	public function insertarAgromerada($datos){
+		$this->db->insert('ActividadAglomerada', $datos);
+		return $this->db->insert_id();
+	}
 	public function obtener_alineacion_ods($id_detact){
 
 		$this->db->select('ped.iIdOds');

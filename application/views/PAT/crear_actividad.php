@@ -369,8 +369,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         </div>
 
                         <div class="col-md-8">
-                                <div class="col-md-12">
-                                    <select class="form-control" name="idActividad" id="idActividad">
+                                <div class="col-md-12" id="recuadroactividad">
+                                    <select class="form-control selectpicker" name="idActividad[]" id="idActividad" multiple>
                                         <option value="">--Seleccione--</option>
                                     </select>
                                 </div>
@@ -484,7 +484,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         $('#txtResumenNarrativo').hide();
         $('#resumenNarrativo').hide();
         $('#txtNivelMIR').hide();
-        $('#idActividad').hide();
+        $('#recuadroactividad').hide();
         $('#selectODS').hide();
         $(".select2").select2();
         url = $("#url").val();
@@ -501,6 +501,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         $('#depAct').change(function(){
             idDEp = $(this).val();
             $("#iAreaResponsable").empty();
+            $("#idActividad").empty();
             obtenerActividades(idDEp)
             obtenerAreasResp(idDEp)
         });
@@ -566,6 +567,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         $('#idActividad').append('<option value="'+parsedData[i]?.iIdActividad+'">'+parsedData[i]?.vActividad+'</option>')
                     }
                 }
+                $('.selectpicker').selectpicker('refresh');
+
                 
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
@@ -705,12 +708,12 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
 
     $('#tieneAglomeracion').click(function(){
         if($(this).is(':checked')){
-            document.getElementById("idActividad").disabled = false;
-            $('#idActividad').show();
+            document.getElementById("recuadroactividad").disabled = false;
+            $('#recuadroactividad').show();
         } else {
-            $('#idActividad').prop('selectedIndex',0);
-            $('#idActividad').hide();
-            document.getElementById("idActividad").disabled = true;
+            $('#recuadroactividad').prop('selectedIndex',0);
+            $('#recuadroactividad').hide();
+            document.getElementById("recuadroactividad").disabled = true;
         }
     });
     
@@ -1150,4 +1153,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             }
         }
     });
+    $( document ).ready(function() {
+            
+            $('.selectpicker').selectpicker();
+        });
 </script>
