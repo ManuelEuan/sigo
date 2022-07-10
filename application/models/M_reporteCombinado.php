@@ -344,7 +344,7 @@ class M_reporteCombinado extends CI_Model {
     {
         $mes = "'month'";  
         $coma = "','";
-        $select = 'select nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
+        $select = 'select nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
         sum(case when (fecha=1) then avance end) as Enero,
         sum(case when (fecha=2) then avance end) as Febrero,
         sum(case when (fecha=3) then avance end) as Marzo,
