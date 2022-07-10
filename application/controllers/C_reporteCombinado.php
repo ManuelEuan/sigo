@@ -96,6 +96,8 @@ class C_reporteCombinado extends CI_Controller {
         }else{
             $ppFinal = $pp;
         }
+
+
         $query = $mrep->reporte_pat($anio,$dep,$eje,$whereString, $mes, $ppFinal);
         $proPre = $mrep->obtenerPPporId($pp);
 
