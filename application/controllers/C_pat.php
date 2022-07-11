@@ -329,7 +329,6 @@ class C_pat extends CI_Controller
                 $retos .= '<option value="'.$value->iIdReto.'" '.$selected.'>'.$value->vDescripcion.'</option>';
             }
             $data3['retos'] = $retos;
-
         }
         $dependencia = $this->pat->getDependenciaById($_SESSION[PREFIJO.'_iddependencia']);
         $data3['vDependencia']  = $dependencia[0]->vDependencia;
