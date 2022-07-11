@@ -315,6 +315,7 @@ class C_reporteCombinado extends CI_Controller {
             {
                 $total = 0;
                 $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
+                // Obtenemos el ID de los primeros
                 $cells = [
                     WriterEntityFactory::createCell($rec->nivel),
                     WriterEntityFactory::createCell($rec->resumennarrativo),
@@ -344,9 +345,51 @@ class C_reporteCombinado extends CI_Controller {
                     WriterEntityFactory::createCell($rec->diciembre),
                     WriterEntityFactory::createCell($total),
                 ];
-                
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
+                $hija = $mrep->obtenerIdHija($rec->idact);
+                foreach($hija as $rhija){
+                    $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
+                    // var_dump($hijadatos);
+                
+                        $cells =[
+                        WriterEntityFactory::createCell('HIJAAAAAAAA'),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell($hijadatos),
+                        WriterEntityFactory::createCell($hijadatos[0]->clave),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(''),
+                        WriterEntityFactory::createCell(0),
+                        ];
+                        $singleRow = WriterEntityFactory::createRow($cells);
+                    $writer->addRow($singleRow);
+                    
+                    
+                }
+
+                
+                
+                
             }
 
             $writer->close();
