@@ -10,14 +10,14 @@ class M_pat extends CI_Model
 
 	/* MOSTRAR DATOS */
 
-	public function mostrar_act($keyword = null, $year = null, $sec = 0, $dep = 0,$covid="")
+	public function mostrar_act($keyword = null, $year = null, $sec = 0, $dep = 0, $covid = "")
 	{
 		$this->db->select('*, 0 AS ods');
 		$this->db->from('DetalleActividad da');
-		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');	
-		$this->db->join('Dependencia d','d.iIdDependencia = a.iIdDependencia','INNER');	
-		$this->db->join('DependenciaEje de','de.iIdDependencia = d.iIdDependencia','INNER');
-		$this->db->join('PED2019Eje e','e.iIdEje = de.iIdEje','INNER');	
+		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');
+		$this->db->join('Dependencia d', 'd.iIdDependencia = a.iIdDependencia', 'INNER');
+		$this->db->join('DependenciaEje de', 'de.iIdDependencia = d.iIdDependencia', 'INNER');
+		$this->db->join('PED2019Eje e', 'e.iIdEje = de.iIdEje', 'INNER');
 		$this->db->where('da.iActivo', 1);
 		$this->db->where('a.iActivo', 1);
 		$this->db->order_by('a.vActividad', 'ASC');
@@ -60,17 +60,19 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerRetosEje($id){
+	public function obtenerRetosEje($id)
+	{
 		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "EjeRetos" 
 		INNER JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
-		WHERE "EjeRetos"."iIdEje" ='.$id;
+		WHERE "EjeRetos"."iIdEje" =' . $id;
 		$query =  $this->db->query($sql);
 		return $query->result();
 	}
-	public function obtenerDependenciaEje($id){
+	public function obtenerDependenciaEje($id)
+	{
 		$sql = 'SELECT "Dependencia"."iIdDependencia", "Dependencia"."vDependencia" FROM "DependenciaEje" 
 		INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "DependenciaEje"."iIdDependencia"
-		WHERE "DependenciaEje"."iIdEje" ='.$id;
+		WHERE "DependenciaEje"."iIdEje" =' . $id;
 		$query =  $this->db->query($sql);
 		return $query->result();
 	}
@@ -156,8 +158,8 @@ class M_pat extends CI_Model
 		$this->db->order_by('vFinanciamiento', 'asc');
 		$this->db->select();
 		$this->db->from('Financiamiento');
-		$this->db->where('iActivo',1);
-		if($anio > 0) $this->db->where('iAnio',$anio);
+		$this->db->where('iActivo', 1);
+		if ($anio > 0) $this->db->where('iAnio', $anio);
 
 		$query = $this->db->get();
 		$resultado = $query->result();
@@ -170,8 +172,8 @@ class M_pat extends CI_Model
 		$this->db->order_by('"vClave" ASC, "vUBP"');
 		$this->db->select('*,"vClave" AS defe');
 		$this->db->from('UBP');
-		$this->db->where('iActivo',1);
-		if($anio > 0) $this->db->where('iAnio',$anio);
+		$this->db->where('iActivo', 1);
+		if ($anio > 0) $this->db->where('iAnio', $anio);
 
 		$query = $this->db->get();
 		$resultado = $query->result();
@@ -188,7 +190,8 @@ class M_pat extends CI_Model
 		return $this->db->update('ActividadLineaAccion', $data);
 	}
 
-	public function consultaExiste($data){
+	public function consultaExiste($data)
+	{
 		$this->db->where('iIdActividad', $data['iIdActividad']);
 		$this->db->where('iIdLineaAccion', $data['iIdLineaAccion']);
 		$this->db->select('*');
@@ -204,15 +207,18 @@ class M_pat extends CI_Model
 		return $this->db->insert_id();
 	}
 
-	public function obtenerActividades($idDependencia){
+	public function obtenerActividades($idDependencia)
+	{
 		$this->db->select();
 		$this->db->from('Actividad');
 		$this->db->where('iIdDependencia', $idDependencia);
+		$this->db->where('iActivo', 1);
 		$query = $this->db->get();
 		$resultado = $query->result();
 		return $resultado;
 	}
-	public function obtenerResumen($idNivel){
+	public function obtenerResumen($idNivel)
+	{
 		$this->db->select();
 		$this->db->from('ResumenNarrativo');
 		$this->db->where('iNivel', $idNivel);
@@ -221,7 +227,8 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerAreasRESP($idDependencia){
+	public function obtenerAreasRESP($idDependencia)
+	{
 		$this->db->select();
 		$this->db->from('AreaResponsable');
 		$this->db->where('iIdDependencia', $idDependencia);
@@ -230,7 +237,8 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerODS(){
+	public function obtenerODS()
+	{
 		$this->db->select();
 		$this->db->from('ODS');
 		$query = $this->db->get();
@@ -238,7 +246,8 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerProyectosPrioritarios(){
+	public function obtenerProyectosPrioritarios()
+	{
 		$this->db->select();
 		$this->db->from('ProyectosPrioritarios');
 		$query = $this->db->get();
@@ -246,7 +255,8 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerProgramaPresupuestario(){
+	public function obtenerProgramaPresupuestario()
+	{
 		$this->db->select();
 		$this->db->from('ProgramaPresupuestario');
 		$query = $this->db->get();
@@ -254,7 +264,8 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerNivelesMIR(){
+	public function obtenerNivelesMIR()
+	{
 		$this->db->select();
 		$this->db->from('NivelMIR');
 		$query = $this->db->get();
@@ -262,13 +273,14 @@ class M_pat extends CI_Model
 		return $resultado;
 	}
 
-	public function obtenerResumenNarrativo(){
+	public function obtenerResumenNarrativo()
+	{
 		$this->db->select();
 		$this->db->from('ResumenNarrativo');
 		$query = $this->db->get();
 		$resultado = $query->result();
 		return $resultado;
-	}	
+	}
 
 	public function agregarDetAct($data)
 	{
@@ -302,17 +314,16 @@ class M_pat extends CI_Model
             INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
 			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
 			INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"  
-			WHERE detAct."iIdDetalleActividad" = '.$id.'
+			WHERE detAct."iIdDetalleActividad" = ' . $id . '
 			LIMIT 1';
-            
-		return $this->db->query($sql)->result();
 
+		return $this->db->query($sql)->result();
 	}
 
 	public function validaralineaneacionactividad($idactividad)
 	{
 		//$datosDA = $this->preparar_update($id);
-		
+
 		$this->db->select();
 		$this->db->from('ActividadLineaAccion');
 		$this->db->where('iIdActividad', $idactividad/*$datosDA->iIdActividad*/);
@@ -336,7 +347,7 @@ class M_pat extends CI_Model
 		$this->db->join('PED2019Eje ej', 't.iIdEje = ej.iIdEje', 'JOIN');
 		$this->db->where('ala.iIdDetalleActividad', $iIdDetalleActividad);
 
-		$query =  $this->db->get();		
+		$query =  $this->db->get();
 		$resultado = $query->result();
 		return $resultado;
 	}
@@ -374,9 +385,9 @@ class M_pat extends CI_Model
 								FROM "ActividadLineaAccion" al
 								INNER JOIN "DetalleActividad" da ON da."iIdActividad" = al."iIdActividad"
 								LEFT OUTER JOIN "DetalleActividadLineaAccion" dat ON dat."iIdDetalleActividad" = da."iIdDetalleActividad"
-								WHERE al."iIdActividad" = '.$iIdActividad.'
+								WHERE al."iIdActividad" = ' . $iIdActividad . '
 								GROUP BY dat."iIdLineaAccion") AS t ON t."iIdLineaAccion" = al."iIdLineaAccion"
-				WHERE al."iIdActividad" = '.$iIdActividad;
+				WHERE al."iIdActividad" = ' . $iIdActividad;
 		$query = $this->db->query($sql);
 		return $query->result();
 	}
@@ -449,9 +460,10 @@ class M_pat extends CI_Model
 		} else {
 			return FALSE;
 		}
-	}	
+	}
 
-    public function eliminarDetaActividad($id){
+	public function eliminarDetaActividad($id)
+	{
 		$this->db->where('iIdDetalleActividad', $id);
 		$data = array('iActivo' => 0);
 		$this->db->update('DetalleActividad', $data);
@@ -474,7 +486,8 @@ class M_pat extends CI_Model
 		return $query->result();
 	}
 
-	public function DAA($id){
+	public function DAA($id)
+	{
 		$this->db->select();
 		$this->db->from('DetalleActividad da');
 		$this->db->where('iIdDetalleActividad', $id);
@@ -482,7 +495,7 @@ class M_pat extends CI_Model
 		return $query;
 	}
 
-	
+
 	/* Consulta financiamiento */
 	public function getFinanciamiento($id)
 	{
@@ -506,24 +519,25 @@ class M_pat extends CI_Model
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//Captura de texto
-	public function consultaLA($iIdActividad,$iIdDetalleActividad)
+	public function consultaLA($iIdActividad, $iIdDetalleActividad)
 	{
 		$this->db->select('ped.*,dal.iIdDetalleActividad, dal.tInforme1, dal.tInforme2, dal.tInforme3, dal.tInforme4');
 		$this->db->from('ActividadLineaAccion al');
-		$this->db->join('PED2019 ped','ped.iIdLineaAccion = al.iIdLineaAccion','INNER');
-		$this->db->join('DetalleActividadLineaAccion dal','dal.iIdLineaAccion = al.iIdLineaAccion AND dal.iIdDetalleActividad = '.$iIdDetalleActividad, 'LEFT OUTER');		
+		$this->db->join('PED2019 ped', 'ped.iIdLineaAccion = al.iIdLineaAccion', 'INNER');
+		$this->db->join('DetalleActividadLineaAccion dal', 'dal.iIdLineaAccion = al.iIdLineaAccion AND dal.iIdDetalleActividad = ' . $iIdDetalleActividad, 'LEFT OUTER');
 		$this->db->where('al.iIdActividad', $iIdActividad);
 		$query = $this->db->get()->result();
 		return $query;
 	}
 
-	public function obtener_informacion_actividad($id_detact){
+	public function obtener_informacion_actividad($id_detact)
+	{
 
 		$this->db->select();
 		$this->db->from('DetalleActividad da');
 		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'JOIN');
 		$this->db->join('Dependencia d', 'a.iIdDependencia = d.iIdDependencia', 'JOIN');
-		$this->db->where('a.iActivo',1);
+		$this->db->where('a.iActivo', 1);
 		$this->db->where('iIdDetalleActividad', $id_detact);
 
 		$query =  $this->db->get()->row();
@@ -531,7 +545,8 @@ class M_pat extends CI_Model
 		return $query;
 	}
 
-	public function obtener_alineacion_actividad($id_detact){
+	public function obtener_alineacion_actividad($id_detact)
+	{
 
 		$this->db->select();
 		$this->db->from('DetalleActividad da');
@@ -542,30 +557,34 @@ class M_pat extends CI_Model
 		$this->db->join('PED2019Objetivo o', 'e.iIdObjetivo = o.iIdObjetivo', 'JOIN');
 		$this->db->join('PED2019Tema t', 'o.iIdTema = t.iIdTema', 'JOIN');
 		$this->db->join('PED2019Eje ej', 't.iIdEje = ej.iIdEje', 'JOIN');
-		
+
 		$this->db->where('iIdDetalleActividad', $id_detact);
 
 		$query =  $this->db->get()->result();
 
 		return $query;
 	}
-	public function obtenerActividadAglomerada($idActividad){
-	$sql = 'SELECT "ActividadAglomerada"."iIdActividadHija", "Actividad"."vDescripcion" FROM "ActividadAglomerada" 
+	public function obtenerActividadAglomerada($idActividad)
+	{
+		$sql = 'SELECT "ActividadAglomerada"."iIdActividadHija", "Actividad"."vDescripcion" FROM "ActividadAglomerada" 
 	INNER JOIN "Actividad" ON "Actividad"."iIdActividad" = "ActividadAglomerada"."iIdActividadHija"
-	WHERE "ActividadAglomerada"."iIdActividadPadre" = '. $idActividad;
+	WHERE "ActividadAglomerada"."iIdActividadPadre" = ' . $idActividad;
 		$query =  $this->db->query($sql);
-		return $query->result(); 
+		return $query->result();
 	}
-	public function borrarActividadAgromerada($idActidad){
+	public function borrarActividadAgromerada($idActidad)
+	{
 		$this->db->where('iIdActividadPadre', $idActidad);
 		$this->db->delete('ActividadAglomerada');
 		return true;
-    }
-	public function insertarAgromerada($datos){
+	}
+	public function insertarAgromerada($datos)
+	{
 		$this->db->insert('ActividadAglomerada', $datos);
 		return $this->db->insert_id();
 	}
-	public function obtener_alineacion_ods($id_detact){
+	public function obtener_alineacion_ods($id_detact)
+	{
 
 		$this->db->select('ped.iIdOds');
 		$this->db->from('DetalleActividad da');
@@ -582,120 +601,127 @@ class M_pat extends CI_Model
 	}
 
 	//Muestra la infromacion de la Actividad y el Entregable
-    public function mostrar_actividadentregables($id_detact){
+	public function mostrar_actividadentregables($id_detact)
+	{
 
-        $this->db->select();
-        $this->db->from('Entregable e');
-        $this->db->join('DetalleEntregable de','e.iIdEntregable = de.iIdEntregable','JOIN');
-        $this->db->where('e.iActivo',1);
-        $this->db->where('de.iActivo',1);
-        $this->db->where('de.iIdDetalleActividad',$id_detact);
+		$this->db->select();
+		$this->db->from('Entregable e');
+		$this->db->join('DetalleEntregable de', 'e.iIdEntregable = de.iIdEntregable', 'JOIN');
+		$this->db->where('e.iActivo', 1);
+		$this->db->where('de.iActivo', 1);
+		$this->db->where('de.iIdDetalleActividad', $id_detact);
 
-        $query =  $this->db->get()->result();
-        
-        return $query;
+		$query =  $this->db->get()->result();
 
+		return $query;
 	}
-	
+
 	//Calcula la suma de avances por cada entregable
-    public function suma_avances_total($id_detent){
-        
-        $this->db->select('sum("nAvance") as total_avance, sum("nEjercido") as monto_total,(sum("nBeneficiariosH") + sum("nBeneficiariosM") + sum("nDiscapacitadosH") + sum("nDiscapacitadosM") + sum("nLenguaH") + sum("nLenguaM")) as total_beneficiarios');
-        $this->db->from('Avance');
-        $this->db->where('iIdDetalleEntregable', $id_detent);
-        $this->db->where('iActivo', 1);
-        $this->db->where('iAprobado', 1);
+	public function suma_avances_total($id_detent)
+	{
 
-        $query =  $this->db->get()->row();
-        
-        return $query;
+		$this->db->select('sum("nAvance") as total_avance, sum("nEjercido") as monto_total,(sum("nBeneficiariosH") + sum("nBeneficiariosM") + sum("nDiscapacitadosH") + sum("nDiscapacitadosM") + sum("nLenguaH") + sum("nLenguaM")) as total_beneficiarios');
+		$this->db->from('Avance');
+		$this->db->where('iIdDetalleEntregable', $id_detent);
+		$this->db->where('iActivo', 1);
+		$this->db->where('iAprobado', 1);
+
+		$query =  $this->db->get()->row();
+
+		return $query;
 	}
-	
+
 	//Calcula la suma del presupuesto
-    public function suma_presupuesto_ejercido($id_detact){
-        
-        $this->db->select('sum(a."nEjercido") as monto_total');
+	public function suma_presupuesto_ejercido($id_detact)
+	{
+
+		$this->db->select('sum(a."nEjercido") as monto_total');
 		$this->db->from('Avance a');
-		$this->db->join('DetalleEntregable de','a.iIdDetalleEntregable = de.iIdDetalleEntregable','JOIN');
-        $this->db->where('de.iIdDetalleActividad', $id_detact);
+		$this->db->join('DetalleEntregable de', 'a.iIdDetalleEntregable = de.iIdDetalleEntregable', 'JOIN');
+		$this->db->where('de.iIdDetalleActividad', $id_detact);
 		$this->db->where('a.iActivo', 1);
 		$this->db->where('a.iAprobado', 1);
 		$this->db->where('de.iActivo', 1);
 
-        $query =  $this->db->get()->row();
-        
-        return $query;
+		$query =  $this->db->get()->row();
+
+		return $query;
 	}
 
 	//Calcula la suma del presupuesto
-    public function suma_presupuesto_modificado($id_detact){
-        
-        $this->db->select('sum(daf."monto") as monto_total');
+	public function suma_presupuesto_modificado($id_detact)
+	{
+
+		$this->db->select('sum(daf."monto") as monto_total');
 		$this->db->from('DetalleActividadFinanciamiento daf');
-		$this->db->join('DetalleActividad da','da.iIdDetalleActividad = daf.iIdDetalleActividad','JOIN');
-        $this->db->where('daf.iIdDetalleActividad', $id_detact);
+		$this->db->join('DetalleActividad da', 'da.iIdDetalleActividad = daf.iIdDetalleActividad', 'JOIN');
+		$this->db->where('daf.iIdDetalleActividad', $id_detact);
 		$this->db->where('da.iActivo', 1);
 
-        $query =  $this->db->get()->row();
-        
-        return $query;
+		$query =  $this->db->get()->row();
+
+		return $query;
 	}
 
-	public function obtener_municipios_actividad($id_detact){
+	public function obtener_municipios_actividad($id_detact)
+	{
 		$this->db->distinct();
 		$this->db->select("m.iIdMunicipio,m.vMunicipio");
 		$this->db->from('DetalleEntregableMetaMunicipio demm');
-		$this->db->join('DetalleEntregable de','demm.iIdDetalleEntregable = de.iIdDetalleEntregable','JOIN');
-		$this->db->join('Municipio m','demm.iIdMunicipio = m.iIdMunicipio','JOIN');
-        $this->db->where('de.iIdDetalleActividad', $id_detact);
+		$this->db->join('DetalleEntregable de', 'demm.iIdDetalleEntregable = de.iIdDetalleEntregable', 'JOIN');
+		$this->db->join('Municipio m', 'demm.iIdMunicipio = m.iIdMunicipio', 'JOIN');
+		$this->db->where('de.iIdDetalleActividad', $id_detact);
 		$this->db->where('de.iActivo', 1);
 
-        $query =  $this->db->get()->result();
-        
-        return $query;
+		$query =  $this->db->get()->result();
+
+		return $query;
 	}
 
-	public function actividad($idAct){
+	public function actividad($idAct)
+	{
 		$this->db->select('da.iIdDetalleActividad, da.iIdActividad, da.dInicio, da.dFin');
 		$this->db->from('DetalleActividad da');
-		$this->db->join('Actividad ac','ac.iIdActividad = da.iIdActividad','INNER');
-		$this->db->where('da.iActivo',1);
-		$this->db->where('da.iIdDetalleActividad',$idAct);
+		$this->db->join('Actividad ac', 'ac.iIdActividad = da.iIdActividad', 'INNER');
+		$this->db->where('da.iActivo', 1);
+		$this->db->where('da.iIdDetalleActividad', $idAct);
 
 		$query =  $this->db->get();
-        
-        return $query;
+
+		return $query;
 	}
 
-	public function actividades_dep($iddep,$anio){
+	public function actividades_dep($iddep, $anio)
+	{
 		$this->db->select('da.iIdDetalleActividad, da.iIdActividad, da.dInicio, da.dFin');
 		$this->db->from('DetalleActividad da');
-		$this->db->join('Actividad ac','ac.iIdActividad = da.iIdActividad','INNER');
-		$this->db->where('da.iActivo',1);
-		$this->db->where('da.iAnio',$anio);
-		$this->db->where('ac.iIdDependencia',$iddep);
+		$this->db->join('Actividad ac', 'ac.iIdActividad = da.iIdActividad', 'INNER');
+		$this->db->where('da.iActivo', 1);
+		$this->db->where('da.iAnio', $anio);
+		$this->db->where('ac.iIdDependencia', $iddep);
 
 		$query =  $this->db->get();
-        
-        return $query;
+
+		return $query;
 	}
 
-	public function entregables_det_act($iIdDetalleActividad){
+	public function entregables_det_act($iIdDetalleActividad)
+	{
 		$this->db->select('de.iIdEntregable, de.iPonderacion');
 		$this->db->from('DetalleEntregable de');
-		$this->db->where('de.iActivo',1);
-		$this->db->where('de.iIdDetalleActividad',$iIdDetalleActividad);
+		$this->db->where('de.iActivo', 1);
+		$this->db->where('de.iIdDetalleActividad', $iIdDetalleActividad);
 
 		$query =  $this->db->get()->result();
-        
-        return $query;
+
+		return $query;
 	}
 
 	public function get_iIdActividad($iIdDetalleActividad)
 	{
 		$this->db->select('da.iIdActividad');
-		$this->db->from('DetalleActividad da');		
-		$this->db->where('da.iIdDetalleActividad',$iIdDetalleActividad);
+		$this->db->from('DetalleActividad da');
+		$this->db->where('da.iIdDetalleActividad', $iIdDetalleActividad);
 
 		return $this->db->get()->row()->iIdActividad;
 	}
@@ -703,9 +729,9 @@ class M_pat extends CI_Model
 	public function get_nameActividad($iIdDetalleActividad)
 	{
 		$this->db->select('act.vActividad');
-		$this->db->from('DetalleActividad da');	
-		$this->db->join('Actividad act','act.iIdActividad = da.iIdActividad','INNER');	
-		$this->db->where('da.iIdDetalleActividad',$iIdDetalleActividad);
+		$this->db->from('DetalleActividad da');
+		$this->db->join('Actividad act', 'act.iIdActividad = da.iIdActividad', 'INNER');
+		$this->db->where('da.iIdDetalleActividad', $iIdDetalleActividad);
 
 		return $this->db->get()->row()->vActividad;
 	}
@@ -713,8 +739,8 @@ class M_pat extends CI_Model
 	public function get_linea_accion($iIdLineaAccion)
 	{
 		$this->db->select('ped.*');
-		$this->db->from('PED2019 ped');		
-		$this->db->where('ped.iIdLineaAccion',$iIdLineaAccion);
+		$this->db->from('PED2019 ped');
+		$this->db->where('ped.iIdLineaAccion', $iIdLineaAccion);
 
 		return $this->db->get()->row();
 	}
@@ -723,16 +749,16 @@ class M_pat extends CI_Model
 	{
 		$sql = 'SELECT ped."iIdOds" FROM "ActividadLineaAccion" al 
 				INNER JOIN "PED2019" ped ON ped."iIdLineaAccion" = al."iIdLineaAccion"
-				WHERE al."iIdActividad" = '.$idAct.'
+				WHERE al."iIdActividad" = ' . $idAct . '
 				GROUP BY ped."iIdOds"';
 
 		return $this->db->query($sql);
 	}
 
 	//Muestra PATs por página
-    public function search_pats($keyword = '', $where = array(), $inicial = null, $lim = null, $orden = null, $col = 0)
-    {
-        /*$this->db->select('act.iIdActividad, da.iIdDetalleActividad, da.nAvance, da.iAnio, act.vActividad, dep.vDependencia, dep.vNombreCorto AS siglas');
+	public function search_pats($keyword = '', $where = array(), $inicial = null, $lim = null, $orden = null, $col = 0)
+	{
+		/*$this->db->select('act.iIdActividad, da.iIdDetalleActividad, da.nAvance, da.iAnio, act.vActividad, dep.vDependencia, dep.vNombreCorto AS siglas');
         $this->db->select('COUNT(av."iIdAvance") avances_pendientes',false);
         $this->db->from('Actividad act');
         $this->db->join('DetalleActividad da','da.iIdActividad = act.iIdActividad AND da.iActivo = 1','INNER');
@@ -745,93 +771,93 @@ class M_pat extends CI_Model
         
         $this->db->where('da.iActivo', 1);
         $this->db->group_by('act.iIdActividad, da.iIdDetalleActividad, da.nAvance, da.iAnio, act.vActividad, dep.vDependencia, dep.vNombreCorto'); */
-        $this->db->from('vListadoPat');
-        $this->db->limit($lim, $inicial);
+		$this->db->from('vListadoPat');
+		$this->db->limit($lim, $inicial);
 
-        if(!empty($where)) {
+		if (!empty($where)) {
 			$this->db->where($where);
 		};
-        
-        if(!empty($keyword) && $keyword != null)
-        {
+
+		if (!empty($keyword) && $keyword != null) {
 			$this->db->where("(\"vActividad\" ilike '%$keyword%')");
 		}
 
 		// Ordenamiento
-        if(!empty($orden) && $orden != null)
-        {
-            switch ($col)
-            {
-                case 0:
-                    $this->db->order_by('nAvance '.$orden);
-                    break;
-                case 1:
-                    $this->db->order_by('vDependencia', $orden);
-                    break;
-                case 2:
-                    $this->db->order_by('vActividad', $orden);
-                    break;
-                case 3:
-                    $this->db->order_by('iAnio', $orden);
-                    break;
-            }        
-        }
+		if (!empty($orden) && $orden != null) {
+			switch ($col) {
+				case 0:
+					$this->db->order_by('nAvance ' . $orden);
+					break;
+				case 1:
+					$this->db->order_by('vDependencia', $orden);
+					break;
+				case 2:
+					$this->db->order_by('vActividad', $orden);
+					break;
+				case 3:
+					$this->db->order_by('iAnio', $orden);
+					break;
+			}
+		}
 
-        $this->db->group_by('iIdEje, iIdDependencia, iIdActividad, iIdDetalleActividad, nAvance, iReactivarEconomia, iAnio, dInicio, vActividad, vDependencia, siglas, avances_pendientes');
+		$this->db->group_by('iIdEje, iIdDependencia, iIdActividad, iIdDetalleActividad, nAvance, iReactivarEconomia, iAnio, dInicio, vActividad, vDependencia, siglas, avances_pendientes');
 		$query =  $this->db->get();
 
-        //$_SESSION['query'] = $this->db->last_query();
+		//$_SESSION['query'] = $this->db->last_query();
 
-        return $query;
-    }
+		return $query;
+	}
 
-    public function total_pats($keyword = '', $where = array())
-    {
-        /*$this->db->select('COUNT(act."iIdActividad") total',false);
+	public function total_pats($keyword = '', $where = array())
+	{
+		/*$this->db->select('COUNT(act."iIdActividad") total',false);
         $this->db->from('Actividad act');
         $this->db->join('DetalleActividad da','da.iIdActividad = act.iIdActividad AND da.iActivo = 1','INNER');
         $this->db->join('Dependencia dep','dep.iIdDependencia = act.iIdDependencia','INNER');
         $this->db->join('DependenciaEje dej','dej.iIdDependencia = dep.iIdDependencia','INNER');
         $this->db->where('da.iActivo', 1);*/
-        
-        $this->db->select('COUNT("iIdDetalleActividad") total',false);
-        $this->db->from('vListadoPat');
-        
-        if(!empty($where)) $this->db->where($where);
-        
-        if(!empty($keyword) && $keyword != null)
-        {
+
+		$this->db->select('COUNT("iIdDetalleActividad") total', false);
+		$this->db->from('vListadoPat');
+
+		if (!empty($where)) $this->db->where($where);
+
+		if (!empty($keyword) && $keyword != null) {
 			$this->db->where("(\"vActividad\" ilike '%$keyword%')");
 		}
 
 		$query = $this->db->get();
 
-        return ($query->num_rows() == 1) ? $query->row()->total:0;
-    }
+		return ($query->num_rows() == 1) ? $query->row()->total : 0;
+	}
 
-	public function getDependenciaPorEje($ejeID = 0){
+	public function getDependenciaPorEje($ejeID = 0)
+	{
 		$sql = 'SELECT * FROM "Dependencia" d 
 		INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia" 
-		WHERE de."iIdEje" = '.$ejeID;
+		WHERE de."iIdEje" = ' . $ejeID;
 
 		return $this->db->query($sql)->result();
 	}
 
-	public function getReto($retoID){
-		$sql = 'SELECT "iIdReto", "iIdEje" FROM "EjeRetos" WHERE "iIdReto" ='.$retoID;
+	public function getReto($retoID)
+	{
+		$sql = 'SELECT "iIdReto", "iIdEje" FROM "EjeRetos" WHERE "iIdReto" =' . $retoID;
 
 		return $this->db->query($sql)->result();
 	}
 
-	public function getRetosPorDependencia($dependenciaID){
-		$sql = 'SELECT * FROM "Reto" r WHERE "iIdDependencia" ='.$dependenciaID;
+	public function getRetosPorDependencia($dependenciaID)
+	{
+		$sql = 'SELECT * FROM "Reto" r WHERE "iIdDependencia" =' . $dependenciaID;
 		return $this->db->query($sql)->result();
 	}
-	public function getRetosDependencia($dependenciaID = 0){
+	public function getRetosDependencia($dependenciaID = 0)
+	{
 		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "DependenciaEje"
 		LEFT JOIN "EjeRetos" ON "EjeRetos"."iIdEje" = "DependenciaEje"."iIdEje"
 		LEFT JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
-		WHERE "DependenciaEje"."iIdDependencia" = '.$dependenciaID;
+		WHERE "DependenciaEje"."iIdDependencia" = ' . $dependenciaID;
 		return $this->db->query($sql)->result();
 	}
 
@@ -841,14 +867,15 @@ class M_pat extends CI_Model
 	 * @param string $where
 	 * @return array
 	 */
-	public function getDataTable($tabla, $where=''){
+	public function getDataTable($tabla, $where = '')
+	{
 		$model = new M_catalogos();
-        $select = '';
+		$select = '';
 
-        $query = $model->{$tabla}($where);       
+		$query = $model->{$tabla}($where);
 
-        if($query != false)
-        	return $query->result();
+		if ($query != false)
+			return $query->result();
 	}
 
 	/**
@@ -856,21 +883,23 @@ class M_pat extends CI_Model
 	 * @param int $dependenciaID
 	 * @return array
 	 */
-	public function getDependenciaById($dependenciaID = 0){
-		$sql = 'SELECT * FROM "Dependencia" d WHERE "iIdDependencia" ='.$dependenciaID;
-		
+	public function getDependenciaById($dependenciaID = 0)
+	{
+		$sql = 'SELECT * FROM "Dependencia" d WHERE "iIdDependencia" =' . $dependenciaID;
+
 		return $this->db->query($sql)->result();
 	}
 
-	function obtenerSeleccionados($id){
-		if($id != ''){
+	function obtenerSeleccionados($id)
+	{
+		if ($id != '') {
 			$sql = 'SELECT * FROM "DetalleActividad" detAct
             INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
 			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
 			INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"  
-			WHERE detAct."iIdDetalleActividad" = '.$id.'
+			WHERE detAct."iIdDetalleActividad" = ' . $id . '
 			LIMIT 1';
-		}else{
+		} else {
 			$sql = 'SELECT * FROM "DetalleActividad" detAct
             INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
 			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
@@ -879,23 +908,24 @@ class M_pat extends CI_Model
 		return $this->db->query($sql)->result();
 	}
 
-	function getRetosPorDEP($dependenciaID){
+	function getRetosPorDEP($dependenciaID)
+	{
 		$sql = 'SELECT "Retos"."iIdReto", "Retos"."vDescripcion" FROM "DependenciaEje"
 
         LEFT JOIN "EjeRetos" ON "EjeRetos"."iIdEje" = "DependenciaEje"."iIdEje"
 
         LEFT JOIN "Retos" ON "Retos"."iIdReto" = "EjeRetos"."iIdReto"
 
-        WHERE "DependenciaEje"."iIdDependencia" = '.$dependenciaID.'
+        WHERE "DependenciaEje"."iIdDependencia" = ' . $dependenciaID . '
 		ORDER BY "Retos"."vDescripcion"';
 
 		return $this->db->query($sql)->result();
 	}
 
-	function getRol($id){
-		$sql = 'SELECT * FROM "Usuario" WHERE "iIdUsuario" = '.$id;
-  
+	function getRol($id)
+	{
+		$sql = 'SELECT * FROM "Usuario" WHERE "iIdUsuario" = ' . $id;
+
 		return $this->db->query($sql)->result();
-	  }
-	  
+	}
 }
