@@ -500,7 +500,7 @@ class M_reporteCombinado extends CI_Model
                       LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
                       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                       LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"
-                      WHERE "Actividad"."iIdActividad" =' . $idactividad;
+                      WHERE "Avance"."iActivo" = 1 AND "Actividad"."iIdActividad" =' . $idactividad;
 
 
       // $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';

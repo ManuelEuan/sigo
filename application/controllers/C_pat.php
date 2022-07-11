@@ -277,7 +277,7 @@ class C_pat extends CI_Controller
             $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
             $data3['actividadAglo']    = $this->pat->obtenerActividadAglomerada($iIdActividad);
             $data3['actividadAgloValue']    = $this->pat->obtenerActividades($data3['consulta'][0]->iIdDependencia);
-            var_dump($data3['actividadAglo'] );
+            //var_dump($data3['actividadAglo'] );
             // var_dump($data3['actividadAgloValue'] );
             $data3['ODS']    = $this->pat->obtenerODS();
            
