@@ -340,7 +340,7 @@ class C_reporteCombinado extends CI_Controller
                     $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
                     // var_dump($hijadatos);
                     foreach ($hijadatos as $h) {
-                        if($h->isactivo == 1){
+                        if ($h->isactivo == 1) {
                             $totalEne = $totalEne + $h->enero;
                             $totalFeb = $totalFeb + $h->febrero;
                             $totalMar = $totalMar + $h->marzo;
@@ -413,18 +413,18 @@ class C_reporteCombinado extends CI_Controller
                                 WriterEntityFactory::createCell($rec->unidadmedida),
                                 WriterEntityFactory::createCell($rec->formula),
                                 WriterEntityFactory::createCell($rec->umedioverifica),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->enero : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->febrero : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->marzo : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->abril : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->mayo : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->junio : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->julio : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->agosto : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->septiembre : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
-                                WriterEntityFactory::createCell(( $h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->enero : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->febrero : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->marzo : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->abril : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->mayo : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->junio : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->julio : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->agosto : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->septiembre : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
+                                WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
                                 WriterEntityFactory::createCell(0),
                             ];
                             $singleRow = WriterEntityFactory::createRow($cells);

@@ -473,11 +473,11 @@ class M_reporteCombinado extends CI_Model
                       "Entregable"."nLineaBase" as meta,
                       "Periodicidad"."vPeriodicidad" as frecuencia,
                       "FormaIndicador"."vDescripcion" as operacion,
-                      string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                      string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
                       "UnidadMedida"."vUnidadMedida" as unidadmedida,
                       "Entregable"."vFormula" as formula,
                       "Entregable"."vMedioVerifica" as umedioverifica,
-                      date_part('.$mes.',"Avance"."dFecha") as fecha,
+                      date_part(' . $mes . ',"Avance"."dFecha") as fecha,
                       "Avance"."nAvance" as avance,
                       "Dependencia"."iIdDependencia" as dep,
                       "PED2019Eje"."iIdEje" as iideje,
@@ -502,7 +502,7 @@ class M_reporteCombinado extends CI_Model
                       LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
                       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                       LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"
-                      WHERE "Actividad"."iIdActividad" =' . $idactividad;
+                      WHERE "Actividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iIdActividad" =' . $idactividad;
 
 
       // $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';

@@ -23,7 +23,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 <div class="col-md-10">
                 </div>
                 <div class="col-md-2 text-right">
-                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="submit" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>
+                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="button" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>
                 </div>
             </div>
 
@@ -462,7 +462,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         <br><br>
                         <center>
                             <input id="iddependenciaSesion" name="iddependenciaSesion" type="hidden" value="<?= $_SESSION[PREFIJO . '_iddependencia'] ?>">
-                            <button title="Ir a listado del PAT" class="btn btn-lg waves-effect waves-light btn-outline-info" type="submit" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>&nbsp;&nbsp;
+                            <button title="Ir a listado del PAT" class="btn btn-lg waves-effect waves-light btn-outline-info" type="button" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>&nbsp;&nbsp;
                             <button class="btn-lectura btn btn-lg btn-info" type="submit">Guardar</button>
                         </center>
                     </div>
@@ -566,6 +566,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
     var contLA = <?= $contLA ?>;
     $(document).ready(function() {
+        $('.selectpicker').selectpicker();
         <?php if ($acceso == 1) { ?>
             $('.btn-lectura').css('display', 'none');
             $('.select-lectura').attr('disabled', true);
@@ -703,11 +704,11 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 idDependencia: idDependencia
             },
             success: function(resp) {
-                $('#idActividad').empty();
+                //$('#idActividad').empty();
                 var parsedData = JSON.parse(resp);
                 for (let i = 0; i <= parsedData.length; i++) {
                     if (parsedData[i]?.vActividad != undefined) {
-                        $('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
+                        //$('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
                     }
                 }
                 $('.selectpicker').selectpicker('refresh');
