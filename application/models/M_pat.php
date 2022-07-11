@@ -209,10 +209,20 @@ class M_pat extends CI_Model
 
 	public function obtenerActividades($idDependencia)
 	{
-		$this->db->select();
+		/*$this->db->select();
 		$this->db->from('Actividad');
 		$this->db->where('iIdDependencia', $idDependencia);
-		$this->db->where('iActivo', 1);
+		$this->db->where('iActivo', 1);*/
+		$this->db->select('*, 0 AS ods');
+		$this->db->from('DetalleActividad da');
+		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');
+		$this->db->join('Dependencia d', 'd.iIdDependencia = a.iIdDependencia', 'INNER');
+		$this->db->join('DependenciaEje de', 'de.iIdDependencia = d.iIdDependencia', 'INNER');
+		$this->db->join('PED2019Eje e', 'e.iIdEje = de.iIdEje', 'INNER');
+		$this->db->where('da.iActivo', 1);
+		$this->db->where('a.iActivo', 1);
+		$this->db->where('a.iIdDependencia', $idDependencia);
+		$this->db->order_by('a.vActividad', 'ASC');
 		$query = $this->db->get();
 		$resultado = $query->result();
 		return $resultado;

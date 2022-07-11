@@ -395,7 +395,7 @@ class M_reporteCombinado extends CI_Model
                         INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
                         left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
                         left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-                        INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+                        INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
                         INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
                         inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
                         inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
@@ -446,18 +446,18 @@ class M_reporteCombinado extends CI_Model
 
 
       $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
-      sum(case when (fecha=1) then avance else 0 end) as Enero,
-        sum(case when (fecha=2) then avance else 0 end) as Febrero,
-        sum(case when (fecha=3) then avance else 0 end) as Marzo,
-        sum(case when (fecha=4) then avance else 0 end) as Abril,
-        sum(case when (fecha=5) then avance else 0 end) as Mayo,
-        sum(case when (fecha=6) then avance else 0 end) as Junio,
-        sum(case when (fecha=7) then avance else 0 end) as Julio,
-        sum(case when (fecha=8) then avance else 0 end) as Agosto,
-        sum(case when (fecha=9) then avance else 0 end) as Septiembre,
-        sum(case when (fecha=10) then avance else 0 end) as Octubre,
-        sum(case when (fecha=11) then avance else 0 end) as Noviembre,
-        sum(case when (fecha=12) then avance else 0 end) as Diciembre
+      sum(case when (fecha=1) then avance end) as Enero,
+      sum(case when (fecha=2) then avance end) as Febrero,
+      sum(case when (fecha=3) then avance end) as Marzo,
+      sum(case when (fecha=4) then avance end) as Abril,
+      sum(case when (fecha=5) then avance end) as Mayo,
+      sum(case when (fecha=6) then avance end) as Junio,
+      sum(case when (fecha=7) then avance end) as Julio,
+      sum(case when (fecha=8) then avance end) as Agosto,
+      sum(case when (fecha=9) then avance end) as Septiembre,
+      sum(case when (fecha=10) then avance end) as Octubre,
+      sum(case when (fecha=11) then avance end) as Noviembre,
+      sum(case when (fecha=12) then avance end) as Diciembre
       from
 
       (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
@@ -473,25 +473,25 @@ class M_reporteCombinado extends CI_Model
                       "Entregable"."nLineaBase" as meta,
                       "Periodicidad"."vPeriodicidad" as frecuencia,
                       "FormaIndicador"."vDescripcion" as operacion,
-                      string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
+                      string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
                       "UnidadMedida"."vUnidadMedida" as unidadmedida,
                       "Entregable"."vFormula" as formula,
                       "Entregable"."vMedioVerifica" as umedioverifica,
-                      date_part(' . $mes . ',"Avance"."dFecha") as fecha,
+                      date_part('.$mes.',"Avance"."dFecha") as fecha,
                       "Avance"."nAvance" as avance,
                       "Dependencia"."iIdDependencia" as dep,
                       "PED2019Eje"."iIdEje" as iideje,
                       "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
                       "Avance"."iIdAvance" as iidavance
                       FROM "Actividad"
-                      LEFT JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-                      LEFT JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+                      left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+                      left JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
                       left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
                       left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-                      LEFT JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
-                      LEFT JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-                      LEFT join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
-                      LEFT join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+                      left JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
+                      left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+                      left join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+                      left join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
                       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
                       left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
                       LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
@@ -507,9 +507,9 @@ class M_reporteCombinado extends CI_Model
 
 
       $gropuBy = ' GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
-        group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
-        umedioverifica, fecha, dep, iideje) consulta
-                  group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
+      group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+      umedioverifica, fecha, dep, iideje) consulta
+                group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
 
       $sql = $select . $gropuBy;
       $query =  $this->db->query($sql)->result();
