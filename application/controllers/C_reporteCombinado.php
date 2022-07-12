@@ -398,6 +398,7 @@ class C_reporteCombinado extends CI_Controller
                     // var_dump($hijadatos);
                     foreach ($hijadatos as $h) {
                         if ($h->isactivo == 1 || $h->isactivo == ''  && $h->isentregable == 1) {
+                            $totalMeses = $h->enero + $h->febrero + $h->marzo + $h->abril + $h->mayo + $h->junio + $h->julio + $h->agosto + $h->septiembre + $h->octubre + $h->noviembre + $h->diciembre;
                             $cells = [
                                 WriterEntityFactory::createCell($rec->nivel),
                                 WriterEntityFactory::createCell($rec->resumennarrativo),
@@ -425,7 +426,7 @@ class C_reporteCombinado extends CI_Controller
                                 WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
                                 WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
                                 WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
-                                WriterEntityFactory::createCell(0),
+                                WriterEntityFactory::createCell($totalMeses),
                             ];
                             $singleRow = WriterEntityFactory::createRow($cells);
                             $writer->addRow($singleRow);
