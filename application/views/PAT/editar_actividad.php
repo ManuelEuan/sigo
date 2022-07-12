@@ -391,7 +391,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                                                                         if ($o->iIdActividad == $rt->iIdActividadHija) {
                                                                                             echo 'selected';
                                                                                         }
-                                                                                    } ?>><?= $o->vDescripcion ?></option>
+                                                                                    } ?>><?= $o->vActividad ?></option>
                                         <?php } ?>
                                     </select>
 
