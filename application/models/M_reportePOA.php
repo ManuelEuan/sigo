@@ -406,6 +406,48 @@ class M_reportePOA extends CI_Model {
         return $query;
     }
 
+    function obtenerDatosHija($idAct){
+      if($idAct != ''){
+        $sql = 'SELECT
+        "Dependencia"."vDependencia" AS organismo, 
+        "AreaResponsable"."vAreaResponsable" AS area, 
+        "ProgramaPresupuestario"."vProgramaPresupuestario", 
+        "PED2019Eje"."vEje", 
+        "PED2019Eje"."iIdEje",
+        "Actividad"."vObjetivo", 
+        "Actividad"."vEstrategia", 
+        "NivelMIR"."vNivelMIR", 
+        "Actividad"."iIdActividad" AS clave, 
+        "Actividad"."vDescripcion" AS resumennarrativo, 
+        "Entregable"."vEntregable" as Indicador, 
+        "DetalleEntregable"."nMeta" as Meta, 
+        "UnidadMedida"."vUnidadMedida" as UnidadMedida,
+        "DetalleActividad"."iAnio",
+        "Dependencia"."iIdDependencia",
+        "DetalleEntregable"."dFechaInicio",
+        "ResumenNarrativo"."vNombreResumenNarrativo",
+        "DetalleEntregable"."dFechaFin",
+        "Entregable"."nLineaBase" as lineabase,
+        "Periodicidad"."vPeriodicidad" as frecuencia
+        FROM "Dependencia"
+        left JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+        left JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
+        left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+        left JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+        left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+        left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+        left JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+        left JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
+        left JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+        left JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
+        left JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+        WHERE "Actividad"."iIdActividad" = '. $idAct;
+        $query =  $this->db->query($sql)->result();
+          return $query;
+      }
+      
+    }
+
     function catalogos($tipo)
     {
         $sql = '';
@@ -470,6 +512,14 @@ class M_reportePOA extends CI_Model {
       return $resultado;
   
      }
+
+     function obtenerIdHija($idact)
+  {
+    $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+    $query =  $this->db->query($sql)->result();
+    return $query;
+  }
 
 }
 

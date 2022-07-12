@@ -520,6 +520,40 @@ class M_reporteClinicas extends CI_Model {
       return $query;
     }
 
+    public function obtenerDatosHija($idAct){
+      $coma = "','";
+      if($idAct != ''){
+        $sql = 'select "iIdActividad", "vActividad",
+        "vNivelMIR",
+        "vProgramaPresupuestario",
+        "vDescripcion",
+        "vNombreResumenNarrativo",
+        "vEntregable",
+        "iValor",
+        "nLineaBase",
+        "nMeta",
+        "vPeriodicidad",
+        array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
+        (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
+        "vMedioVerifica",
+        "vSupuesto"
+        from vistaMir4
+        WHERE vistamir4."iIdActividad" = '.$idAct.'
+        group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+        $query =  $this->db->query($sql)->result();
+        return $query;
+      }
+      
+    }
+
+  function obtenerIdHija($idact)
+  {
+    $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+    $query =  $this->db->query($sql)->result();
+    return $query;
+  }
+
 }
 
                         
