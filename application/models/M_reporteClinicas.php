@@ -488,21 +488,22 @@ class M_reporteClinicas extends CI_Model {
       $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
 
       $sql = $select.$where.$group;*/
-
+      $coma = "','";
+      $barra = "' | '";
       $select = 'select "iIdActividad", "vActividad",
       "vNivelMIR",
       "vProgramaPresupuestario",
       "vDescripcion",
       "vNombreResumenNarrativo",
-      "vEntregable",
-      "iValor",
-      "nLineaBase",
-      "nMeta",
-      "vPeriodicidad",
-      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
-      (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
-      "vMedioVerifica",
-      "vSupuesto"
+			STRING_AGG ("vEntregable",' .$barra. ') as indicador,
+			max("iValor") as ivalor,
+			max("nLineaBase") as nlineabase,  
+      max("nMeta") as meta,
+			STRING_AGG ("vPeriodicidad",' .$barra. ') as periodicidad,
+      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma. ') AS vNombreVariable,
+      sum("nAvance") / avg("nMeta") * 100 as PorcentajeAvance,
+			STRING_AGG ("vMedioVerifica",' .$barra. ') as medioverifica,
+      STRING_AGG ("vSupuesto",' .$barra. ') as supuesto
       from vistaMir4
       ';
 
@@ -512,7 +513,7 @@ class M_reporteClinicas extends CI_Model {
         $where = $where.' AND "iIdDependencia" = '.$dep;
       }
 
-      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "vDescripcion","vNombreResumenNarrativo", "vActividad","iIdActividad"';
 
       $sql = $select.$where.$group;
 

@@ -118,13 +118,17 @@ class C_rclinica extends CI_Controller {
             $porcentaje = 0;
 
             foreach ($records as $rec){
-                $totalMeta = $totalMeta + $rec->nMeta;
+                $totalMeta = $totalMeta + $rec->meta;
                 $totalAvance = $totalAvance + $rec->nAvance;
 
             }
-
-            $porcentaje = ($totalAvance/$totalMeta)*100;
-            $porcentajeRedondeado = round($porcentaje, 0);
+            if($totalMeta != 0){
+                $porcentaje = ($totalAvance/$totalMeta)*100;
+                $porcentajeRedondeado = round($porcentaje, 0);
+            }else{
+                $porcentaje = 0;
+                $porcentajeRedondeado = 0;
+            }
             
             $obtenerDep = $mrep->obtenerDep($dep);
 
@@ -245,15 +249,15 @@ class C_rclinica extends CI_Controller {
                     WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
                     WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
                     WriterEntityFactory::createCell($rec->vActividad),
-                    WriterEntityFactory::createCell($rec->vEntregable),
+                    WriterEntityFactory::createCell($rec->indicador),
                     WriterEntityFactory::createCell($rec->vnombrevariable),
-                    WriterEntityFactory::createCell($rec->iValor),
-                    WriterEntityFactory::createCell($rec->nLineaBase),
+                    WriterEntityFactory::createCell($rec->ivalor),
+                    WriterEntityFactory::createCell($rec->nlineabase),
                     WriterEntityFactory::createCell((int)'100%'),
-                    WriterEntityFactory::createCell($rec->vPeriodicidad),
+                    WriterEntityFactory::createCell($rec->periodicidad),
                     WriterEntityFactory::createCell($total.'%'),
-                    WriterEntityFactory::createCell($rec->vMedioVerifica),
-                    WriterEntityFactory::createCell($rec->vSupuesto),
+                    WriterEntityFactory::createCell($rec->medioverifica),
+                    WriterEntityFactory::createCell($rec->supuesto),
                 ];
 
                 $singleRow = WriterEntityFactory::createRow($cells);
@@ -278,7 +282,7 @@ class C_rclinica extends CI_Controller {
                             WriterEntityFactory::createCell($d->vPeriodicidad),
                             WriterEntityFactory::createCell($d->porcentajeavance.'%'),
                             WriterEntityFactory::createCell($d->vMedioVerifica),
-                            WriterEntityFactory::createCell($rec->vSupuesto),
+                            WriterEntityFactory::createCell($rec->supuesto),
                         ];
         
                         $singleRow = WriterEntityFactory::createRow($cells);

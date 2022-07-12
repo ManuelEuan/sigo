@@ -332,7 +332,10 @@ return $resultado;
 
     public function reporte_pat($anio,$eje, $dep, $whereString=null, $pp)
     {
+      $barra = "' | '";
       $select ='SELECT DISTINCT
+			STRING_AGG ("Entregable"."vEntregable",' .$barra. ') as indicador,
+			STRING_AGG ("Entregable"."vMedioVerifica",' .$barra. ') as vmedioverifica,
       "PED2019Eje"."vEje", 
       "Dependencia"."vDependencia", 
       "Actividad"."iIdActividad", 
@@ -353,8 +356,6 @@ return $resultado;
       "DetalleActividad"."nPresupuestoModificado",
       "ProgramaPresupuestario"."vProgramaPresupuestario",
       "ProgramaPresupuestario"."iIdProgramaPresupuestario",
-      "Entregable"."vEntregable" ,
-      "Entregable"."vMedioVerifica" ,
       "Retos"."vDescripcion" as reto,
       "Actividad"."vEstrategia" as estrategiaact, 
       "Dependencia"."iIdDependencia", 
@@ -363,15 +364,15 @@ return $resultado;
       ';
       
 
-      $from = 'FROM "Actividad"
-      INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-      INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+      $from = ' FROM "Actividad"
+      left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      left JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
       left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
       left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-      INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
-      INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-      inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
-      inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+      left JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+      left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+      left join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+      left join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
       left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
@@ -398,9 +399,33 @@ return $resultado;
         $whereCondition = $whereCondition.' '. $whereString;
       }
       
-      $group_by = '';
+      $group_by = ' GROUP BY "PED2019Eje"."vEje", 
+      "Dependencia"."vDependencia", 
+      "Actividad"."iIdActividad", 
+      "Actividad"."vActividad", 
+      "Actividad"."vObjetivo", 
+      "Actividad"."vDescripcion", 
+      "Actividad"."vSupuesto", 
+      "DetalleActividad"."iAnio", 
+      "Actividad"."vResumenNarrativo", 
+      "DetalleActividad"."dInicio", 
+      "DetalleActividad"."dFin", 
+      "DetalleActividad"."nAvance", 
+      "Actividad"."vResponsable", 
+      "AreaResponsable"."vAreaResponsable", 
+      "NivelMIR"."vNivelMIR", 
+      "DetalleActividad"."iReactivarEconomia", 
+      "DetalleActividad"."nPresupuestoAutorizado",
+      "DetalleActividad"."nPresupuestoModificado",
+      "ProgramaPresupuestario"."vProgramaPresupuestario",
+      "ProgramaPresupuestario"."iIdProgramaPresupuestario",
+			reto,
+      estrategiaact, 
+      "Dependencia"."iIdDependencia", 
+      "ResumenNarrativo"."vNombreResumenNarrativo",
+      "PED2019Eje"."iIdEje"';
       
-      $sql = $select.$from.$whereCondition;
+      $sql = $select.$from.$whereCondition.$group_by;
       $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
       return $query;
@@ -442,14 +467,14 @@ return $resultado;
 
 
       $from = 'FROM "Actividad"
-      INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-      INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+      left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      left JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
       left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
       left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-      INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
-      INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-      inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
-      inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+      left JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+      left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+      left join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+      left join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
       left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
