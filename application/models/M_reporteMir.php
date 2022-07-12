@@ -400,6 +400,65 @@ return $resultado;
       return $query;
     }
 
+  public function reporte_Hija($idact)
+  {
+    $anio = date('Y');
+    if ($idact != ''){
+      $select = 'SELECT DISTINCT
+      "PED2019Eje"."vEje", 
+      "Dependencia"."vDependencia", 
+      "Actividad"."iIdActividad", 
+      "Actividad"."vActividad", 
+      "Actividad"."vObjetivo", 
+      "Actividad"."vDescripcion", 
+      "Actividad"."vSupuesto", 
+      "DetalleActividad"."iAnio", 
+      "Actividad"."vResumenNarrativo", 
+      "DetalleActividad"."dInicio", 
+      "DetalleActividad"."dFin", 
+      "DetalleActividad"."nAvance", 
+      "Actividad"."vResponsable", 
+      "AreaResponsable"."vAreaResponsable", 
+      "NivelMIR"."vNivelMIR", 
+      "DetalleActividad"."iReactivarEconomia", 
+      "DetalleActividad"."nPresupuestoAutorizado",
+      "DetalleActividad"."nPresupuestoModificado",
+      "ProgramaPresupuestario"."vProgramaPresupuestario",
+      "ProgramaPresupuestario"."iIdProgramaPresupuestario",
+      "Entregable"."vEntregable" ,
+      "Entregable"."vMedioVerifica" ,
+      "Retos"."vDescripcion" as reto,
+      "Actividad"."vEstrategia" as estrategiaact, 
+      "Dependencia"."iIdDependencia", 
+      "ResumenNarrativo"."vNombreResumenNarrativo",
+      "PED2019Eje"."iIdEje"
+      ';
+
+
+      $from = 'FROM "Actividad"
+      INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+      left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+      left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+      INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+      INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+      inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+      inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+      left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+      left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
+
+
+      $whereCondition = ' WHERE "Actividad"."iIdActividad" =' . $idact. ' AND "DetalleActividad"."iAnio" = ' . $anio . ' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "Avance"."iActivo" = 1';
+      //
+      $sql = $select . $from . $whereCondition;
+      $query =  $this->db->query($sql)->result();
+      //$_SESSION['sql'] = $this->db->last_query();
+      return $query;
+    }
+  }
+
+
     function catalogos($tipo)
     {
         $sql = '';
@@ -454,6 +513,15 @@ return $resultado;
 
       return $query;
     }
+
+  function obtenerIdHija($idact)
+    {
+      $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+      $query =  $this->db->query($sql)->result();
+      return $query;
+    }
+
 }
 
                         

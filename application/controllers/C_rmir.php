@@ -216,6 +216,7 @@ class C_rmir extends CI_Controller {
 
             foreach ($records as $rec)
             {
+                
                 $cells = [
                     
                     WriterEntityFactory::createCell($rec->vNivelMIR),
@@ -232,6 +233,27 @@ class C_rmir extends CI_Controller {
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
+                $hija = $mrep->obtenerIdHija($rec->iIdActividad);
+                foreach ($hija as $key => $h) {
+                    # code...
+                    $hijadatos = $mrep->reporte_Hija($h->iIdActividadHija);
+                    foreach ($hijadatos as $key => $v) {
+                        # code...
+                        $cells = [
+                            WriterEntityFactory::createCell($rec->vNivelMIR),
+                            WriterEntityFactory::createCell((int)$rec->iIdActividad),
+                            WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                            WriterEntityFactory::createCell($v->vEntregable),
+                            WriterEntityFactory::createCell($v->vMedioVerifica),
+                            WriterEntityFactory::createCell($rec->vSupuesto),
+                            WriterEntityFactory::createCell($rec->vAreaResponsable),
+
+                        ];
+                        $singleRow = WriterEntityFactory::createRow($cells);
+                        $writer->addRow($singleRow);
+                    }
+
+                }
             }
 
             $writer->close();
