@@ -332,7 +332,7 @@ return $resultado;
 
     public function reporte_pat($anio,$eje, $dep, $whereString=null, $pp)
     {
-      /*$select ='SELECT DISTINCT
+      $select ='SELECT DISTINCT
       "PED2019Eje"."vEje", 
       "Dependencia"."vDependencia", 
       "Actividad"."iIdActividad", 
@@ -374,13 +374,13 @@ return $resultado;
       inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
       left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
       left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
-      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';*/
+      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
-      $select = 'SELECT * FROM vrep_mir
+      /*$select = 'SELECT * FROM vrep_mir
         INNER JOIN "Actividad" ON vrep_mir."iIdActividad" = "Actividad"."iIdActividad"
         INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
         INNER JOIN "Dependencia" ON "Actividad"."iIdDependencia" = "Dependencia"."iIdDependencia"
-        INNER JOIN "DetalleActividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"';
+        INNER JOIN "DetalleActividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"';*/
 
 
       $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio. ' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1';
@@ -390,9 +390,9 @@ return $resultado;
         $whereCondition = $whereCondition.' AND "Dependencia"."iIdDependencia" ='.$dep;
       }
 
-      /*if($pp != 0){
+      if($pp != 0){
         $whereCondition = $whereCondition.' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
-      }*/
+      }
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
