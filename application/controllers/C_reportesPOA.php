@@ -283,18 +283,17 @@ class C_reportesPOA extends CI_Controller {
 
                     foreach ($datosHija as $key => $d) {
                         $cells = [
-                                WriterEntityFactory::createCell($key),
-                                WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                                WriterEntityFactory::createCell($rec->clave),
-                                WriterEntityFactory::createCell($d->clave.'-'.$d->indicador),
-                                WriterEntityFactory::createCell($d->lineabase),
-                                WriterEntityFactory::createCell($d->meta),
-                                WriterEntityFactory::createCell($d->frecuencia),
-                                WriterEntityFactory::createCell($d->unidadmedida),
-                            ];
-                            $singleRow = WriterEntityFactory::createRow($cells);
-                            $writer->addRow($singleRow);
-                        
+                            WriterEntityFactory::createCell($rec->vNivelMIR),
+                            WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                            WriterEntityFactory::createCell($rec->clave),
+                            WriterEntityFactory::createCell($d->indicador),
+                            WriterEntityFactory::createCell($d->lineabase),
+                            WriterEntityFactory::createCell($d->meta),
+                            WriterEntityFactory::createCell($d->frecuencia),
+                            WriterEntityFactory::createCell($d->unidadmedida),
+                        ];
+                        $singleRow = WriterEntityFactory::createRow($cells);
+                        $writer->addRow($singleRow);
                     }
 
                 }

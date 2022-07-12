@@ -16,7 +16,7 @@ class C_pat extends CI_Controller
         $this->load->library('Class_options');
 
         //Parametros para la conexion al sistema de finanzas
-        $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
+        $this->urlFinanzas    = "https://picasoplus.queretaro.gob.mx:8080/wsSigo/API/";
         $this->userFinanzas   = 'ws_user';
         $this->passFinanzas   = 'usr.sws.951';
         $this->authFinanzas   = $this->userFinanzas.":".$this->passFinanzas;
