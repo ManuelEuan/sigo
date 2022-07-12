@@ -62,7 +62,7 @@
           if (isset($dependencias)) {
             echo '<div class="col">
                   <div class="form-group">
-                      <label class="control-label">Dependencia responsabe</label>
+                      <label class="control-label">Dependencia responsable</label>
                       <select name="selDep" id="selDep" class="form-control" >
                           <option value="0">--Todos--</option>' . $dependencias . '
                       </select>

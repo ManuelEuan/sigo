@@ -172,10 +172,10 @@ class C_rclinica extends CI_Controller {
             $writer->addRow($singleRow);
 
             $cells =[
-                WriterEntityFactory::createCell('Clasificación Programática​'),
+                WriterEntityFactory::createCell('Clasificación Programática​', $rowStyle),
                 WriterEntityFactory::createCell($proPre->vGrupoGasto), 
             ];
-            $singleRow = WriterEntityFactory::createRow($cells,$rowStyle);
+            $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
 
             $cells =[
@@ -229,28 +229,63 @@ class C_rclinica extends CI_Controller {
             $writer->addRow($singleRow);
 
             foreach ($records as $key => $rec) {
-                //$resultado = $mrep->obtenerDatosPorActividad($id->iIdActividad);
-                
-                    $cells = [
-                        WriterEntityFactory::createCell($rec->vNivelMIR),
-                        WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                        WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                        WriterEntityFactory::createCell($rec->vActividad),
-                        WriterEntityFactory::createCell($rec->vEntregable),
-                        WriterEntityFactory::createCell($rec->vnombrevariable),
-                        WriterEntityFactory::createCell($rec->iValor),
-                        WriterEntityFactory::createCell($rec->nLineaBase),
-                        WriterEntityFactory::createCell((int)'100%'),
-                        WriterEntityFactory::createCell($rec->vPeriodicidad),
-                        WriterEntityFactory::createCell($rec->porcentajeavance.'%'),
-                        WriterEntityFactory::createCell($rec->vMedioVerifica),
-                        WriterEntityFactory::createCell($rec->vSupuesto),
-                    ];
-    
-                    $singleRow = WriterEntityFactory::createRow($cells);
-                    $writer->addRow($singleRow);
-     
+                $total = 0;
+                $resultado = $mrep->obtenerIdHija($rec->iIdActividad);
 
+                foreach ($resultado as $key => $r) {
+                    $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
+                    foreach ($datosHija as $key => $d) {
+                       
+                        $total = $total + $d->porcentajeavance;
+                    }
+                }
+
+                $cells = [
+                    WriterEntityFactory::createCell($rec->vNivelMIR),
+                    WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
+                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                    WriterEntityFactory::createCell($rec->vActividad),
+                    WriterEntityFactory::createCell($rec->vEntregable),
+                    WriterEntityFactory::createCell($rec->vnombrevariable),
+                    WriterEntityFactory::createCell($rec->iValor),
+                    WriterEntityFactory::createCell($rec->nLineaBase),
+                    WriterEntityFactory::createCell((int)'100%'),
+                    WriterEntityFactory::createCell($rec->vPeriodicidad),
+                    WriterEntityFactory::createCell($total.'%'),
+                    WriterEntityFactory::createCell($rec->vMedioVerifica),
+                    WriterEntityFactory::createCell($rec->vSupuesto),
+                ];
+
+                $singleRow = WriterEntityFactory::createRow($cells);
+                $writer->addRow($singleRow);
+
+                
+                
+                foreach ($resultado as $key => $r) {
+                    
+                    $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
+                    foreach ($datosHija as $key => $d) {
+                        $cells = [
+                            WriterEntityFactory::createCell($rec->vNivelMIR),
+                            WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
+                            WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                            WriterEntityFactory::createCell($d->vActividad),
+                            WriterEntityFactory::createCell($d->vEntregable),
+                            WriterEntityFactory::createCell($d->vnombrevariable),
+                            WriterEntityFactory::createCell($d->iValor),
+                            WriterEntityFactory::createCell($d->nLineaBase),
+                            WriterEntityFactory::createCell((int)'100%'),
+                            WriterEntityFactory::createCell($d->vPeriodicidad),
+                            WriterEntityFactory::createCell($d->porcentajeavance.'%'),
+                            WriterEntityFactory::createCell($d->vMedioVerifica),
+                            WriterEntityFactory::createCell($rec->vSupuesto),
+                        ];
+        
+                        $singleRow = WriterEntityFactory::createRow($cells);
+                        $writer->addRow($singleRow);
+                    }
+                    
+                }
             }
 
 
