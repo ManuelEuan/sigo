@@ -445,7 +445,7 @@ class M_reporteCombinado extends CI_Model
     if (!empty($idactividad)) {
 
 
-      $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
+      $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica, isActivo, isEntregable,
       sum(case when (fecha=1) then avance end) as Enero,
       sum(case when (fecha=2) then avance end) as Febrero,
       sum(case when (fecha=3) then avance end) as Marzo,
@@ -460,7 +460,7 @@ class M_reporteCombinado extends CI_Model
       sum(case when (fecha=12) then avance end) as Diciembre
       from
 
-      (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+      (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, isActivo, isEntregable,
               umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
               (SELECT "NivelMIR"."vNivelMIR" as nivel,
                       "Actividad"."iIdActividad" as idact,
@@ -473,16 +473,18 @@ class M_reporteCombinado extends CI_Model
                       "Entregable"."nLineaBase" as meta,
                       "Periodicidad"."vPeriodicidad" as frecuencia,
                       "FormaIndicador"."vDescripcion" as operacion,
-                      string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                      string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
                       "UnidadMedida"."vUnidadMedida" as unidadmedida,
                       "Entregable"."vFormula" as formula,
                       "Entregable"."vMedioVerifica" as umedioverifica,
-                      date_part('.$mes.',"Avance"."dFecha") as fecha,
+                      date_part(' . $mes . ',"Avance"."dFecha") as fecha,
                       "Avance"."nAvance" as avance,
                       "Dependencia"."iIdDependencia" as dep,
                       "PED2019Eje"."iIdEje" as iideje,
                       "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
-                      "Avance"."iIdAvance" as iidavance
+                      "Avance"."iIdAvance" as iidavance,
+                      "Avance"."iActivo" as isActivo,
+											"Entregable"."iActivo" as isEntregable
                       FROM "Actividad"
                       left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
                       left JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
@@ -500,16 +502,16 @@ class M_reporteCombinado extends CI_Model
                       LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
                       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                       LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"
-                      WHERE "Actividad"."iIdActividad" =' . $idactividad;
+                      WHERE "Actividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iIdActividad" =' . $idactividad;
 
 
       // $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';
 
 
-      $gropuBy = ' GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
-      group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+      $gropuBy = 'GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance, isEntregable)  vistaRCombinado
+      group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,isActivo, isEntregable,
       umedioverifica, fecha, dep, iideje) consulta
-                group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
+                group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica, isActivo, isEntregable';
 
       $sql = $select . $gropuBy;
       $query =  $this->db->query($sql)->result();
