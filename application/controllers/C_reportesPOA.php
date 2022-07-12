@@ -292,8 +292,6 @@ class C_reportesPOA extends CI_Controller {
                             WriterEntityFactory::createCell($d->frecuencia),
                             WriterEntityFactory::createCell($d->unidadmedida),
                         ];
-        
-        
                         $singleRow = WriterEntityFactory::createRow($cells);
                         $writer->addRow($singleRow);
                     }
