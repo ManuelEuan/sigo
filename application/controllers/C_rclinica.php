@@ -122,13 +122,8 @@ class C_rclinica extends CI_Controller {
                 $totalAvance = $totalAvance + $rec->nAvance;
 
             }
-            if($totalMeta != 0){
-                $porcentaje = ($totalAvance/$totalMeta)*100;
-                $porcentajeRedondeado = round($porcentaje, 0);
-            }else{
-                $porcentaje = 0;
-                $porcentajeRedondeado = 0;
-            }
+            $porcentaje = ($totalAvance/$totalMeta)*100;
+            $porcentajeRedondeado = round($porcentaje, 0);
             
             $obtenerDep = $mrep->obtenerDep($dep);
 

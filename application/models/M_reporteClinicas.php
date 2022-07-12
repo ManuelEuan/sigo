@@ -501,7 +501,7 @@ class M_reporteClinicas extends CI_Model {
       max("nMeta") as meta,
 			STRING_AGG ("vPeriodicidad",' .$barra. ') as periodicidad,
       array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma. ') AS vNombreVariable,
-      sum("nAvance") / avg("nMeta") * 100 as PorcentajeAvance,
+      sum("nAvance") / sum("nMeta") * 100 as PorcentajeAvance,
 			STRING_AGG ("vMedioVerifica",' .$barra. ') as medioverifica,
       STRING_AGG ("vSupuesto",' .$barra. ') as supuesto
       from vistaMir4
