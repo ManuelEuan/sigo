@@ -432,7 +432,6 @@ class C_reporteCombinado extends CI_Controller
                             $writer->addRow($singleRow);
                         }
                     }
-                   
                 }
             }
 
