@@ -250,8 +250,7 @@ class C_rclinica extends CI_Controller {
                     foreach ($resultado as $key => $r) {
                         $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
                         foreach ($datosHija as $key => $d) {
-                           
-                            $total = $total + $d->porcentajeavance;
+                            $total = $total + ($d->porcentajeavance / count($datosHija));
                         }
                     }
     
