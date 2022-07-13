@@ -401,16 +401,16 @@ class M_reportePOA extends CI_Model {
             "NivelMIR"."vNivelMIR", 
             "Actividad"."iIdActividad" AS clave, 
             "Actividad"."vDescripcion" AS resumennarrativo, 
-            STRING_AGG ("Entregable"."vEntregable",'.$barra.') as Indicador, 
+            STRING_AGG ( DISTINCT "Entregable"."vEntregable",'.$barra.') as Indicador, 
             sum("DetalleEntregable"."nMeta") as Meta, 
-            STRING_AGG ("UnidadMedida"."vUnidadMedida",'.$barra.') as UnidadMedida,
+            STRING_AGG ( DISTINCT "UnidadMedida"."vUnidadMedida",'.$barra.') as UnidadMedida,
             "DetalleActividad"."iAnio",
             "Dependencia"."iIdDependencia",
             "DetalleEntregable"."dFechaInicio",
             "ResumenNarrativo"."vNombreResumenNarrativo",
 	          "DetalleEntregable"."dFechaFin",
             max("Entregable"."nLineaBase") as lineabase,
-             STRING_AGG ("Periodicidad"."vPeriodicidad",'.$barra.') as frecuencia
+            STRING_AGG ( DISTINCT "Periodicidad"."vPeriodicidad",'.$barra.') as frecuencia
             FROM "Dependencia"
             left JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
             left JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
