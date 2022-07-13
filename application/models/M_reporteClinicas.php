@@ -495,15 +495,15 @@ class M_reporteClinicas extends CI_Model {
       "vProgramaPresupuestario",
       "vDescripcion",
       "vNombreResumenNarrativo",
-			STRING_AGG ("vEntregable",' .$barra. ') as indicador,
-			max("iValor") as ivalor,
-			max("nLineaBase") as nlineabase,  
+            STRING_AGG (DISTINCT "vEntregable" ,' .$barra. ')  as indicador,
+            max("iValor") as ivalor,
+            max("nLineaBase") as nlineabase,  
       max("nMeta") as meta,
-			STRING_AGG ("vPeriodicidad",' .$barra. ') as periodicidad,
+            STRING_AGG (DISTINCT"vPeriodicidad",' .$barra. ') as periodicidad,
       array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma. ') AS vNombreVariable,
       sum("nAvance") / sum("nMeta") * 100 as PorcentajeAvance,
-			STRING_AGG ("vMedioVerifica",' .$barra. ') as medioverifica,
-      STRING_AGG ("vSupuesto",' .$barra. ') as supuesto
+            STRING_AGG (DISTINCT "vMedioVerifica",' .$barra. ') as medioverifica,
+      STRING_AGG (DISTINCT "vSupuesto",' .$barra. ') as supuesto
       from vistaMir4
       ';
 
