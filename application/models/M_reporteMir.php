@@ -480,7 +480,7 @@ return $resultado;
       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"';
 
 
-      $whereCondition = ' WHERE "Actividad"."iIdActividad" =' . $idact. ' AND "DetalleActividad"."iAnio" = ' . $anio . ' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "Avance"."iActivo" = 1';
+      $whereCondition = ' WHERE "Actividad"."iIdActividad" =' . $idact. ' AND "DetalleActividad"."iAnio" = ' . $anio;
       //
       $sql = $select . $from . $whereCondition;
       $query =  $this->db->query($sql)->result();

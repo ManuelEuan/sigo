@@ -202,6 +202,10 @@ class C_rclinica extends CI_Controller {
             ->setFontColor(Color::WHITE)
             ->setFontItalic()
             ->build();
+            $amaStyle = (new StyleBuilder())
+                ->setBackgroundColor(Color::ORANGE)
+                ->setFontColor(Color::BLACK)
+                ->build();
            
             $cells = [
                     WriterEntityFactory::createCell('Nivel',$blueStyle),
@@ -227,14 +231,22 @@ class C_rclinica extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
-            foreach ($records as $key => $rec) {
-                $total = 0;
+            $arrayaglomerados = array();
+            foreach ($records as $rec){
                 $resultado = $mrep->obtenerIdHija($rec->iIdActividad);
-                $arrayaglomerados = array();
+            
                 foreach ($resultado as $key => $value) {
-                    array_push($arrayaglomerados, $value->iIdActividadHija);
+                    array_push($arrayaglomerados, (int)$value->iIdActividadHija);
                 }
-                if(!in_array($rec->iIdActividad, $arrayaglomerados)){
+            }
+
+            foreach ($records as $key => $rec) {
+
+                if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
+                    $total = 0;
+                    $resultado = $mrep->obtenerIdHija($rec->iIdActividad);
+                    
+    
                     foreach ($resultado as $key => $r) {
                         $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
                         foreach ($datosHija as $key => $d) {
@@ -244,19 +256,19 @@ class C_rclinica extends CI_Controller {
                     }
     
                     $cells = [
-                        WriterEntityFactory::createCell($rec->vNivelMIR),
-                        WriterEntityFactory::createCell($rec->vProgramaPresupuestario),
-                        WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                        WriterEntityFactory::createCell($rec->vActividad),
-                        WriterEntityFactory::createCell($rec->indicador),
-                        WriterEntityFactory::createCell($rec->vnombrevariable),
-                        WriterEntityFactory::createCell($rec->ivalor),
-                        WriterEntityFactory::createCell($rec->nlineabase),
-                        WriterEntityFactory::createCell((int)'100%'),
-                        WriterEntityFactory::createCell($rec->periodicidad),
-                        WriterEntityFactory::createCell($total.'%'),
-                        WriterEntityFactory::createCell($rec->medioverifica),
-                        WriterEntityFactory::createCell($rec->supuesto),
+                        WriterEntityFactory::createCell($rec->vNivelMIR, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vProgramaPresupuestario, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vNombreResumenNarrativo, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vActividad, $amaStyle),
+                        WriterEntityFactory::createCell($rec->indicador, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vnombrevariable, $amaStyle),
+                        WriterEntityFactory::createCell($rec->ivalor, $amaStyle),
+                        WriterEntityFactory::createCell($rec->nlineabase, $amaStyle),
+                        WriterEntityFactory::createCell((int)'100%', $amaStyle),
+                        WriterEntityFactory::createCell($rec->periodicidad, $amaStyle),
+                        WriterEntityFactory::createCell($total.'%', $amaStyle),
+                        WriterEntityFactory::createCell($rec->medioverifica, $amaStyle),
+                        WriterEntityFactory::createCell($rec->supuesto, $amaStyle),
                     ];
     
                     $singleRow = WriterEntityFactory::createRow($cells);
@@ -290,7 +302,6 @@ class C_rclinica extends CI_Controller {
                         
                     }
                 }
-                
             }
 
 
