@@ -141,7 +141,7 @@ class C_reportesPOA extends CI_Controller {
                             ->build();
 
             $amaStyle = (new StyleBuilder())
-                ->setBackgroundColor(Color::ORANGE)
+            ->setBackgroundColor('FFD9A8')
                 ->setFontColor(Color::BLACK)
                 ->build();
 

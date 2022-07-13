@@ -134,7 +134,7 @@ class C_reporteCombinado extends CI_Controller
                 ->setFontItalic()
                 ->build();
             $amaStyle = (new StyleBuilder())
-                ->setBackgroundColor(Color::ORANGE)
+                ->setBackgroundColor('FFD9A8')
                 ->setFontColor(Color::BLACK)
                 ->setFontItalic()
                 ->setFontBold()
