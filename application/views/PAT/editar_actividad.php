@@ -23,7 +23,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 <div class="col-md-10">
                 </div>
                 <div class="col-md-2 text-right">
-                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="submit" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>
+                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="button" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>
                 </div>
             </div>
 
@@ -314,7 +314,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                             foreach ($alineacion as $row) {
                                                 $button = ($row->caracteres > 10) ? '<i class="fas fa-check text-success"></i>' : '<button type="button" name="dltactla" title="Eliminar" id="dltactla" type="button" class="btn btn-xs waves-effect waves-light boton_eliminar dltactla" onclick="eliminarLA(' . $contLA . ')"><i class="mdi mdi-close"></i></button>';
                                                 $input = '<input type="hidden" class="linea" name="la' . $contLA . '" id="la' . $contLA . '" value="' . $row->iIdLineaAccion . '">';
-
                                                 echo '<tr id="trla' . $contLA . '">
                                                     <td>' . $row->vEje . '</td>
                                                     <td>' . $row->vTema . '</td>
@@ -326,7 +325,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                                 </tr>';
                                                 $contLA++;
                                             }
-
                                             ?> 
                                             </tbody>
                                         </table>
@@ -388,7 +386,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
                                         <?php foreach ($actividadAgloValue as $o) { ?>
                                             <option value="<?= $o->iIdActividad ?>" <?php foreach ($actividadAglo as $rt) {
-                                                                                        if ($o->iIdActividad == $rt->iIdActividadHija) {
+                                                if ($o->iIdActividad == $rt->iIdActividadHija) {
                                                                                             echo 'selected';
                                                                                         }
                                                                                     } ?>><?= $o->vDescripcion ?></option>
@@ -462,7 +460,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         <br><br>
                         <center>
                             <input id="iddependenciaSesion" name="iddependenciaSesion" type="hidden" value="<?= $_SESSION[PREFIJO . '_iddependencia'] ?>">
-                            <button title="Ir a listado del PAT" class="btn btn-lg waves-effect waves-light btn-outline-info" type="submit" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>&nbsp;&nbsp;
+                            <button title="Ir a listado del PAT" class="btn btn-lg waves-effect waves-light btn-outline-info" type="button" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>&nbsp;&nbsp;
                             <button class="btn-lectura btn btn-lg btn-info" type="submit">Guardar</button>
                         </center>
                     </div>
@@ -479,6 +477,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
     var isNS = document.layers ? true : false;
     var peticion = true;
     var arrayDep = [];
+    $( document ).ready(function() {
+            
+            $('.selectpicker').selectpicker();
+        });
 
     function onlyDigits(e, decReq) {
         var key = (isIE) ? event.keyCode : e.which;
@@ -703,7 +705,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 idDependencia: idDependencia
             },
             success: function(resp) {
-                $('#idActividad').empty();
+                // $('#idActividad').empty();
                 var parsedData = JSON.parse(resp);
                 for (let i = 0; i <= parsedData.length; i++) {
                     if (parsedData[i]?.vActividad != undefined) {

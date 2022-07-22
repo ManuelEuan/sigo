@@ -213,7 +213,7 @@ class M_pat extends CI_Model
 		$this->db->from('Actividad');
 		$this->db->where('iIdDependencia', $idDependencia);
 		$this->db->where('iActivo', 1);*/
-		$this->db->select('*, 0 AS ods');
+		$this->db->select('a.iIdActividad,a.vDescripcion, 0 AS ods');
 		$this->db->from('DetalleActividad da');
 		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');
 		$this->db->join('Dependencia d', 'd.iIdDependencia = a.iIdDependencia', 'INNER');
@@ -581,6 +581,14 @@ class M_pat extends CI_Model
 	WHERE "ActividadAglomerada"."iIdActividadPadre" = ' . $idActividad;
 		$query =  $this->db->query($sql);
 		return $query->result();
+	}
+	public function obtenerActividadesP($idDependencia){
+		$this->db->select();
+		$this->db->from('Actividad');
+		$this->db->where('iIdDependencia', $idDependencia);
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
 	}
 	public function borrarActividadAgromerada($idActidad)
 	{
