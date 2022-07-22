@@ -1,44 +1,48 @@
-<?php 
+<?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
-                        
-class M_reporteCombinado extends CI_Model {
+defined('BASEPATH') or exit('No direct script access allowed');
 
-    function __construct(){
+class M_reporteCombinado extends CI_Model
+{
+
+  function __construct()
+  {
     parent::__construct();
-        $this->db = $this->load->database('default',TRUE);
+    $this->db = $this->load->database('default', TRUE);
+  }
+
+  public function ejes()
+  {
+    $this->db->select('"iIdEje", "vEje"');
+    $this->db->from('"PED2019Eje"');
+    $query = $this->db->get();
+
+    foreach ($query->result() as $row) {
+      $datos[] = [
+        'iIdEje'                       => $row->iIdEje,
+        'vEje'                   => $row->vEje
+      ];
     }
-    
-    public function ejes(){
-        $this->db->select('"iIdEje", "vEje"');
-        $this->db->from('"PED2019Eje"');
-        $query = $this->db->get();
+    return $datos;
+  }
 
-        foreach ($query->result() as $row) {
-        $datos[] = [
-           'iIdEje'                       => $row->iIdEje,
-           'vEje'                   => $row->vEje
-         ];
-     }
-     return $datos;
+  public function anio()
+  {
+    $this->db->distinct();
+    $this->db->select('"iAnio"');
+    $this->db->from('"DetalleActividad"');
+
+    $query = $this->db->get();
+
+    foreach ($query->result() as $row) {
+      $datos[] = [
+        'iAnio'                       => $row->iAnio
+      ];
     }
-    
-    public function anio(){
-        $this->db->distinct();
-        $this->db->select('"iAnio"');
-        $this->db->from('"DetalleActividad"');
+    return $datos;
+  }
 
-        $query = $this->db->get();
-
-        foreach ($query->result() as $row) {
-        $datos[] = [
-           'iAnio'                       => $row->iAnio
-         ];
-     }
-     return $datos;
-    }
-
-    /*public function dependencias($id){
+  /*public function dependencias($id){
         $this->db->select('"Dependencia"."iIdDependencia","vDependencia"');
         $this->db->from('"Dependencia"');
         $this->db->join('"DependenciaEje"', '"Dependencia"."iIdDependencia" = "DependenciaEje"."iIdDependencia"');
@@ -55,235 +59,239 @@ class M_reporteCombinado extends CI_Model {
     }*/
 
 
-    public function generar($eje,$dep,$anio){
-        $datos = '';
-        $datos = array();
-        $this->db->select();
-        $this->db->from('reporte_actividades');
-        $this->db->where('iIdEje', $eje);
-        $this->db->where('iIdDependencia', $dep);
-        $this->db->where('iAnio', $anio);
-        $query = $this->db->get();
+  public function generar($eje, $dep, $anio)
+  {
+    $datos = '';
+    $datos = array();
+    $this->db->select();
+    $this->db->from('reporte_actividades');
+    $this->db->where('iIdEje', $eje);
+    $this->db->where('iIdDependencia', $dep);
+    $this->db->where('iAnio', $anio);
+    $query = $this->db->get();
 
-        if($query->num_rows() > 0){
-            foreach ($query->result() as $row) {
-                $datos[] = [
-                   'iIdActividad'             => $row->iIdActividad,
-                   'iActivo'                       => $row->iActivo,
-                   'vActividad'                 => $row->vActividad,
-                   'objetivoactividad'   => $row->objetivoactividad,
-                   'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
-                   'vDescripcion'             => $row->vDescripcion,
-                   'dInicio'                       => $row->dInicio,
-                   'dFin'                             => $row->dFin,
-                   'vDependencia'             => $row->vDependencia,
-                   'claveff'                       => $row->claveff,
-                   'vFinanciamiento'       => $row->vFinanciamiento,
-                   'monto'                           => $row->monto,
-                   'vLineaAccion'             => $row->vLineaAccion,
-                   'vEstrategia'               => $row->vEstrategia,
-                   'valorobjetivo'           => $row->valorobjetivo,
-                   'vTema'                           => $row->vTema,
-                   'vEje'                             => $row->vEje,
-                   'claveubp'                     => $row->claveubp,
-                   'vUBP'                             => $row->vUBP,
-                   'iIdEntregable'           => $row->iIdEntregable,
-                   'vEntregable'               => $row->vEntregable,
-                   'nMeta'                           => $row->nMeta,
-                   'vUnidadMedida'           => $row->vUnidadMedida,
-                   'vSujetoAfectado'       => $row->vSujetoAfectado,
-                   'vPeriodicidad'           => $row->vPeriodicidad,
-                   'iMunicipalizacion'   => $row->iMunicipalizacion,
-                   'nAvance'                       => $row->nAvance,
-                   'nEjercido'                   => $row->nEjercido,
-                   'iIdAvance'                    =>$row->iIdAvance,
-                 ];
-             }
-        }else{
-            return 'no hay datos';
-        }
-     return $datos;
+    if ($query->num_rows() > 0) {
+      foreach ($query->result() as $row) {
+        $datos[] = [
+          'iIdActividad'             => $row->iIdActividad,
+          'iActivo'                       => $row->iActivo,
+          'vActividad'                 => $row->vActividad,
+          'objetivoactividad'   => $row->objetivoactividad,
+          'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
+          'vDescripcion'             => $row->vDescripcion,
+          'dInicio'                       => $row->dInicio,
+          'dFin'                             => $row->dFin,
+          'vDependencia'             => $row->vDependencia,
+          'claveff'                       => $row->claveff,
+          'vFinanciamiento'       => $row->vFinanciamiento,
+          'monto'                           => $row->monto,
+          'vLineaAccion'             => $row->vLineaAccion,
+          'vEstrategia'               => $row->vEstrategia,
+          'valorobjetivo'           => $row->valorobjetivo,
+          'vTema'                           => $row->vTema,
+          'vEje'                             => $row->vEje,
+          'claveubp'                     => $row->claveubp,
+          'vUBP'                             => $row->vUBP,
+          'iIdEntregable'           => $row->iIdEntregable,
+          'vEntregable'               => $row->vEntregable,
+          'nMeta'                           => $row->nMeta,
+          'vUnidadMedida'           => $row->vUnidadMedida,
+          'vSujetoAfectado'       => $row->vSujetoAfectado,
+          'vPeriodicidad'           => $row->vPeriodicidad,
+          'iMunicipalizacion'   => $row->iMunicipalizacion,
+          'nAvance'                       => $row->nAvance,
+          'nEjercido'                   => $row->nEjercido,
+          'iIdAvance'                    => $row->iIdAvance,
+        ];
+      }
+    } else {
+      return 'no hay datos';
+    }
+    return $datos;
+  }
+
+  public function generar2($anio)
+  {
+    $datos = '';
+    $datos = array();
+    $this->db->select();
+    $this->db->from('"reporte_actividades"');
+    $this->db->where('"iAnio" = ' . $anio . '');
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+      foreach ($query->result() as $row) {
+        $datos[] = [
+          'iIdActividad'             => $row->iIdActividad,
+          'iActivo'                       => $row->iActivo,
+          'vActividad'                 => $row->vActividad,
+          'objetivoactividad'   => $row->objetivoactividad,
+          'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
+          'vDescripcion'             => $row->vDescripcion,
+          'dInicio'                       => $row->dInicio,
+          'dFin'                             => $row->dFin,
+          'vDependencia'             => $row->vDependencia,
+          'claveff'                       => $row->claveff,
+          'vFinanciamiento'       => $row->vFinanciamiento,
+          'monto'                           => $row->monto,
+          'vLineaAccion'             => $row->vLineaAccion,
+          'vEstrategia'               => $row->vEstrategia,
+          'valorobjetivo'           => $row->valorobjetivo,
+          'vTema'                           => $row->vTema,
+          'vEje'                             => $row->vEje,
+          'claveubp'                     => $row->claveubp,
+          'vUBP'                             => $row->vUBP,
+          'iIdEntregable'           => $row->iIdEntregable,
+          'vEntregable'               => $row->vEntregable,
+          'nMeta'                           => $row->nMeta,
+          'vUnidadMedida'           => $row->vUnidadMedida,
+          'vSujetoAfectado'       => $row->vSujetoAfectado,
+          'vPeriodicidad'           => $row->vPeriodicidad,
+          'iMunicipalizacion'   => $row->iMunicipalizacion,
+          'nAvance'                       => $row->nAvance,
+          'nEjercido'                   => $row->nEjercido,
+          'iIdAvance'                    => $row->iIdAvance,
+        ];
+      }
+    } else {
+      return 'no hay datos';
+    }
+    return $datos;
+  }
+
+  public function generar3($eje, $anio)
+  {
+
+    $datos = '';
+    $datos = array();
+    $this->db->select();
+    $this->db->from('reporte_actividades');
+    $this->db->where('iIdEje', $eje);
+    $this->db->where('iAnio', $anio);
+    $this->db->where('iActivo', 1);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+      foreach ($query->result() as $row) {
+        $datos[] = [
+          'iIdActividad'             => $row->iIdActividad,
+          'iActivo'                       => $row->iActivo,
+          'vActividad'                 => $row->vActividad,
+          'objetivoactividad'   => $row->objetivoactividad,
+          'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
+          'vDescripcion'             => $row->vDescripcion,
+          'dInicio'                       => $row->dInicio,
+          'dFin'                             => $row->dFin,
+          'vDependencia'             => $row->vDependencia,
+          'claveff'                       => $row->claveff,
+          'vFinanciamiento'       => $row->vFinanciamiento,
+          'monto'                           => $row->monto,
+          'vLineaAccion'             => $row->vLineaAccion,
+          'vEstrategia'               => $row->vEstrategia,
+          'valorobjetivo'           => $row->valorobjetivo,
+          'vTema'                           => $row->vTema,
+          'vEje'                             => $row->vEje,
+          'claveubp'                     => $row->claveubp,
+          'vUBP'                             => $row->vUBP,
+          'iIdEntregable'           => $row->iIdEntregable,
+          'vEntregable'               => $row->vEntregable,
+          'nMeta'                           => $row->nMeta,
+          'vUnidadMedida'           => $row->vUnidadMedida,
+          'vSujetoAfectado'       => $row->vSujetoAfectado,
+          'vPeriodicidad'           => $row->vPeriodicidad,
+          'iMunicipalizacion'   => $row->iMunicipalizacion,
+          'nAvance'                       => $row->nAvance,
+          'nEjercido'                   => $row->nEjercido,
+          'iIdAvance'                    => $row->iIdAvance,
+        ];
+      }
+    } else {
+      echo 'no hay datos';
     }
 
-    public function generar2($anio){
-        $datos = '';
-        $datos = array();
-        $this->db->select();
-        $this->db->from('"reporte_actividades"');
-        $this->db->where('"iAnio" = '.$anio. '');
-        $query = $this->db->get();
+    return $datos;
+  }
 
-        if($query->num_rows() > 0){
-            foreach ($query->result() as $row) {
-                $datos[] = [
-                   'iIdActividad'             => $row->iIdActividad,
-                   'iActivo'                       => $row->iActivo,
-                   'vActividad'                 => $row->vActividad,
-                   'objetivoactividad'   => $row->objetivoactividad,
-                   'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
-                   'vDescripcion'             => $row->vDescripcion,
-                   'dInicio'                       => $row->dInicio,
-                   'dFin'                             => $row->dFin,
-                   'vDependencia'             => $row->vDependencia,
-                   'claveff'                       => $row->claveff,
-                   'vFinanciamiento'       => $row->vFinanciamiento,
-                   'monto'                           => $row->monto,
-                   'vLineaAccion'             => $row->vLineaAccion,
-                   'vEstrategia'               => $row->vEstrategia,
-                   'valorobjetivo'           => $row->valorobjetivo,
-                   'vTema'                           => $row->vTema,
-                   'vEje'                             => $row->vEje,
-                   'claveubp'                     => $row->claveubp,
-                   'vUBP'                             => $row->vUBP,
-                   'iIdEntregable'           => $row->iIdEntregable,
-                   'vEntregable'               => $row->vEntregable,
-                   'nMeta'                           => $row->nMeta,
-                   'vUnidadMedida'           => $row->vUnidadMedida,
-                   'vSujetoAfectado'       => $row->vSujetoAfectado,
-                   'vPeriodicidad'           => $row->vPeriodicidad,
-                   'iMunicipalizacion'   => $row->iMunicipalizacion,
-                   'nAvance'                       => $row->nAvance,
-                   'nEjercido'                   => $row->nEjercido,
-                   'iIdAvance'                    =>$row->iIdAvance,
-                 ];
-             }
-        }else{
-            return 'no hay datos';
-        }
-        return $datos;
-    }
+  public function recolectarsuma1($id)
+  {
+    $this->db->select('COALESCE(sum("monto"),0) as "monto"');
+    $this->db->from('"DetalleActividadFinanciamiento"');
+    $this->db->join('"DetalleActividad"', '"DetalleActividad"."iIdDetalleActividad" = "DetalleActividadFinanciamiento"."iIdDetalleActividad"');
+    $this->db->where('"DetalleActividad"."iIdActividad"', $id);
 
-    public function generar3($eje,$anio){
+    return $this->db->get()->row()->monto;
+  }
 
-        $datos = '';
-        $datos = array();
-        $this->db->select();
-        $this->db->from('reporte_actividades');
-        $this->db->where('iIdEje', $eje);
-        $this->db->where('iAnio', $anio);
-        $this->db->where('iActivo',1);
-        $query = $this->db->get();
+  public function recolectarsuma2($id)
+  {
+    $this->db->select('COALESCE(sum("nBeneficiariosH"+"nBeneficiariosM"+"nDiscapacitadosH"+"nDiscapacitadosM"+"nLenguaH"+"nLenguaM"),0) as "sum2"');
+    $this->db->from('"Avance"');
+    $this->db->where('"iIdAvance"', $id);
+    return $this->db->get()->row()->sum2;
+  }
 
-        if($query->num_rows() > 0){
-            foreach ($query->result() as $row) {
-                $datos[] = [
-                   'iIdActividad'             => $row->iIdActividad,
-                   'iActivo'                       => $row->iActivo,
-                   'vActividad'                 => $row->vActividad,
-                   'objetivoactividad'   => $row->objetivoactividad,
-                   'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
-                   'vDescripcion'             => $row->vDescripcion,
-                   'dInicio'                       => $row->dInicio,
-                   'dFin'                             => $row->dFin,
-                   'vDependencia'             => $row->vDependencia,
-                   'claveff'                       => $row->claveff,
-                   'vFinanciamiento'       => $row->vFinanciamiento,
-                   'monto'                           => $row->monto,
-                   'vLineaAccion'             => $row->vLineaAccion,
-                   'vEstrategia'               => $row->vEstrategia,
-                   'valorobjetivo'           => $row->valorobjetivo,
-                   'vTema'                           => $row->vTema,
-                   'vEje'                             => $row->vEje,
-                   'claveubp'                     => $row->claveubp,
-                   'vUBP'                             => $row->vUBP,
-                   'iIdEntregable'           => $row->iIdEntregable,
-                   'vEntregable'               => $row->vEntregable,
-                   'nMeta'                           => $row->nMeta,
-                   'vUnidadMedida'           => $row->vUnidadMedida,
-                   'vSujetoAfectado'       => $row->vSujetoAfectado,
-                   'vPeriodicidad'           => $row->vPeriodicidad,
-                   'iMunicipalizacion'   => $row->iMunicipalizacion,
-                   'nAvance'                       => $row->nAvance,
-                   'nEjercido'                   => $row->nEjercido,
-                   'iIdAvance'                    =>$row->iIdAvance,
-                 ];
-             }
-        }else{
-            echo 'no hay datos';
-        }
-        
-     return $datos;
-    }
+  /******************** Funciones Barbosa ************************/
+  public function carga_actividades($eje = 0, $dep = 0, $anio = '')
+  {
+    $this->db->select('act.iIdActividad');
+    $this->db->from('Actividad act');
+    $this->db->join('DetalleActividad dact', 'act.iIdActividad = dact.iIdActividad', 'INNER');
+    $this->db->join('DependenciaEje dep', 'act.iIdDependencia = dep.iIdDependencia', 'INNER');
 
-    public function recolectarsuma1($id){
-        $this->db->select('COALESCE(sum("monto"),0) as "monto"');
-        $this->db->from('"DetalleActividadFinanciamiento"');
-        $this->db->join('"DetalleActividad"', '"DetalleActividad"."iIdDetalleActividad" = "DetalleActividadFinanciamiento"."iIdDetalleActividad"');
-        $this->db->where('"DetalleActividad"."iIdActividad"', $id);
+    if ($eje > 0) $this->db->where('dep.iIdEje', $eje);
+    if ($dep > 0) $this->db->where('act.iIdDependencia', $dep);
+    if ($anio != '') $this->db->where('dact.iAnio', $anio);
 
-        return $this->db->get()->row()->monto;
-    }
+    $query = $this->db->get();
+    if ($query != false) return $query->result();
+    else return false;
+  }
 
-    public function recolectarsuma2($id){
-        $this->db->select('COALESCE(sum("nBeneficiariosH"+"nBeneficiariosM"+"nDiscapacitadosH"+"nDiscapacitadosM"+"nLenguaH"+"nLenguaM"),0) as "sum2"');
-        $this->db->from('"Avance"');
-        $this->db->where('"iIdAvance"', $id);
-        return $this->db->get()->row()->sum2;
-    }
+  public function dependencias($ejeid)
+  {
+    $this->db->select('d.iIdDependencia, d.vDependencia');
+    $this->db->from('Dependencia d');
+    $this->db->join('DependenciaEje de', 'd.iIdDependencia = de.iIdDependencia', 'INNER');
+    $this->db->where('de.iIdEje', $ejeid);
 
-    /******************** Funciones Barbosa ************************/
-   public function carga_actividades($eje = 0, $dep= 0, $anio= '')
-   {
-      $this->db->select('act.iIdActividad');
-      $this->db->from('Actividad act');
-      $this->db->join('DetalleActividad dact','act.iIdActividad = dact.iIdActividad','INNER');
-      $this->db->join('DependenciaEje dep','act.iIdDependencia = dep.iIdDependencia','INNER');
-      
-      if($eje > 0) $this->db->where('dep.iIdEje', $eje);
-      if($dep > 0) $this->db->where('act.iIdDependencia', $dep);
-      if($anio != '') $this->db->where('dact.iAnio', $anio);
+    $query = $this->db->get();
+    if ($query != false) return $query->result();
+    else return false;
+  }
 
-      $query = $this->db->get();
-      if($query!=false) return $query->result();
-      else return false;
-   }
+  /******************** Funciones Jorge E ************************/
 
-   public function dependencias($ejeid)
-   {
-      $this->db->select('d.iIdDependencia, d.vDependencia');
-      $this->db->from('Dependencia d');
-      $this->db->join('DependenciaEje de','d.iIdDependencia = de.iIdDependencia','INNER');
-      $this->db->where('de.iIdEje', $ejeid);
+  public function listado_actividades($where = '')
+  {
+    $this->db->select('da.iIdDetalleActividad');
+    $this->db->from('DetalleActividad da');
+    $this->db->join('Actividad ac', 'ac.iIdActividad = da.iIdActividad', 'INNER');
+    $this->db->join('Dependencia dep', 'dep.iIdDependencia = ac.iIdDependencia', 'INNER');
+    $this->db->join('DependenciaEje dej', 'dej.iIdDependencia = dep.iIdDependencia', 'INNER');
+    $this->db->where('da.iActivo = 1 AND ac.iActivo = 1');
+    $this->db->order_by('dej.iIdEje, dep.vDependencia');
+    if ($where != '') $this->db->where($where);
 
-      $query = $this->db->get();
-      if($query!=false) return $query->result();
-      else return false;
-   }
+    $result = $this->db->get()->result();
+    $_SESSION['sql'] = $this->db->last_query();
+    return $result;
+  }
 
-   /******************** Funciones Jorge E ************************/
+  public function getEjeDep($iIdDetalleActividad)
+  {
+    $this->db->select('dej.iIdEje, dep.vNombreCorto');
+    $this->db->from('DetalleActividad da');
+    $this->db->join('Actividad ac', 'ac.iIdActividad = da.iIdActividad', 'INNER');
+    $this->db->join('Dependencia dep', 'dep.iIdDependencia = ac.iIdDependencia', 'INNER');
+    $this->db->join('DependenciaEje dej', 'dej.iIdDependencia = dep.iIdDependencia', 'INNER');
+    $this->db->where('da.iIdDetalleActividad', $iIdDetalleActividad);
 
-    public function listado_actividades($where='')
-    {
-      $this->db->select('da.iIdDetalleActividad');
-      $this->db->from('DetalleActividad da');
-      $this->db->join('Actividad ac','ac.iIdActividad = da.iIdActividad','INNER');
-      $this->db->join('Dependencia dep','dep.iIdDependencia = ac.iIdDependencia','INNER');
-      $this->db->join('DependenciaEje dej','dej.iIdDependencia = dep.iIdDependencia','INNER');
-      $this->db->where('da.iActivo = 1 AND ac.iActivo = 1');
-      $this->db->order_by('dej.iIdEje, dep.vDependencia');
-      if($where != '') $this->db->where($where);
+    return $this->db->get()->row();
+  }
 
-      $result = $this->db->get()->result();
-      $_SESSION['sql'] = $this->db->last_query(); 
-      return $result;
-    }
-
-    public function getEjeDep($iIdDetalleActividad)
-    {
-      $this->db->select('dej.iIdEje, dep.vNombreCorto');
-      $this->db->from('DetalleActividad da');
-      $this->db->join('Actividad ac','ac.iIdActividad = da.iIdActividad','INNER');
-      $this->db->join('Dependencia dep','dep.iIdDependencia = ac.iIdDependencia','INNER');
-      $this->db->join('DependenciaEje dej','dej.iIdDependencia = dep.iIdDependencia','INNER');
-      $this->db->where('da.iIdDetalleActividad',$iIdDetalleActividad);
-
-      return $this->db->get()->row();
-      
-    }
-
-    public function reporte_actividades($anio,$eje,$dep=0)
-    {
-      /*$sql = 'SELECT ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds",  eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."dInicio", dat."dFin", fin."vFinanciamiento", daf.monto, pre.presupuesto, dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado",
+  public function reporte_actividades($anio, $eje, $dep = 0)
+  {
+    /*$sql = 'SELECT ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds",  eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."dInicio", dat."dFin", fin."vFinanciamiento", daf.monto, pre.presupuesto, dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado",
         pp."vProgramaPresupuestario", ubp."vClave", ubp."vUBP",
         ent."iIdEntregable", det."iIdDetalleEntregable", ent."vEntregable", det."iPonderacion", det."nMeta", det."iSuspension", u."vUnidadMedida",
         s."vSujetoAfectado", pe."vPeriodicidad", ent."iMunicipalizacion", ent."iMismosBeneficiarios", av.avance, av.ejercido, av.beneficiariosh, av.beneficiariosm, 
@@ -295,7 +303,7 @@ class M_reporteCombinado extends CI_Model {
         FROM "Actividad" act
         INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iAnio" = '.$anio.'
         INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"';*/
-        /*$sql = 'SELECT COUNT(act."iIdActividad") num FROM 
+    /*$sql = 'SELECT COUNT(act."iIdActividad") num FROM 
         FROM "Actividad" act
         INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iAnio" = '.$anio.'
         INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"';
@@ -335,16 +343,16 @@ class M_reporteCombinado extends CI_Model {
         WHERE dat."iActivo" = 1
         LIMIT 1';*/
 
-        $sql = 'SELECT "iIdEje" FROM actividades_eje';
+    $sql = 'SELECT "iIdEje" FROM actividades_eje';
 
-        return $this->db->query($sql);
-    }
+    return $this->db->query($sql);
+  }
 
-    public function reporte_pat($anio, $dep, $eje, $whereString=null, $mes, $pp)
-    {
-        $mes = "'month'";  
-        $coma = "','";
-        $select = 'select nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
+  public function reporte_pat($anio, $dep, $eje, $whereString = null, $mes, $pp)
+  {
+    $mes = "'month'";
+    $coma = "','";
+    $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
         sum(case when (fecha=1) then avance end) as Enero,
         sum(case when (fecha=2) then avance end) as Febrero,
         sum(case when (fecha=3) then avance end) as Marzo,
@@ -358,10 +366,11 @@ class M_reporteCombinado extends CI_Model {
         sum(case when (fecha=11) then avance end) as Noviembre,
         sum(case when (fecha=12) then avance end) as Diciembre
         from
-         
-        (select nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+
+        (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
                 umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
                 (SELECT "NivelMIR"."vNivelMIR" as nivel,
+                        "Actividad"."iIdActividad" as idact,
                         "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
                         "Actividad"."vtipoactividad" as tipo,
                         "DimensionIndicador"."vDescripcion" as dimension,
@@ -371,22 +380,22 @@ class M_reporteCombinado extends CI_Model {
                         "Entregable"."nLineaBase" as meta,
                         "Periodicidad"."vPeriodicidad" as frecuencia,
                         "FormaIndicador"."vDescripcion" as operacion,
-                                string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                        string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
                         "UnidadMedida"."vUnidadMedida" as unidadmedida,
                         "Entregable"."vFormula" as formula,
                         "Entregable"."vMedioVerifica" as umedioverifica,
-                        date_part('.$mes.',"Avance"."dFecha") as fecha,
+                        date_part(' . $mes . ',"Avance"."dFecha") as fecha,
                         "Avance"."nAvance" as avance,
                         "Dependencia"."iIdDependencia" as dep,
                         "PED2019Eje"."iIdEje" as iideje,
-                                "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
-                                "Avance"."iIdAvance" as iidavance
+                        "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
+                        "Avance"."iIdAvance" as iidavance
                         FROM "Actividad"
                         INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
                         INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
                         left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
                         left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-                        INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+                        INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
                         INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
                         inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
                         inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
@@ -399,108 +408,202 @@ class M_reporteCombinado extends CI_Model {
                         left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                         LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
 
-
-          $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';
-          if($dep != ''){
-            $weherDep = ' AND "Dependencia"."iIdDependencia" = '.$dep;
-            $where = $where.$weherDep;
-          }
-          if($pp != '' && $pp != null){ 
-            $wherePP = ' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
-            $where = $where.$wherePP;
-          }
-          
-          $gropuBy = 'GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
-          group by  nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
-          umedioverifica, fecha, dep, iideje) consulta
-					group by nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
-        $sql = $select.$where.$gropuBy;
-        $query =  $this->db->query($sql);
-      //$_SESSION['sql'] = $this->db->last_query();
-        return $query;
+    $where = ' WHERE "PED2019Eje"."iIdEje" = ' . $eje . ' AND "DetalleActividad"."iAnio" = ' . $anio;
+    if ($dep != '') {
+      $weherDep = ' AND "Dependencia"."iIdDependencia" = ' . $dep;
+      $where = $where . $weherDep;
+    }
+    if ($pp != '' && $pp != null) {
+      $wherePP = ' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = ' . $pp;
+      $where = $where . $wherePP;
     }
 
-    function catalogos($tipo)
-    {
-        $sql = '';
-        if($tipo == 1)
-        {
-          $sql = 'SELECT * FROM "Financiamiento" WHERE "iActivo" = 1'; 
-        }
+    $gropuBy = ' GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
+          group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+          umedioverifica, fecha, dep, iideje) consulta
+                    group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
+    $sql = $select . $where . $gropuBy;
+    $query =  $this->db->query($sql);
+    //$_SESSION['sql'] = $this->db->last_query();
+    return $query;
+  }
+  public function reporteH($idactividad)
+  {
+    if (!empty($idactividad)) {
+      $this->db->select('*');
+      $this->db->from('Actividad');
+      $this->db->where('iIdActividad', $idactividad);
+      $query =  $this->db->get();
+      $resultado = $query->row();
+      return $resultado;
+    }
+  }
+  public function reporteHija($idactividad)
+  {
+    $mes = "'month'";
+    $coma = "','";
+    if (!empty($idactividad)) {
 
-        if($tipo == 2)
-        {
-          $sql = 'SELECT * FROM "PED2019"'; 
-        }
 
-        if($tipo == 3)
-        {
-          $sql = 'SELECT * FROM "ProgramaPresupuestario" WHERE "iActivo" = 1'; 
-        }
+      $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica, isActivo, isEntregable,
+      sum(case when (fecha=1) then avance end) as Enero,
+      sum(case when (fecha=2) then avance end) as Febrero,
+      sum(case when (fecha=3) then avance end) as Marzo,
+      sum(case when (fecha=4) then avance end) as Abril,
+      sum(case when (fecha=5) then avance end) as Mayo,
+      sum(case when (fecha=6) then avance end) as Junio,
+      sum(case when (fecha=7) then avance end) as Julio,
+      sum(case when (fecha=8) then avance end) as Agosto,
+      sum(case when (fecha=9) then avance end) as Septiembre,
+      sum(case when (fecha=10) then avance end) as Octubre,
+      sum(case when (fecha=11) then avance end) as Noviembre,
+      sum(case when (fecha=12) then avance end) as Diciembre
+      from
 
-        if($tipo == 4)
-        {
-          $sql = 'SELECT * FROM "SujetoAfectado" WHERE "iActivo" = 1'; 
-        }
+      (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, isActivo, isEntregable,
+              umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
+              (SELECT "NivelMIR"."vNivelMIR" as nivel,
+                      "Actividad"."iIdActividad" as idact,
+                      "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
+                      "Actividad"."vtipoactividad" as tipo,
+                      "DimensionIndicador"."vDescripcion" as dimension,
+                      "Actividad"."vActividad" as accion,
+                      "Actividad"."iIdActividad" as clave,
+                      "Entregable"."vEntregable" as indicador,
+                      "Entregable"."nLineaBase" as meta,
+                      "Periodicidad"."vPeriodicidad" as frecuencia,
+                      "FormaIndicador"."vDescripcion" as operacion,
+                      string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                      "UnidadMedida"."vUnidadMedida" as unidadmedida,
+                      "Entregable"."vFormula" as formula,
+                      "Entregable"."vMedioVerifica" as umedioverifica,
+                      date_part('.$mes.',"Avance"."dFecha") as fecha,
+                      "Avance"."nAvance" as avance,
+                      "Dependencia"."iIdDependencia" as dep,
+                      "PED2019Eje"."iIdEje" as iideje,
+                      "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
+                      "Avance"."iIdAvance" as iidavance,
+                      "Avance"."iActivo" as isActivo,
+											"Entregable"."iActivo" as isEntregable
+                      FROM "Actividad"
+                      left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+                      left JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+                      left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+                      left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+                      left JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
+                      left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+                      left join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+                      left join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+                      left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+                      left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+                      LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
+                      LEFT JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+                      LEFT JOIN "FormaIndicador" ON "FormaIndicador"."iIdFormaInd" = "Entregable"."iIdFormaInd"
+                      LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
+                      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
+                      LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"
+                      WHERE "Actividad"."iIdActividad" =' . $idactividad;
 
-        if($tipo == 5)
-        {
-          $sql = 'SELECT u.*, tu."vTipoUbp" 
+
+      // $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';
+
+
+      $gropuBy = 'GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance, isEntregable)  vistaRCombinado
+      group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,isActivo, isEntregable,
+      umedioverifica, fecha, dep, iideje) consulta
+                group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica, isActivo, isEntregable';
+
+      $sql = $select . $gropuBy;
+      $query =  $this->db->query($sql)->result();
+      //$_SESSION['sql'] = $this->db->last_query();
+      return $query;
+    }
+  }
+  function obtenerIdHija($idact)
+  {
+    $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+    $query =  $this->db->query($sql)->result();
+    return $query;
+  }
+  function catalogos($tipo)
+  {
+    $sql = '';
+    if ($tipo == 1) {
+      $sql = 'SELECT * FROM "Financiamiento" WHERE "iActivo" = 1';
+    }
+
+    if ($tipo == 2) {
+      $sql = 'SELECT * FROM "PED2019"';
+    }
+
+    if ($tipo == 3) {
+      $sql = 'SELECT * FROM "ProgramaPresupuestario" WHERE "iActivo" = 1';
+    }
+
+    if ($tipo == 4) {
+      $sql = 'SELECT * FROM "SujetoAfectado" WHERE "iActivo" = 1';
+    }
+
+    if ($tipo == 5) {
+      $sql = 'SELECT u.*, tu."vTipoUbp" 
               FROM "UBP" u
               INNER JOIN "TipoUBP" tu ON tu."iIdTipoUbp" = u."iIdTipoUbp"
-              WHERE u."iActivo" = 1;'; 
-        }
-
-        if($tipo == 6)
-        {
-          $sql = 'SELECT * FROM "UnidadMedida" WHERE "iActivo" = 1 ORDER BY "iIdUnidadMedida"'; 
-        }
-        return $this->db->query($sql);
+              WHERE u."iActivo" = 1;';
     }
 
-    public function obtenerDep($dep){
-      $this->db->select('*');
-      $this->db->from('Dependencia');
-      $this->db->where('iIdDependencia', $dep);
-      $query =  $this->db->get();
-		  $resultado = $query->row();
-      return $resultado;
+    if ($tipo == 6) {
+      $sql = 'SELECT * FROM "UnidadMedida" WHERE "iActivo" = 1 ORDER BY "iIdUnidadMedida"';
     }
+    return $this->db->query($sql);
+  }
 
-    public function obtenerEje($eje){
-      $this->db->select();
-      $this->db->from('PED2019Eje');
-      $this->db->where('iIdEje', $eje);
-      $query =  $this->db->get();
-		  $resultado = $query->row();
-      return $resultado;
-    }
+  public function obtenerDep($dep)
+  {
+    $this->db->select('*');
+    $this->db->from('Dependencia');
+    $this->db->where('iIdDependencia', $dep);
+    $query =  $this->db->get();
+    $resultado = $query->row();
+    return $resultado;
+  }
 
-    public function obtenerObj($eje){
-      $sql = 'select "vEje", "vObjetivoGobierno" From "PED2019Eje" Where "iIdEje" ='.$eje;
-      
-      $query =  $this->db->query($sql);
-		  $resultado = $query->row();
-      return $resultado;
-  
-     }
-     function obtenerPP(){
-      $this->db->select();
-      $this->db->from('ProgramaPresupuestario');
-      $query = $this->db->get()->result();
+  public function obtenerEje($eje)
+  {
+    $this->db->select();
+    $this->db->from('PED2019Eje');
+    $this->db->where('iIdEje', $eje);
+    $query =  $this->db->get();
+    $resultado = $query->row();
+    return $resultado;
+  }
 
-      return $query;
-    }
+  public function obtenerObj($eje)
+  {
+    $sql = 'select "vEje", "vObjetivoGobierno" From "PED2019Eje" Where "iIdEje" =' . $eje;
 
-    function obtenerPPporId($id){
-      $this->db->select();
-      $this->db->from('ProgramaPresupuestario');
-      $this->db->where('iIdProgramaPresupuestario', $id);
-      $query = $this->db->get()->row();
+    $query =  $this->db->query($sql);
+    $resultado = $query->row();
+    return $resultado;
+  }
+  function obtenerPP()
+  {
+    $this->db->select();
+    $this->db->from('ProgramaPresupuestario');
+    $query = $this->db->get()->result();
 
-      return $query;
-    }
+    return $query;
+  }
 
+  function obtenerPPporId($id)
+  {
+    $this->db->select();
+    $this->db->from('ProgramaPresupuestario');
+    $this->db->where('iIdProgramaPresupuestario', $id);
+    $query = $this->db->get()->row();
+
+    return $query;
+  }
 }
 
 
@@ -528,5 +631,3 @@ SELECT ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaA
 */
                         
 /* End of file M_reporteAct.php */
-    
-                        

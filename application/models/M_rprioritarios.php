@@ -2,7 +2,7 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
                         
-class M_reporteAct extends CI_Model {
+class M_rprioritarios extends CI_Model {
 
     function __construct(){
     parent::__construct();
@@ -71,6 +71,14 @@ class M_reporteAct extends CI_Model {
                    'iIdActividad'             => $row->iIdActividad,
                    'iActivo'                       => $row->iActivo,
                    'vActividad'                 => $row->vActividad,
+                   'vResumenNarrativo'            =>$row->vResumenNarrativo,
+                   'vSupuesto'                    =>$row->vSupuesto,
+                   'iIdNivelMIR'                  =>$row->iIdNivelMIR,
+                   'vNivelMIR'                    =>$row->vNivelMIR,
+                   'vAreaResponsable'              =>$row->vAreaResponsable,
+                   'vMedioVerifica'               =>$row->vMedioVerifica,
+                   'vProgramaPresupuestario'      =>$row->vProgramaPresupuestario,
+                   'vEntregable'               =>$row->vEntregable,
                    'objetivoactividad'   => $row->objetivoactividad,
                    'vPoblacionObjetivo' => $row->vPoblacionObjetivo,
                    'vDescripcion'             => $row->vDescripcion,
@@ -97,6 +105,7 @@ class M_reporteAct extends CI_Model {
                    'nAvance'                       => $row->nAvance,
                    'nEjercido'                   => $row->nEjercido,
                    'iIdAvance'                    =>$row->iIdAvance,
+                   
                  ];
              }
         }else{
@@ -145,6 +154,8 @@ class M_reporteAct extends CI_Model {
                    'nAvance'                       => $row->nAvance,
                    'nEjercido'                   => $row->nEjercido,
                    'iIdAvance'                    =>$row->iIdAvance,
+                   'vResumenNarrativo'                    =>$row->vResumenNarrativo,
+                   'vSupuesto'                    =>$row->vSupuesto,
                  ];
              }
         }else{
@@ -196,6 +207,8 @@ class M_reporteAct extends CI_Model {
                    'nAvance'                       => $row->nAvance,
                    'nEjercido'                   => $row->nEjercido,
                    'iIdAvance'                    =>$row->iIdAvance,
+                   'vResumenNarrativo'                    =>$row->vResumenNarrativo,
+                   'vSupuesto'                    =>$row->vSupuesto,
                  ];
              }
         }else{
@@ -249,6 +262,32 @@ class M_reporteAct extends CI_Model {
       if($query!=false) return $query->result();
       else return false;
    }
+   public function obtenerDep($dep){
+$this->db->select('vDependencia');
+$this->db->from('Dependencia');
+$this->db->where('iIdDependencia',$dep);
+$query = $this->db->get();
+$resultado = $query->row();
+return $resultado;
+   }
+   public function obtenerEje($eje){
+    $this->db->select('vEje');
+    $this->db->from('PED2019Eje');
+    $this->db->where('iIdEje',$eje);
+    $query = $this->db->get();
+    $resultado = $query->row();
+    return $resultado;
+   }
+   public function obtenerObj($eje){
+    /*$this->db->select('vObjetivo');
+    $this->db->from('PED2019Eje');
+    $this->db->where('iIdEje',$eje);
+    $query = $this->db->get();
+    $resultado = $query->row();*/
+    $sql = 'SELECT "vObjetivoGobierno" from "PED2019Eje" WHERE "iIdEje" ='.$eje;
+    $query =  $this->db->query($sql)->result();
+    return $query;
+   }
 
    /******************** Funciones Jorge E ************************/
 
@@ -283,145 +322,68 @@ class M_reporteAct extends CI_Model {
 
     public function reporte_actividades($anio,$eje,$dep=0)
     {
-      /*$sql = 'SELECT ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds",  eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."dInicio", dat."dFin", fin."vFinanciamiento", daf.monto, pre.presupuesto, dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado",
-        pp."vProgramaPresupuestario", ubp."vClave", ubp."vUBP",
-        ent."iIdEntregable", det."iIdDetalleEntregable", ent."vEntregable", det."iPonderacion", det."nMeta", det."iSuspension", u."vUnidadMedida",
-        s."vSujetoAfectado", pe."vPeriodicidad", ent."iMunicipalizacion", ent."iMismosBeneficiarios", av.avance, av.ejercido, av.beneficiariosh, av.beneficiariosm, 
-        av.discapacitadosh, av.discapacitadosm, av.lenguah, av.lenguam, 
-        ben.beneficiariosh beneh, ben.beneficiariosm benem, 
-        ben.discapacitadosh disch, ben.discapacitadosm discm, ben.lenguah lengh, ben.lenguam lengm,
-        mun."vMunicipio", dem."nMeta" metamunicipio,
-        c."iNumero", c."vCompromiso", comp."vComponente"
-        FROM "Actividad" act
-        INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iAnio" = '.$anio.'
-        INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"';*/
-        /*$sql = 'SELECT COUNT(act."iIdActividad") num FROM 
-        FROM "Actividad" act
-        INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iAnio" = '.$anio.'
-        INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"';
-
-        if($dep > 0) $sql.= ' AND dep."iIdDependencia" = '.$dep;
-
-        $sql .= ' INNER JOIN "DependenciaEje" dej ON dej."iIdDependencia" = dep."iIdDependencia"
-        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = dej."iIdEje" AND dej."iIdEje" = '.$eje.'
-        LEFT OUTER JOIN "ActividadLineaAccion" al ON al."iIdActividad" = act."iIdActividad"
-        LEFT OUTER JOIN "PED2019" ped ON ped."iIdLineaAccion" = al."iIdLineaAccion"
-        LEFT OUTER JOIN "DetalleActividadFinanciamiento" daf ON daf."iIdDetalleActividad" = dat."iIdDetalleActividad" 
-        LEFT OUTER JOIN "Financiamiento" fin ON fin."iIdFinanciamiento" = daf."iIdFinanciamiento" 
-        LEFT OUTER JOIN "DetalleActividadUBP" dup ON dup."iIdDetalleActividad" = dat."iIdDetalleActividad"
-        LEFT OUTER JOIN "UBP" ubp ON ubp."iIdUbp" = dup."iIdUbp"
-        LEFT OUTER JOIN "ProgramaPresupuestario" pp ON pp."iIdProgramaPresupuestario" = ubp."iIdProgramaPresupuestario"
-        LEFT OUTER JOIN (SELECT "iIdDetalleActividad", SUM("monto") presupuesto
-                        FROM "DetalleActividadFinanciamiento"
-                        GROUP BY "iIdDetalleActividad") AS pre ON pre."iIdDetalleActividad" = dat."iIdDetalleActividad"
-        LEFT OUTER JOIN "DetalleEntregable" det ON det."iIdDetalleActividad" = dat."iIdDetalleActividad" AND det."iActivo" = 1
-        LEFT OUTER JOIN "Entregable" ent ON ent."iIdEntregable" = det."iIdEntregable" AND ent."iActivo" = 1
-        LEFT OUTER JOIN "UnidadMedida" u ON u."iIdUnidadMedida" = ent."iIdUnidadMedida" 
-        LEFT OUTER JOIN "SujetoAfectado" s ON s."iIdSujetoAfectado" = ent."iIdSujetoAfectado"
-        LEFT OUTER JOIN "Periodicidad" pe ON pe."iIdPeriodicidad" = ent."iIdPeriodicidad"
-        LEFT OUTER JOIN "DetalleEntregableMetaMunicipio" dem ON dem."iIdDetalleEntregable" = det."iIdDetalleEntregable"
-        LEFT OUTER JOIN "Municipio" mun ON mun."iIdMunicipio" = dem."iIdMunicipio"
-        LEFT OUTER JOIN "EntregableComponente" ec ON ec."iIdEntregable" = ent."iIdEntregable"
-        LEFT OUTER JOIN "Componente" comp ON comp."iIdComponente" = ec."iIdComponente"
-        LEFT OUTER JOIN "Compromiso" c ON c."iIdCompromiso" = comp."iIdCompromiso"
-        LEFT OUTER JOIN (SELECT "iIdDetalleEntregable", SUM("nAvance") avance, SUM("nEjercido")  ejercido, SUM("nBeneficiariosH") beneficiariosh, SUM("nBeneficiariosM") beneficiariosm, SUM("nDiscapacitadosH") discapacitadosh, SUM("nDiscapacitadosM") discapacitadosm, SUM("nLenguaH") lenguah, SUM("nLenguaM") lenguam, MAX("dFecha") fechamax
-                          FROM "Avance"
-                          WHERE "iActivo" = 1 AND "iAprobado" = 1
-                          GROUP BY "iIdDetalleEntregable") AS av ON av."iIdDetalleEntregable" = det."iIdDetalleEntregable"
-        LEFT OUTER JOIN (SELECT "iIdDetalleEntregable", "dFecha" fechamax, SUM("nBeneficiariosH") beneficiariosh, SUM("nBeneficiariosM") beneficiariosm, SUM("nDiscapacitadosH") discapacitadosh, SUM("nDiscapacitadosM") discapacitadosm, SUM("nLenguaH") lenguah, SUM("nLenguaM") lenguam 
-        FROM "Avance" 
-        WHERE "iActivo" = 1 AND "iAprobado" = 1
-        GROUP BY "iIdDetalleEntregable", "dFecha" ) AS ben ON ben."iIdDetalleEntregable" = det."iIdDetalleEntregable" AND ben.fechamax = av.fechamax
-        WHERE dat."iActivo" = 1
-        LIMIT 1';*/
-
         $sql = 'SELECT "iIdEje" FROM actividades_eje';
 
         return $this->db->query($sql);
     }
 
-    public function reporte_pat($anio, $eje, $dep, $tabla = array(),$whereString=null, $rol)
+
+
+
+    public function reporte_pat($anio,$eje, $dep, $whereString=null, $pp)
     {
-      $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", act."vcattipoactividad", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado" as pauth, "Retos"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
-coalesce(bh, 0) as bh,
-coalesce(bm, 0) as bm,
-coalesce(bdh, 0) as bdh,
-coalesce(bdm, 0) as bdm,
-coalesce(blh, 0) as blh,
-coalesce(blm, 0) as blm,
-coalesce(bth, 0) as bth,
-coalesce(btm, 0) as btm,
-coalesce(bah, 0) as bah,
-coalesce(bam, 0) as bam
-         ';
-
-      if(isset($tabla['fuentes'])) $select.= ', fin."vFinanciamiento", daf.monto';
-      if(isset($tabla['ubp'])) $select.= ', pp."iNumero" AS clavepp, pp."vProgramaPresupuestario", ubp."vClave" AS claveubp, ubp."vUBP"';
-      if(isset($tabla['ped'])) $select.= ', ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds"';
-      if(isset($tabla['entregables'])) $select.= ', ent."iIdEntregable", det."iIdDetalleEntregable", ent."vEntregable", det."iPonderacion", det."nMeta", det."nMetaModificada", det."iSuspension", u."vUnidadMedida",
-        s."vSujetoAfectado", pe."vPeriodicidad", ent."iMunicipalizacion", ent."iMismosBeneficiarios"';
-      if(isset($tabla['compromisos'])) $select.= ', c."iNumero", c."vCompromiso", comp."vComponente"';
-      if(isset($tabla['metasmun'])) $select.=  ', mun."vMunicipio" municipiometa, dem."nMeta" metamunicipio, dem."nMetaModificada" metamodificadamunicipio';
-      if(isset($tabla['avances'])) $select.= ', av.*';
-
-      $from = ' FROM "Actividad" act
-
-        INNER JOIN "Retos" on act."iReto"="Retos"."iIdReto"
-        INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iActivo" = 1
-        INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia"
-        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = act."iideje"';
-      if($rol == 1){
-        $from.= ' and act."iideje"='.$eje;
-      } 
-      if($dep > 0) $from.= ' AND act."iIdDependencia" = '.$dep;
-      $from.= ' INNER JOIN "PED2019Eje" eje2 ON eje2."iIdEje" = act."iideje"';
-
-      if(isset($tabla['fuentes'])) $from.= ' LEFT OUTER JOIN "DetalleActividadFinanciamiento" daf ON daf."iIdDetalleActividad" = dat."iIdDetalleActividad" 
-        LEFT OUTER JOIN "Financiamiento" fin ON fin."iIdFinanciamiento" = daf."iIdFinanciamiento"';
-      if(isset($tabla['ubp'])) $from.= '  LEFT OUTER JOIN "DetalleActividadUBP" dup ON dup."iIdDetalleActividad" = dat."iIdDetalleActividad"
-        LEFT OUTER JOIN "UBP" ubp ON ubp."iIdUbp" = dup."iIdUbp"
-        LEFT OUTER JOIN "ProgramaPresupuestario" pp ON pp."iIdProgramaPresupuestario" = ubp."iIdProgramaPresupuestario"'; 
-      if(isset($tabla['ped'])) $from.= ' LEFT OUTER JOIN "ActividadLineaAccion" al ON al."iIdActividad" = act."iIdActividad"
-        LEFT OUTER JOIN "PED2019" ped ON ped."iIdLineaAccion" = al."iIdLineaAccion"';
-      if(isset($tabla['entregables'])) $from.= '  LEFT OUTER JOIN "DetalleEntregable" det ON det."iIdDetalleActividad" = dat."iIdDetalleActividad" AND det."iActivo" = 1
-        LEFT OUTER JOIN "Entregable" ent ON ent."iIdEntregable" = det."iIdEntregable" AND ent."iActivo" = 1
-        LEFT OUTER JOIN "UnidadMedida" u ON u."iIdUnidadMedida" = ent."iIdUnidadMedida" 
-        LEFT OUTER JOIN "SujetoAfectado" s ON s."iIdSujetoAfectado" = ent."iIdSujetoAfectado"
-        LEFT OUTER JOIN "Periodicidad" pe ON pe."iIdPeriodicidad" = ent."iIdPeriodicidad"';
-      if(isset($tabla['compromisos'])) $from.= ' LEFT OUTER JOIN "EntregableComponente" ec ON ec."iIdEntregable" = ent."iIdEntregable"
-        LEFT OUTER JOIN "Componente" comp ON comp."iIdComponente" = ec."iIdComponente"
-        LEFT OUTER JOIN "Compromiso" c ON c."iIdCompromiso" = comp."iIdCompromiso"';
-      if(isset($tabla['metasmun'])) $from.= ' LEFT OUTER JOIN "DetalleEntregableMetaMunicipio" dem ON dem."iIdDetalleEntregable" = det."iIdDetalleEntregable"
-        LEFT OUTER JOIN "Municipio" mun ON mun."iIdMunicipio" = dem."iIdMunicipio"';
+      $select ='SELECT DISTINCT
+      "PED2019Eje"."vEje", 
+      "Dependencia"."vDependencia", 
+      "Actividad"."iIdActividad", 
+			"DetalleActividad"."iIdDetalleActividad",
+			"Actividad"."vAccion",
+      "DetalleActividad"."iAnio", 
+      "DetalleActividad"."dInicio", 
+      "DetalleActividad"."dFin", 
+      "DetalleActividad"."nAvance", 
+      "Actividad"."vResponsable", 
+      "AreaResponsable"."vAreaResponsable",  
+      "DetalleActividad"."iReactivarEconomia", 
+      "DetalleActividad"."nPresupuestoAutorizado",
+      "DetalleActividad"."nPresupuestoModificado",
+      "Actividad"."vEstrategia" as estrategiaact, 
+      "Dependencia"."iIdDependencia", 
+      "PED2019Eje"."iIdEje",
+			"Avance"."nAvance" as avancedos,
+			SUM("Avance"."nBeneficiariosH" + "Avance"."nBeneficiariosM" + "Avance"."nTerceraEdadM" +"Avance"."nTerceraEdadH" + "Avance"."nLenguaM" + "Avance"."nLenguaH" + "Avance"."nEjercido" + "Avance"."nDiscapacitadosM" + "Avance"."nDiscapacitadosH" + "Avance"."nAdolescenteM" + "Avance"."nAdolescenteH") personasbeneficiadas,
+			"ProyectosPrioritarios"."vProyectoPrioritario"
+			
+			';
       
-      if(isset($tabla['avances']))
-      {
-         $from.= ' LEFT OUTER JOIN "vAvanceMunicipio" av ON av."iIdDetalleEntregable" = det."iIdDetalleEntregable"';
+
+      $from = 'FROM "Actividad"
+      INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+      left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+      INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+      left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+      left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
+      INNER JOIN "ProyectosPrioritarios" ON "ProyectosPrioritarios"."iIdEje" = "PED2019Eje"."iIdEje"';
+
+
+      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "Avance"."iActivo" = 1';
+      //
+
+      if($dep != 0){
+        $whereCondition = $whereCondition.' AND "Dependencia"."iIdDependencia" ='.$dep;
       }
 
-
-        $from.= 'LEFT JOIN ( SELECT de."iIdDetalleActividad",
-        count(DISTINCT de."iIdDetalleEntregable") AS entregables,
-        max(av_1."nEjercido") AS ejercido, 
-        sum(av_1."nBeneficiariosH") as bh, sum(av_1."nBeneficiariosM") as bm,
-        sum(av_1."nDiscapacitadosH") as bdh, sum(av_1."nDiscapacitadosM") as bdm,
-        sum(av_1."nLenguaH") as blh, sum(av_1."nLenguaM") as blm,
-        sum(av_1."nTerceraEdadH") as bth, sum(av_1."nTerceraEdadM") as btm,
-        sum(av_1."nAdolescenteH") as bah, sum(av_1."nAdolescenteM") as bam
-        FROM "DetalleEntregable" de
-        LEFT JOIN "Avance" av_1 ON av_1."iIdDetalleEntregable" = de."iIdDetalleEntregable" AND av_1."iAprobado" = 1 AND         av_1."iActivo" = 1
-          WHERE de."iActivo" = 1
-          GROUP BY de."iIdDetalleActividad") ava ON ava."iIdDetalleActividad" = dat."iIdDetalleActividad" ';
-
-
-
-      $whereCondition = 'WHERE'. ' dat."iAnio" = '.$anio;
+      // if($pp != 0){
+      //   $whereCondition = $whereCondition.' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
+      // }
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
       }
       
-      $group_by = '';
+      $group_by = 'GROUP BY "PED2019Eje"."iIdEje", "Dependencia"."iIdDependencia", "Actividad"."iIdActividad", "DetalleActividad"."iIdDetalleActividad", "AreaResponsable"."iIdAreaResponsable", "Avance"."iIdAvance", "ProyectosPrioritarios"."iIdProyectoPrioritario"';
       
       $sql = $select.$from.$whereCondition.$group_by;
       $query =  $this->db->query($sql);
@@ -467,37 +429,25 @@ coalesce(bam, 0) as bam
         return $this->db->query($sql);
     }
 
-    function getRol($id){
-      $sql = 'SELECT * FROM "Usuario" WHERE "iIdUsuario" = '.$id;
+    function obtenerPP(){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $query = $this->db->get()->result();
 
-      return $this->db->query($sql)->result();
+      return $query;
+    }
+
+    function obtenerPPporId($id){
+      $this->db->select();
+      $this->db->from('ProgramaPresupuestario');
+      $this->db->where('iIdProgramaPresupuestario', $id);
+      $query = $this->db->get()->row();
+
+      return $query;
     }
 }
 
-
-
-/*
-SELECT ped."vEje", ped."vTema", ped."vObjetivo", ped."vEstrategia", ped."vLineaAccion", ped."iIdOds", ped."vOds",  eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."dInicio", dat."dFin", dat."nAvance", dat."iReactivarEconomia", dat."nPresupuestoModificado", dat."nPresupuestoAutorizado",
-        ent."iIdEntregable", det."iIdDetalleEntregable", ent."vEntregable", det."iPonderacion", det."nMeta", det."nMetaModificada", det."iSuspension", u."vUnidadMedida",
-        s."vSujetoAfectado", pe."vPeriodicidad", ent."iMunicipalizacion", ent."iMismosBeneficiarios", av."nAvance", av."nEjercido", av."nBeneficiariosH", av."nBeneficiariosM", 
-        av."nDiscapacitadosH", av."nDiscapacitadosM", av."nLenguaH", av."nLenguaM", mun."vMunicipio"
-        FROM "Actividad" act
-        INNER JOIN "DetalleActividad" dat ON dat."iIdActividad" = act."iIdActividad" AND dat."iAnio" = 2020
-        INNER JOIN "Dependencia" dep ON dep."iIdDependencia" = act."iIdDependencia" AND dep."iIdDependencia" = 14
-        INNER JOIN "DependenciaEje" dej ON dej."iIdDependencia" = dep."iIdDependencia"
-        INNER JOIN "PED2019Eje" eje ON eje."iIdEje" = dej."iIdEje" AND dej."iIdEje" = 2
-        LEFT OUTER JOIN "ActividadLineaAccion" al ON al."iIdActividad" = act."iIdActividad"
-        LEFT OUTER JOIN "PED2019" ped ON ped."iIdLineaAccion" = al."iIdLineaAccion"        
-        LEFT OUTER JOIN "DetalleActividadUBP" dup ON dup."iIdDetalleActividad" = dat."iIdDetalleActividad"
-        LEFT OUTER JOIN "DetalleEntregable" det ON det."iIdDetalleActividad" = dat."iIdDetalleActividad" AND det."iActivo" = 1
-        LEFT OUTER JOIN "Entregable" ent ON ent."iIdEntregable" = det."iIdEntregable" AND ent."iActivo" = 1
-        LEFT OUTER JOIN "UnidadMedida" u ON u."iIdUnidadMedida" = ent."iIdUnidadMedida" 
-        LEFT OUTER JOIN "SujetoAfectado" s ON s."iIdSujetoAfectado" = ent."iIdSujetoAfectado"
-        LEFT OUTER JOIN "Periodicidad" pe ON pe."iIdPeriodicidad" = ent."iIdPeriodicidad"        
-        INNER JOIN "Avance" av ON av."iIdDetalleEntregable" = det."iIdDetalleEntregable" AND av."iActivo" = 1 AND av."iAprobado" = 1 
-        INNER JOIN "Municipio" mun ON mun."iIdMunicipio" = av."iMunicipio"
-*/
                         
-/* End of file M_reporteAct.php */
+/* End of file M_reporteMir.php */
     
                         
