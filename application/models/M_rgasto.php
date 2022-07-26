@@ -332,49 +332,34 @@ return $resultado;
 
     public function reporte_pat($anio,$eje, $dep, $whereString=null, $pp)
     {
-      $select ='SELECT DISTINCT
-      "PED2019Eje"."vEje", 
-      "Dependencia"."vDependencia", 
-      "Actividad"."iIdActividad", 
-			"DetalleActividad"."iIdDetalleActividad",
-			"Actividad"."vAccion",
-      "DetalleActividad"."iAnio", 
-      "DetalleActividad"."dInicio", 
-      "DetalleActividad"."dFin", 
-      "DetalleActividad"."nAvance", 
-      "Actividad"."vResponsable", 
-      "AreaResponsable"."vAreaResponsable",  
-      "DetalleActividad"."iReactivarEconomia", 
-      "DetalleActividad"."nPresupuestoAutorizado",
-      "DetalleActividad"."nPresupuestoModificado",
-      "Actividad"."vEstrategia" as estrategiaact, 
-      "Dependencia"."iIdDependencia", 
-      "PED2019Eje"."iIdEje",
-			"Avance"."nAvance" as avancedos,
-			SUM("Avance"."nBeneficiariosH" + "Avance"."nBeneficiariosM" + "Avance"."nTerceraEdadM" +"Avance"."nTerceraEdadH" + "Avance"."nLenguaM" + "Avance"."nLenguaH" + "Avance"."nEjercido" + "Avance"."nDiscapacitadosM" + "Avance"."nDiscapacitadosH" + "Avance"."nAdolescenteM" + "Avance"."nAdolescenteH") personasbeneficiadas,
-			"ProyectosPrioritarios"."vProyectoPrioritario",
-			"ODS"."vOds"
+      $select ='SELECT
+      vistagastoacumulado.iideje, 
+      vistagastoacumulado.iiddependencia, 
+      vistagastoacumulado.acciones as AccionesAcumulado, 
+      vistagastoacumulado.npresupuestoautorizado as PorGastarAcumulado, 
+      vistagastoacumulado.nejercido as GastadoAcumulado, 
+      vistagastomes.acciones as AccionesMes, 
+      vistagastomes.npresupuestoautorizado as PorGastarMes, 
+      vistagastomes.nejercido as GastadoMes
+    
 			
 			';
       
 
-      $from = 'FROM "Actividad"
-      INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-      INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
-      left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
-      INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
-      left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
-      left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
-      left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
-      INNER JOIN "ProyectosPrioritarios" ON "ProyectosPrioritarios"."iIdEje" = "PED2019Eje"."iIdEje"
-			LEFT JOIN "ODS" ON "ODS"."iIdOds" = "Actividad"."iODS"';
+      $from = 'FROM
+      vistagastoacumulado
+      left JOIN
+      vistagastomes
+      ON 
+        vistagastoacumulado.iideje = vistagastomes.iideje AND
+        vistagastoacumulado.iiddependencia = vistagastomes.iiddependencia';
 
 
-      $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '.$anio.' AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "Avance"."iActivo" = 1';
+      $whereCondition = ' WHERE vistagastoacumulado.iideje ='.$eje;
       //
 
       if($dep != 0){
-        $whereCondition = $whereCondition.' AND "Dependencia"."iIdDependencia" ='.$dep;
+        $whereCondition = $whereCondition.' AND vistagastoacumulado.iiddependencia ='.$dep;
       }
 
       // if($pp != 0){
@@ -387,7 +372,7 @@ return $resultado;
       
       $group_by = '	GROUP BY "PED2019Eje"."iIdEje", "Dependencia"."iIdDependencia", "Actividad"."iIdActividad", "DetalleActividad"."iIdDetalleActividad", "AreaResponsable"."iIdAreaResponsable", "Avance"."iIdAvance", "ProyectosPrioritarios"."iIdProyectoPrioritario", "ODS"."iIdOds"';
       
-      $sql = $select.$from.$whereCondition.$group_by;
+      $sql = $select.$from.$whereCondition; 
       $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
       return $query;
