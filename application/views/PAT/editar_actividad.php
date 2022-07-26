@@ -389,7 +389,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                                 if ($o->iIdActividad == $rt->iIdActividadHija) {
                                                                                             echo 'selected';
                                                                                         }
-                                                                                    } ?>><?= $o->vDescripcion ?></option>
+                                                                                    } ?>><?= $o->vActividad ?></option>
                                         <?php } ?>
                                     </select>
 
@@ -568,6 +568,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
     var contLA = <?= $contLA ?>;
     $(document).ready(function() {
+        $('.selectpicker').selectpicker();
         <?php if ($acceso == 1) { ?>
             $('.btn-lectura').css('display', 'none');
             $('.select-lectura').attr('disabled', true);
@@ -709,7 +710,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 var parsedData = JSON.parse(resp);
                 for (let i = 0; i <= parsedData.length; i++) {
                     if (parsedData[i]?.vActividad != undefined) {
-                        $('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
+                        //$('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
                     }
                 }
                 $('.selectpicker').selectpicker('refresh');

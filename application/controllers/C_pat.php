@@ -16,7 +16,7 @@ class C_pat extends CI_Controller
         $this->load->library('Class_options');
 
         //Parametros para la conexion al sistema de finanzas
-        $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
+        $this->urlFinanzas    = "https://picasoplus.queretaro.gob.mx:8080/wsSigo/API/";
         $this->userFinanzas   = 'ws_user';
         $this->passFinanzas   = 'usr.sws.951';
         $this->authFinanzas   = $this->userFinanzas.":".$this->passFinanzas;
@@ -492,7 +492,7 @@ class C_pat extends CI_Controller
         if(isset($_POST['depAct'])){
             $idDep = $this->input->post('depAct');
         }
-        $idEje = null;
+        //$idEje = null;
         if (isset($_POST['RetoAct'])) {
             $idEje =  $this->input->post('RetoAct', true);
         }else{
@@ -599,11 +599,11 @@ class C_pat extends CI_Controller
             if(isset($_POST['depAct'])){
                 $iIdDependencia = $this->input->post('depAct');
             }
-            $idEje = null;
+            //$idEje = null;
             if (isset($_POST['RetoAct'])) {
                 $idEje =  $this->input->post('RetoAct', true);
             }else{
-                $objReto = $this->pat->getRetosPorDEP($this->input->post('iReto',true));
+                $objReto = $this->pat->getReto($this->input->post('iReto',true));
                 $idEje = $objReto[0]->iIdEje;
             }
             $id             = $this->input->post('id',true);    //$iIdDetalleActividad

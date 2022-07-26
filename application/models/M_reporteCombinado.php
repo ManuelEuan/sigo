@@ -350,63 +350,69 @@ class M_reporteCombinado extends CI_Model
 
   public function reporte_pat($anio, $dep, $eje, $whereString = null, $mes, $pp)
   {
+    $barra = "' | '";
     $mes = "'month'";
     $coma = "','";
-    $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
-        sum(case when (fecha=1) then avance end) as Enero,
-        sum(case when (fecha=2) then avance end) as Febrero,
-        sum(case when (fecha=3) then avance end) as Marzo,
-        sum(case when (fecha=4) then avance end) as Abril,
-        sum(case when (fecha=5) then avance end) as Mayo,
-        sum(case when (fecha=6) then avance end) as Junio,
-        sum(case when (fecha=7) then avance end) as Julio,
-        sum(case when (fecha=8) then avance end) as Agosto,
-        sum(case when (fecha=9) then avance end) as Septiembre,
-        sum(case when (fecha=10) then avance end) as Octubre,
-        sum(case when (fecha=11) then avance end) as Noviembre,
-        sum(case when (fecha=12) then avance end) as Diciembre
-        from
-
-        (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
-                umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
-                (SELECT "NivelMIR"."vNivelMIR" as nivel,
-                        "Actividad"."iIdActividad" as idact,
-                        "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
-                        "Actividad"."vtipoactividad" as tipo,
-                        "DimensionIndicador"."vDescripcion" as dimension,
-                        "Actividad"."vActividad" as accion,
-                        "Actividad"."iIdActividad" as clave,
-                        "Entregable"."vEntregable" as indicador,
-                        "Entregable"."nLineaBase" as meta,
-                        "Periodicidad"."vPeriodicidad" as frecuencia,
-                        "FormaIndicador"."vDescripcion" as operacion,
-                        string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
-                        "UnidadMedida"."vUnidadMedida" as unidadmedida,
-                        "Entregable"."vFormula" as formula,
-                        "Entregable"."vMedioVerifica" as umedioverifica,
-                        date_part(' . $mes . ',"Avance"."dFecha") as fecha,
-                        "Avance"."nAvance" as avance,
-                        "Dependencia"."iIdDependencia" as dep,
-                        "PED2019Eje"."iIdEje" as iideje,
-                        "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
-                        "Avance"."iIdAvance" as iidavance
-                        FROM "Actividad"
-                        INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-                        INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
-                        left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
-                        left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
-                        INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
-                        INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-                        inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
-                        inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
-                        left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
-                        left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
-                        LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
-                        LEFT JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
-                        LEFT JOIN "FormaIndicador" ON "FormaIndicador"."iIdFormaInd" = "Entregable"."iIdFormaInd"
-                        LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
-                        left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
-                        LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
+    $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, STRING_AGG ( DISTINCT operacion,' .$barra. ') as operacion,STRING_AGG (DISTINCT vvariable,' .$barra. ') as vvariable, STRING_AGG ( DISTINCT indicador,' .$barra. ') as indicador, STRING_AGG ( DISTINCT unidadmedida,' .$barra. ') as unidadmedida, STRING_AGG ( DISTINCT frecuencia,' .$barra. ') as frecuencia, sum(meta) as meta,
+    STRING_AGG ( DISTINCT formula,' .$barra. ') as formula, STRING_AGG( DISTINCT umedioverifica, ' .$barra. ') as umedioverifica,
+   SUM (Enero) AS Enero, sum(Febrero) as Febrero,sum(Marzo) as Marzo,
+   sum(Abril) as Abril, sum(Mayo) as Mayo,Sum(Junio) as Junio,sum(Julio) as Julio, sum(Agosto) as Agosto,
+   sum(Septiembre) as Septiembre, sum(Octubre) as Octubre, sum(Noviembre) as Noviembre, sum(Diciembre) as Diciembre from 
+   (select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
+           sum(case when (fecha=1) then avance end) as Enero,
+           sum(case when (fecha=2) then avance end) as Febrero,
+           sum(case when (fecha=3) then avance end) as Marzo,
+           sum(case when (fecha=4) then avance end) as Abril,
+           sum(case when (fecha=5) then avance end) as Mayo,
+           sum(case when (fecha=6) then avance end) as Junio,
+           sum(case when (fecha=7) then avance end) as Julio,
+           sum(case when (fecha=8) then avance end) as Agosto,
+           sum(case when (fecha=9) then avance end) as Septiembre,
+           sum(case when (fecha=10) then avance end) as Octubre,
+           sum(case when (fecha=11) then avance end) as Noviembre,
+           sum(case when (fecha=12) then avance end) as Diciembre
+           from
+   
+           (select idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+                   umedioverifica, fecha, sum(avance) as avance, dep, iideje  from
+                   (SELECT "NivelMIR"."vNivelMIR" as nivel,
+                           "Actividad"."iIdActividad" as idact,
+                           "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
+                           "Actividad"."vtipoactividad" as tipo,
+                           "DimensionIndicador"."vDescripcion" as dimension,
+                           "Actividad"."vActividad" as accion,
+                           "Actividad"."iIdActividad" as clave,
+                           "Entregable"."vEntregable" as indicador,
+                           "Entregable"."nLineaBase" as meta,
+                           "Periodicidad"."vPeriodicidad" as frecuencia,
+                           "FormaIndicador"."vDescripcion" as operacion,
+                           string_agg("VariableIndicador"."vNombreVariable", '.$coma. ') vvariable,
+                           "UnidadMedida"."vUnidadMedida" as unidadmedida,
+                           "Entregable"."vFormula" as formula,
+                           "Entregable"."vMedioVerifica" as umedioverifica,
+                           date_part('.$mes.',"Avance"."dFecha") as fecha,
+                           "Avance"."nAvance" as avance,
+                           "Dependencia"."iIdDependencia" as dep,
+                           "PED2019Eje"."iIdEje" as iideje,
+                           "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
+                           "Avance"."iIdAvance" as iidavance
+                           FROM "Actividad"
+                           INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+                           INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+                           left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+                           left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+                           INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
+                           INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+                           inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+                           inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+                           left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+                           left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+                           LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
+                           LEFT JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+                           LEFT JOIN "FormaIndicador" ON "FormaIndicador"."iIdFormaInd" = "Entregable"."iIdFormaInd"
+                           LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
+                           left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
+                           LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
 
     $where = ' WHERE "PED2019Eje"."iIdEje" = ' . $eje . ' AND "DetalleActividad"."iAnio" = ' . $anio;
     if ($dep != '') {
@@ -419,9 +425,10 @@ class M_reporteCombinado extends CI_Model
     }
 
     $gropuBy = ' GROUP BY fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance)  vistaRCombinado
-          group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
-          umedioverifica, fecha, dep, iideje) consulta
-                    group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica';
+    group by idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+    umedioverifica, fecha, dep, iideje) consulta
+              group by idact, nivel, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica) qry
+group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave';
     $sql = $select . $where . $gropuBy;
     $query =  $this->db->query($sql);
     //$_SESSION['sql'] = $this->db->last_query();
@@ -473,11 +480,11 @@ class M_reporteCombinado extends CI_Model
                       "Entregable"."nLineaBase" as meta,
                       "Periodicidad"."vPeriodicidad" as frecuencia,
                       "FormaIndicador"."vDescripcion" as operacion,
-                      string_agg("VariableIndicador"."vNombreVariable", '.$coma.') vvariable,
+                      string_agg("VariableIndicador"."vNombreVariable", ' . $coma . ') vvariable,
                       "UnidadMedida"."vUnidadMedida" as unidadmedida,
                       "Entregable"."vFormula" as formula,
                       "Entregable"."vMedioVerifica" as umedioverifica,
-                      date_part('.$mes.',"Avance"."dFecha") as fecha,
+                      date_part(' . $mes . ',"Avance"."dFecha") as fecha,
                       "Avance"."nAvance" as avance,
                       "Dependencia"."iIdDependencia" as dep,
                       "PED2019Eje"."iIdEje" as iideje,
@@ -502,7 +509,7 @@ class M_reporteCombinado extends CI_Model
                       LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
                       left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                       LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"
-                      WHERE "Actividad"."iIdActividad" =' . $idactividad;
+                      WHERE "Actividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iIdActividad" =' . $idactividad;
 
 
       // $where = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.' AND "DetalleActividad"."iAnio" = '. $anio.' AND "Entregable"."iActivo" = 1 AND "Avance"."iActivo" = 1 AND "Actividad"."iActivo" = 1';

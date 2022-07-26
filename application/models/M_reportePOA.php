@@ -356,7 +356,7 @@ class M_reportePOA extends CI_Model {
     public function reporte_pat($anio, $dep, $eje, $whereString=null, $mes)
     {
         
-        $select = 'SELECT
+        /*$select = 'SELECT
             "Dependencia"."vDependencia" AS organismo, 
             "AreaResponsable"."vAreaResponsable" AS area, 
             "ProgramaPresupuestario"."vProgramaPresupuestario", 
@@ -388,7 +388,41 @@ class M_reportePOA extends CI_Model {
             INNER JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
             INNER JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
             INNER JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
-            INNER JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"';
+            INNER JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"';*/
+            $barra = "' | '";
+            $select = 'SELECT 
+            "Dependencia"."vDependencia" AS organismo, 
+            "AreaResponsable"."vAreaResponsable" AS area, 
+            "ProgramaPresupuestario"."vProgramaPresupuestario", 
+            "PED2019Eje"."vEje", 
+            "PED2019Eje"."iIdEje",
+            "Actividad"."vObjetivo", 
+            "Actividad"."vEstrategia", 
+            "NivelMIR"."vNivelMIR", 
+            "Actividad"."iIdActividad" AS clave, 
+            "Actividad"."vDescripcion" AS resumennarrativo, 
+            STRING_AGG ( DISTINCT "Entregable"."vEntregable",'.$barra.') as Indicador, 
+            sum("DetalleEntregable"."nMeta") as Meta, 
+            STRING_AGG ( DISTINCT "UnidadMedida"."vUnidadMedida",'.$barra.') as UnidadMedida,
+            "DetalleActividad"."iAnio",
+            "Dependencia"."iIdDependencia",
+            "DetalleEntregable"."dFechaInicio",
+            "ResumenNarrativo"."vNombreResumenNarrativo",
+	          "DetalleEntregable"."dFechaFin",
+            max("Entregable"."nLineaBase") as lineabase,
+            STRING_AGG ( DISTINCT "Periodicidad"."vPeriodicidad",'.$barra.') as frecuencia
+            FROM "Dependencia"
+            left JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+            left JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
+            left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+            left JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+            left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+            left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+            left JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+            left JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
+            left JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+            left JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
+            left JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"';
         
             $whereCondition = ' WHERE "PED2019Eje"."iIdEje" = '.$eje.'AND "Actividad"."iActivo" = 1 AND "DetalleActividad"."iActivo" = 1 AND "Entregable"."iActivo" = 1 AND "DetalleEntregable"."iActivo" = 1 AND "DetalleActividad"."iAnio" ='.$anio ;
             if($dep != 0){
@@ -396,14 +430,72 @@ class M_reportePOA extends CI_Model {
             }
       /*if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;
-      }
+      }*/
       
-      $group_by = '';*/
+      $group_by = ' group by
+      "Dependencia"."vDependencia",
+      "AreaResponsable"."vAreaResponsable",
+      "ProgramaPresupuestario"."vProgramaPresupuestario", 
+      "PED2019Eje"."vEje", 
+      "PED2019Eje"."iIdEje",
+      "Actividad"."vObjetivo", 
+      "Actividad"."vEstrategia", 
+      "NivelMIR"."vNivelMIR", 
+      "Actividad"."iIdActividad", 
+      "Actividad"."vDescripcion",             
+      "DetalleActividad"."iAnio",
+      "Dependencia"."iIdDependencia",
+      "DetalleEntregable"."dFechaInicio",
+      "ResumenNarrativo"."vNombreResumenNarrativo",
+      "DetalleEntregable"."dFechaFin"';
       
-        $sql = $select.$whereCondition;
+        $sql = $select.$whereCondition.$group_by;
         $query =  $this->db->query($sql);
       //$_SESSION['sql'] = $this->db->last_query();
         return $query;
+    }
+
+    function obtenerDatosHija($idAct){
+      if($idAct != ''){
+        $sql = 'SELECT DISTINCT
+        "Dependencia"."vDependencia" AS organismo, 
+        "AreaResponsable"."vAreaResponsable" AS area, 
+        "ProgramaPresupuestario"."vProgramaPresupuestario", 
+        "PED2019Eje"."vEje", 
+        "PED2019Eje"."iIdEje",
+        "Actividad"."vObjetivo", 
+        "Actividad"."vEstrategia", 
+        "NivelMIR"."vNivelMIR", 
+        "Actividad"."iIdActividad" AS clave, 
+        "Actividad"."vDescripcion" AS resumennarrativo, 
+        "Entregable"."vEntregable" as Indicador, 
+        "DetalleEntregable"."nMeta" as Meta, 
+        "UnidadMedida"."vUnidadMedida" as UnidadMedida,
+        "DetalleActividad"."iAnio",
+        "Dependencia"."iIdDependencia",
+        "DetalleEntregable"."dFechaInicio",
+        "ResumenNarrativo"."vNombreResumenNarrativo",
+        "DetalleEntregable"."dFechaFin",
+        "Entregable"."nLineaBase" as lineabase,
+        "Periodicidad"."vPeriodicidad" as frecuencia,
+        "Entregable"."iIdEntregable" as idindicador
+        FROM "Dependencia"
+        left JOIN "AreaResponsable" ON "Dependencia"."iIdDependencia" = "AreaResponsable"."iIdDependencia"
+        left JOIN "Actividad" ON cast("AreaResponsable"."iIdAreaResponsable" as varchar) = cast("Actividad"."vResponsable" as varchar)
+        left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+        left JOIN "ProgramaPresupuestario" ON "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+        left JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+        left JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+        left JOIN "DetalleActividad" ON "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+        left JOIN "DetalleEntregable" ON "DetalleActividad"."iIdDetalleActividad" = "DetalleEntregable"."iIdDetalleActividad"
+        left JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
+        left JOIN "UnidadMedida" ON "Entregable"."iIdUnidadMedida" = "UnidadMedida"."iIdUnidadMedida"
+        left JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+        WHERE "Actividad"."iIdActividad" = '. $idAct;
+        $query =  $this->db->query($sql)->result();
+          return $query;
+      }
+      
     }
 
     function catalogos($tipo)
@@ -470,6 +562,14 @@ class M_reportePOA extends CI_Model {
       return $resultado;
   
      }
+
+     function obtenerIdHija($idact)
+  {
+    $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+    $query =  $this->db->query($sql)->result();
+    return $query;
+  }
 
 }
 
