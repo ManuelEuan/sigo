@@ -314,7 +314,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                             foreach ($alineacion as $row) {
                                                 $button = ($row->caracteres > 10) ? '<i class="fas fa-check text-success"></i>' : '<button type="button" name="dltactla" title="Eliminar" id="dltactla" type="button" class="btn btn-xs waves-effect waves-light boton_eliminar dltactla" onclick="eliminarLA(' . $contLA . ')"><i class="mdi mdi-close"></i></button>';
                                                 $input = '<input type="hidden" class="linea" name="la' . $contLA . '" id="la' . $contLA . '" value="' . $row->iIdLineaAccion . '">';
-
                                                 echo '<tr id="trla' . $contLA . '">
                                                     <td>' . $row->vEje . '</td>
                                                     <td>' . $row->vTema . '</td>
@@ -326,7 +325,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                                 </tr>';
                                                 $contLA++;
                                             }
-
                                             ?> 
                                             </tbody>
                                         </table>
@@ -388,7 +386,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
                                         <?php foreach ($actividadAgloValue as $o) { ?>
                                             <option value="<?= $o->iIdActividad ?>" <?php foreach ($actividadAglo as $rt) {
-                                                                                        if ($o->iIdActividad == $rt->iIdActividadHija) {
+                                                if ($o->iIdActividad == $rt->iIdActividadHija) {
                                                                                             echo 'selected';
                                                                                         }
                                                                                     } ?>><?= $o->vActividad ?></option>
@@ -479,6 +477,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
     var isNS = document.layers ? true : false;
     var peticion = true;
     var arrayDep = [];
+    $( document ).ready(function() {
+            
+            $('.selectpicker').selectpicker();
+        });
 
     function onlyDigits(e, decReq) {
         var key = (isIE) ? event.keyCode : e.which;
@@ -704,7 +706,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 idDependencia: idDependencia
             },
             success: function(resp) {
-                //$('#idActividad').empty();
+                // $('#idActividad').empty();
                 var parsedData = JSON.parse(resp);
                 for (let i = 0; i <= parsedData.length; i++) {
                     if (parsedData[i]?.vActividad != undefined) {
