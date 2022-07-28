@@ -125,7 +125,7 @@
                 <div class="form-row">
                     <div class="col-md-3 mb-3">
                         <label>Meta<span class="text-danger">*</span></label>
-                        <input type="text" id="meta" name="meta" class="input-lectura form-control" required="" placeholder="" value="<?= DecimalMoneda($consulta->nMeta); ?>" onKeypress="return soloDigitos(event,'OK');" maxlength="30" onblur="moneyFormat(this.id);">
+                        <input type="text" id="meta" name="meta" class="input-lectura form-control" required="" placeholder="" value="<?= DecimalMoneda($consulta->nMeta); ?>" onKeypress="return soloDigitos(event,'OK','MIN');" maxlength="30" onblur="moneyFormat(this.id);">
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
                         </div>
