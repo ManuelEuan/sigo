@@ -16,7 +16,7 @@ class C_pat extends CI_Controller
         $this->load->library('Class_options');
 
         //Parametros para la conexion al sistema de finanzas
-        $this->urlFinanzas    = "https://picasoplus.queretaro.gob.mx:8080/wsSigo/API/";
+        $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
         $this->userFinanzas   = 'ws_user';
         $this->passFinanzas   = 'usr.sws.951';
         $this->authFinanzas   = $this->userFinanzas.":".$this->passFinanzas;
@@ -242,23 +242,10 @@ class C_pat extends CI_Controller
             $data3['consulta2']     = $this->pat->preparar_update2($id);
             
             //Se trabaja con el catalogo de POAS
-            $arrayDependencias      = $this->pat->getDependenciaById($data3['consulta'][0]->iIdDependencia );
-            $dependencia            = $arrayDependencias[0]->vDependencia;
-
-
-            /*$catalogosPOA   = json_decode($this->getCatalogoPOA(false));
-            $dependencia    = $this->eliminar_tildes($dependencia);
-            
-            foreach ($catalogosPOA->datos as $value) {
-                $valorFinanzas = $this->eliminar_tildes($value->dependenciaEjecutora);
-                if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
-                    $selected =  $value->numeroProyecto == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
-                    $catPoas .= '<option value="'.$value->numeroProyecto.'" '.$selected.'>'.$value->nombreProyecto.'</option>'; 
-                }
-            }*/
-            
-            $catalogosPOA   = $this->validarListaPOAEdit($id);
-            $dependencia    = $this->eliminar_tildes($dependencia);
+            $arrayDependencias  = $this->pat->getDependenciaById($data3['consulta'][0]->iIdDependencia );
+            $dependencia        = $arrayDependencias[0]->vDependencia;
+            $catalogosPOA       = $this->validarListaPOAEdit($id);
+            $dependencia        = $this->eliminar_tildes($dependencia);
             
             foreach ($catalogosPOA as $value) {
                 $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
@@ -289,6 +276,7 @@ class C_pat extends CI_Controller
         }
         // var_dump('HOLA');
     }
+
     public function obtenerResumenNarrativo(){
         $nivelMIR = isset($_POST['nivelMIR']) ? $_POST['nivelMIR'] : '';
 
@@ -499,25 +487,13 @@ class C_pat extends CI_Controller
             $objReto = $this->pat->getReto($this->input->post('iReto',true));
             $idEje = $objReto[0]->iIdEje;
         }
-        $incluyeMIR = $this->input->post('icluyeMIR', true);
+
+        $incluyeMIR         = $this->input->post('icluyeMIR', true);
         $incluyeAglomeraMIR = $this->input->post('tieneAglomeracion', true);
-        $idActividadAglomera = $this->input->post('idActividad', true);
-        $idNivelMIR = $this->input->post('idNivelMIR', true);
-        $valorMIR = 0;
-        $valorAglomeraMIR = 0;
-
-        if($incluyeMIR == 'on'){
-            $valorMIR = 1;
-        }else{
-            $valorMIR = 0;
-        }
-
-        if($incluyeAglomeraMIR == 'on'){
-            $valorAglomeraMIR = 1;
-        }else{
-            $valorAglomeraMIR = 0;
-        }
-
+        $idActividadAglomera= $this->input->post('idActividad', true);
+        $idNivelMIR         = $this->input->post('idNivelMIR', true);
+        $valorMIR           = $incluyeMIR == 'on' ? 1 : 0;
+        $valorAglomeraMIR   = $incluyeAglomeraMIR == 'on' ? 1 : 0;
 
         if (isset($_POST['NombAct'])) {
             $data = array(
@@ -530,24 +506,24 @@ class C_pat extends CI_Controller
                'iIdDependencia'=> $idDep,
               //  (isset($_POST['depAct'])) ? $this->input->post('depAct'):0;
 
-                'vResponsable'  => $this->input->post('iAreaResponsable',true),
-                'vCargo'        => $this->input->post('vCargo',true),
-                'vCorreo'       => $this->input->post('vCorreo',true),
-                'vTelefono'     => $this->input->post('vTelefono',true),
-                'vAccion'       => $this->input->post('vAccion',true),
-                'vEstrategia'   => $this->input->post('vEstrategia',true),
-                'iReto'         => $this->input->post('iReto',true),
-                'iideje'        => $idEje,
+                'vResponsable'      => $this->input->post('iAreaResponsable',true),
+                'vCargo'            => $this->input->post('vCargo',true),
+                'vCorreo'           => $this->input->post('vCorreo',true),
+                'vTelefono'         => $this->input->post('vTelefono',true),
+                'vAccion'           => $this->input->post('vAccion',true),
+                'vEstrategia'       => $this->input->post('vEstrategia',true),
+                'iReto'             => $this->input->post('iReto',true),
+                'iideje'            => $idEje,
                 'vtipoactividad'    => $this->input->post('vTipoActividad', true),
                 'vcattipoactividad' => $this->input->post('valCatPoas', true),
-                'iIncluyeMIR' => $valorMIR ?: 0,
-                'iAglomeraMIR' => $valorAglomeraMIR ,
-                'iIdActividadMIR' => 0,
-                'iIdNivelMIR' => $idNivelMIR ?: null,
-                'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
+                'iIncluyeMIR'       => $valorMIR ?: 0,
+                'iAglomeraMIR'      => $valorAglomeraMIR ,
+                'iIdActividadMIR'   => 0,
+                'iIdNivelMIR'       => $idNivelMIR ?: null,
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
-                'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
-                'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
+                'vSupuesto'         => $this->input->post('txtSupuesto',true)?: null,
+                'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
+                'iIdProyectoPrioritario'    => $this->input->post('selectProyectoPrioritario',true)?: null,
             );
 
             $idAct = $this->pat->agregarAct($data);
@@ -561,31 +537,24 @@ class C_pat extends CI_Controller
                 $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
             }
 
-
             if ($idAct > 0) {
-                $data1 = array(
+                $clavePOA = $this->input->post('catPoas',true);
+                $data1  = array(
                     'iIdActividad'              => $idAct,
                     'iAnio'                     => $this->input->post('annio',true),
                     'dInicio'                   => $this->input->post('fINICIO',true),
                     'dFin'                      => $this->input->post('fFIN',true),
-                    'nPresupuestoAutorizado'    => floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true))),//$this->input->post('nPresupuestoAutorizado',true),
-                    'dUltActAvance'             => null, //$this->input->post('fINICIO',true),
-                    'dUltActTexto'              => null, //$this->input->post('fINICIO',true),
-                    'dFechaElim'                => null, //$this->input->post('fINICIO',true),
-                    'vClavePOA'                 => $this->input->post('catPoas',true) ?: '',
-
+                    'nPresupuestoAutorizado'    => floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true))),
+                    'dUltActAvance'             => null,
+                    'dUltActTexto'              => null,
+                    'dFechaElim'                => null,
+                    'vClavePOA'                 => $clavePOA == '' || is_null($clavePOA) ? null : $this->input->post('catPoas',true),
                 );
+
                 $insert = $this->pat->agregarDetAct($data1);
-
-                if ($insert > 0) {
-                    echo 'Correcto';
-                } else {
-                    echo 'Error';
-                }
+                $respuesta = $insert > 0 ? "Correcto" : 'Error';
+                echo($respuesta);
             }
-            
-            
-
         }
     }
 
@@ -593,7 +562,6 @@ class C_pat extends CI_Controller
 
     public function guardarAct()
     {
-       
         if (isset($_POST['id']) && isset($_POST['idAct']) && isset($_POST['NombAct']) && isset($_POST['objGeneral']) && isset($_POST['descripcion'])) {
             $iIdDependencia =  $_SESSION[PREFIJO.'_iddependencia'];
             if(isset($_POST['depAct'])){
@@ -2016,8 +1984,30 @@ class C_pat extends CI_Controller
     }
 
     /**
+     * Actualiza los montos autorizados de las actividades que han sido capturadas como POA
+     * @return void
+     */
+    public function updateMontoActividades(){
+        $catalogoPOAS   = $this->getCatalogoPOA(false);
+        $datos          = json_decode($catalogoPOAS, true);
+
+        foreach ($datos['datos'] as $key => $value) {
+            $array          = array();
+            $actividades    = $this->pat->getActividadesPOA($value['numeroProyecto'], 'poa');
+            foreach($actividades as $actividad){
+                array_push($array,$actividad->iIdActividad);
+            }
+    
+            if(sizeof($array) > 0)
+                $this->pat->updateMontoActividades($array, $value['aprobado']);
+        }
+
+        echo("finalizo");
+    }
+
+    /**
      * Retorna el catalogo de POAS que brinda el sistema de finanzas
-     * @return Json
+     * @return String
      */
     function getCatalogoPOA($print = true) {
         $url    = $this->urlFinanzas.'proyectos/listado';
@@ -2094,15 +2084,12 @@ class C_pat extends CI_Controller
     }
 
     function validarListaPOA(){
-        $catalogosPOA   = $this->getCatalogoPOA(false);
-        $datos = json_decode($catalogosPOA, true);
-        
-        $arrayResultados = array();
-        $arrayElegidos = array();
-
-        $arrayidElegido = array();
-
-        $idelegido = (int)$this->input->post('id',true)?:'';
+        $catalogosPOA       = $this->getCatalogoPOA(false);
+        $datos              = json_decode($catalogosPOA, true);
+        $arrayResultados    = array();
+        $arrayElegidos      = array();
+        $arrayidElegido     = array();
+        $idelegido          = (int)$this->input->post('id',true)?:'';
 
         $respuestaElegidosID = $this->pat->obtenerSeleccionados($idelegido);
 
@@ -2116,35 +2103,31 @@ class C_pat extends CI_Controller
             foreach ($datos['datos'] as $key => $value) {
                 if(in_array($value['numeroProyecto'], $arrayidElegido)){
                     array_push($arrayResultados,
-                    ['numeroProyecto' => $value['numeroProyecto'],
-                    'aprobado' => $value['aprobado'],
-                    'pagado' => $value['pagado'],
+                    ['numeroProyecto'   => $value['numeroProyecto'],
+                    'aprobado'          => $value['aprobado'],
+                    'pagado'            => $value['pagado'],
                     'dependenciaEjecutora' => $value['dependenciaEjecutora'],
-                    'nombreProyecto' => $value['nombreProyecto'],
-                    'fechaAprobacion' => $value['fechaAprobacion']]);
+                    'nombreProyecto'    => $value['nombreProyecto'],
+                    'fechaAprobacion'   => $value['fechaAprobacion']]);
                 }
             }
-            
         }
 
-        //json_encode($datos['datos']);
-
         $respuestaElegidos = $this->pat->obtenerSeleccionados('');
-
         foreach ($respuestaElegidos as $key => $value) {
             array_push($arrayElegidos, $value->vcattipoactividad);
         }
-        
 
         foreach ($datos['datos'] as $key => $value) {
             if(!in_array($value['numeroProyecto'], $arrayElegidos)){
-                array_push($arrayResultados,
-                ['numeroProyecto' => $value['numeroProyecto'],
-                'aprobado' => $value['aprobado'],
-                'pagado' => $value['pagado'],
-                'dependenciaEjecutora' => $value['dependenciaEjecutora'],
-                'nombreProyecto' => $value['nombreProyecto'],
-                'fechaAprobacion' => $value['fechaAprobacion']]);
+                array_push($arrayResultados, [
+                    'numeroProyecto'    => $value['numeroProyecto'],
+                    'aprobado'          => $value['aprobado'],
+                    'pagado'            => $value['pagado'],
+                    'nombreProyecto'    => $value['nombreProyecto'],
+                    'fechaAprobacion'   => $value['fechaAprobacion'],
+                    'dependenciaEjecutora'  => $value['dependenciaEjecutora']
+                ]);
             }
         }
         
@@ -2153,17 +2136,13 @@ class C_pat extends CI_Controller
 
 
     function validarListaPOAEdit($id){
-        $catalogosPOA   = $this->getCatalogoPOA(false);
-        $datos = json_decode($catalogosPOA, true);
-        
-        $arrayResultados = array();
-        $arrayElegidos = array();
-
-        $arrayidElegido = array();
-
+        $catalogosPOA       = $this->getCatalogoPOA(false);
+        $datos              = json_decode($catalogosPOA, true);
+        $arrayElegidos      = array();
+        $arrayResultados    = array();
+        $arrayidElegido     = array();
         $respuestaElegidosID = $this->pat->obtenerSeleccionados($id);
 
-        
         if($respuestaElegidosID[0]->vcattipoactividad != null || $respuestaElegidosID[0]->vcattipoactividad != ''){
 
             foreach ($respuestaElegidosID as $key => $value) {
@@ -2172,16 +2151,16 @@ class C_pat extends CI_Controller
 
             foreach ($datos['datos'] as $key => $value) {
                 if(in_array($value['numeroProyecto'], $arrayidElegido)){
-                    array_push($arrayResultados,
-                    ['numeroProyecto' => $value['numeroProyecto'],
-                    'aprobado' => $value['aprobado'],
-                    'pagado' => $value['pagado'],
-                    'dependenciaEjecutora' => $value['dependenciaEjecutora'],
-                    'nombreProyecto' => $value['nombreProyecto'],
-                    'fechaAprobacion' => $value['fechaAprobacion']]);
+                    array_push($arrayResultados,[
+                        'numeroProyecto'        => $value['numeroProyecto'],
+                        'aprobado'              => $value['aprobado'],
+                        'pagado'                => $value['pagado'],
+                        'dependenciaEjecutora'  => $value['dependenciaEjecutora'],
+                        'nombreProyecto'        => $value['nombreProyecto'],
+                        'fechaAprobacion'       => $value['fechaAprobacion']
+                    ]);
                 }
             }
-            
         }
 
         //json_encode($datos['datos']);
@@ -2195,18 +2174,19 @@ class C_pat extends CI_Controller
 
         foreach ($datos['datos'] as $key => $value) {
             if(!in_array($value['numeroProyecto'], $arrayElegidos)){
-                array_push($arrayResultados,
-                ['numeroProyecto' => $value['numeroProyecto'],
-                'aprobado' => $value['aprobado'],
-                'pagado' => $value['pagado'],
-                'dependenciaEjecutora' => $value['dependenciaEjecutora'],
-                'nombreProyecto' => $value['nombreProyecto'],
-                'fechaAprobacion' => $value['fechaAprobacion']]);
+                array_push($arrayResultados,[
+                    'numeroProyecto'       => $value['numeroProyecto'],
+                    'aprobado'              => $value['aprobado'],
+                    'pagado'                => $value['pagado'],
+                    'dependenciaEjecutora'  => $value['dependenciaEjecutora'],
+                    'nombreProyecto'        => $value['nombreProyecto'],
+                    'fechaAprobacion'       => $value['fechaAprobacion']
+                ]);
             }
         }
         
         return $arrayResultados;
     }
-
+ 
 }
 ?>

@@ -24,7 +24,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 <div class="col-md-10">
                 </div>
                 <div class="col-md-2 text-right">
-                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="submit" onclick="back()"><i class="mdi mdi-arrow-left"></i>Regresar</button>
+                    <button title="Ir a listado del PAT" class="btn waves-effect waves-light btn-outline-info" type="submit" onclick="back()">
+                        <i class="mdi mdi-arrow-left"></i>Regresar
+                    </button>
                 </div>
             </div>
 
@@ -475,9 +477,8 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $('.btn-lectura').css('display', 'none');
             $('.select-lectura').attr('disabled', true);
             $('.input-lectura').attr('readonly', 'readonly');
-
-
         <?php } ?>
+
         $('#idNivelMIR').hide();
         $('#selectProyectoPrioritario').hide();
         $('#txtResumenNarrativo').hide();
@@ -490,13 +491,10 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         sumaMontoFin();
 
         idDependenciaGuardado = <?php echo $idDependencia ?>;
-
         obtenerAreasResp(idDependenciaGuardado)
         obtenerActividades(idDependenciaGuardado)
 
-
-        $("#mostrarPOAS").removeClass("col-sm-3");
-
+        $("#mostrarPOAS").hide();
         $('#depAct').change(function() {
             idDEp = $(this).val();
             $("#iAreaResponsable").empty();
@@ -548,8 +546,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         $('#resumenNarrativo').append('<option value="' + parsedData[i]?.iIdResumenNarrativo + '">' + parsedData[i]?.vNombreResumenNarrativo + '</option>')
                     }
                 }
-
-
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
@@ -558,7 +554,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
     }
 
     function obtenerActividades(idDependencia) {
-
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_pat/obtenerActividades",
@@ -574,18 +569,14 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     }
                 }
                 $('.selectpicker').selectpicker('refresh');
-
-
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
             }
         });
-
     }
 
     function obtenerAreasResp(idDependencia) {
-
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_pat/obtenerAreasRESP",
@@ -599,7 +590,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         $('#iAreaResponsable').append('<option value="' + parsedData[i]?.iIdAreaResponsable + '">' + parsedData[i]?.vAreaResponsable + '</option>')
                     }
                 }
-
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
@@ -638,10 +628,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
 
         } else {
             console.log('No se ha seleccinado algo')
-
-
         }
-
     });
 
     function obtenerRetoseje(iIdEje) {
@@ -659,11 +646,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         $('#iReto').append('<option value="' + parsedData[i]?.iIdReto + '"  >' + parsedData[i]?.vDescripcion + '</option>')
                     }
                 }
-                // $('.selectpicker').selectpicker('refresh');
-
-                console.log(resp)
-
-
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
@@ -686,11 +668,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         $('#depAct').append('<option value="' + parsedData[i]?.iIdDependencia + '"  >' + parsedData[i]?.vDependencia + '</option>')
                     }
                 }
-                // $('.selectpicker').selectpicker('refresh');
-
-                console.log(resp)
-
-
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
@@ -756,7 +733,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
 
     function agregarLA() {
         var idLA = $("#linAcc").val();
-        console.log(findLA(!idLA));
 
         if (findLA(idLA) == false) {
             $.ajax({
@@ -793,7 +769,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             type: "GET",
             url: url + recurso,
             success: function(data) {
-                //console.log(comma(data));
                 $("#montoFinal").val(comma(data));
             }
         });
@@ -816,7 +791,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         resultado += ',';
                         cont = 0;
                     }
-
                 }
             }
         }
@@ -826,9 +800,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             resultado += '.' + valor[1]
         }
 
-        /*if (data.indexOf('.')) {
-            resultado += '.' + valor[1]
-        }*/
         return resultado;
     }
 
@@ -850,7 +821,6 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
     function cargarPpublica() {
 
         var value = $("#eje").val();
-        console.log(value);
         $("#polipub").load('C_pat/dPoliPub/' + value);
         $("#objetivo").load('C_pat/dObjetivo/' + 0);
         $("#estrategia").load('C_pat/dEstrategia/' + 0);
@@ -1081,9 +1051,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
      * Crea el select del POA
      */
     function createSelectPOA() {
-        let actvidad = $('select[id=vTipoActividad]').val();
-        let html = '';
-        let tieneDep = true;
+        let actvidad    = $('select[id=vTipoActividad]').val();
+        let html        = '';
+        let tieneDep    = true;
 
         <?php if (!isset($ejes) && !isset($dependencias)) { ?> tieneDep = false <?php } ?>
 
@@ -1103,6 +1073,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     nombreDep = removeAccents(varJS);
                 }
 
+                $("#mostrarPOAS").show();
                 $("#mostrarPOAS").addClass("col-sm-4");
                 html = `<div id="divCatPoas">
                         <label for="tipoActividad">POAS <span class="text-danger">*</span></label>
@@ -1149,7 +1120,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
     $("#vTipoActividad").change(function() {
         let actv = $('select[id=vTipoActividad]').val();
 
-        $("#mostrarPOAS").removeClass("col-sm-4");
+        $("#mostrarPOAS").hide();
         $("#mostrarPOAS").html('');
 
         if (actv == 'gestion') {
