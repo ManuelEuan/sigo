@@ -123,9 +123,7 @@
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="actualizarNuevos();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Alineación con Picaso 
                                         </button>
-                                        <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="cargar('//localhost/Trabajo/SIGO-QRO/index.php/C_proyectosPOA','#contenido');">
-                                            <i class="fa-solid fa-arrows-rotate"></i>
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
