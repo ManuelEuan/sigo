@@ -95,6 +95,7 @@ class C_rmir extends CI_Controller {
         $obtenerEje = $mrep->obtenerEje($eje);
         $obtenerObj = $mrep->obtenerObj($eje);
         $proPre = $mrep->obtenerPPporId($pp);
+        
 
         
         $query = $mrep->reporte_pat($anio,$eje,$dep,$whereString, $pp);
@@ -116,6 +117,12 @@ class C_rmir extends CI_Controller {
             ->setFontColor(Color::BLACK)
             ->setFontSize(22)
             ->build();
+
+            $amaStyle = (new StyleBuilder())
+            ->setBackgroundColor('FFD9A8')
+            ->setFontColor(Color::BLACK)
+            ->build();
+
             $cells =[
                 WriterEntityFactory::createCell('Organismo',$blueStyle),
                 WriterEntityFactory::createCell($obtenerDep->vDependencia),
@@ -214,25 +221,59 @@ class C_rmir extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
+            $arrayaglomerados = array();
+            foreach ($records as $rec){
+                $resultado = $mrep->obtenerIdHija($rec->iIdActividad);
+            
+                foreach ($resultado as $key => $value) {
+                    array_push($arrayaglomerados, (int)$value->iIdActividadHija);
+                }
+            }
+            
             foreach ($records as $rec)
             {
-                $cells = [
-                    
-                    WriterEntityFactory::createCell($rec->vNivelMIR),
-                    WriterEntityFactory::createCell((int)$rec->iIdActividad),
-                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->vEntregable),
-                    WriterEntityFactory::createCell($rec->vMedioVerifica),
-                    WriterEntityFactory::createCell($rec->vSupuesto),
-                    WriterEntityFactory::createCell($rec->vAreaResponsable),
-                   
-                    
-                ];
 
-
-                $singleRow = WriterEntityFactory::createRow($cells);
-                $writer->addRow($singleRow);
-            }
+                if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
+                    $cells = [
+                    
+                        WriterEntityFactory::createCell($rec->vNivelMIR, $amaStyle),
+                        WriterEntityFactory::createCell((int)$rec->iIdActividad, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vNombreResumenNarrativo, $amaStyle),
+                        WriterEntityFactory::createCell($rec->indicador, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vmedioverifica, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vSupuesto, $amaStyle),
+                        WriterEntityFactory::createCell($rec->vAreaResponsable, $amaStyle),
+                       
+                        
+                    ];
+    
+    
+                    $singleRow = WriterEntityFactory::createRow($cells);
+                    $writer->addRow($singleRow);
+                    $hija = $mrep->obtenerIdHija($rec->iIdActividad);
+                    foreach ($hija as $key => $h) {
+                        # code...
+                        $hijadatos = $mrep->reporte_Hija($h->iIdActividadHija);
+                        foreach ($hijadatos as $key => $v) {
+                            # code...
+                            $cells = [
+                                WriterEntityFactory::createCell($rec->vNivelMIR),
+                                WriterEntityFactory::createCell((int)$rec->iIdActividad),
+                                WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                                WriterEntityFactory::createCell($v->vEntregable),
+                                WriterEntityFactory::createCell($v->vMedioVerifica),
+                                WriterEntityFactory::createCell($rec->vSupuesto),
+                                WriterEntityFactory::createCell($rec->vAreaResponsable),
+    
+                            ];
+                            $singleRow = WriterEntityFactory::createRow($cells);
+                            $writer->addRow($singleRow);
+                        }
+    
+                    }
+                }
+                }
+                
 
             $writer->close();
            

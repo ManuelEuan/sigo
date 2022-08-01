@@ -228,17 +228,17 @@ class C_rgasto extends CI_Controller {
                 $writer->addRow($singleRow);
     
                 $cells = [
-                    WriterEntityFactory::createCell($rec->vEje),
-                    WriterEntityFactory::createCell($rec->vAccion),
+                    WriterEntityFactory::createCell($rec->iideje),
+                    WriterEntityFactory::createCell($rec->accionesacumulado),
                     WriterEntityFactory::createCell(' '),
                     WriterEntityFactory::createCell(' '),
-                    WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
-                    WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
+                    WriterEntityFactory::createCell($rec->AccionesMes),
+                    WriterEntityFactory::createCell($rec->GastadoAcumulado),
                     WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
                     WriterEntityFactory::createCell(' '),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),    
+                    WriterEntityFactory::createCell($rec->accionesacumulado),
+                    WriterEntityFactory::createCell($rec->PorGastarMes),
+                    WriterEntityFactory::createCell($rec->GastadoMes),    
                 ];
 
 
@@ -277,17 +277,17 @@ class C_rgasto extends CI_Controller {
                 $writer->addRow($singleRow);
                 $cells = [
                     
-                    WriterEntityFactory::createCell($rec->vDependencia),
-                    WriterEntityFactory::createCell($rec->vAccion),
+                    WriterEntityFactory::createCell($rec->iiddependencia),
+                    WriterEntityFactory::createCell($rec->accionesacumulado),
                     WriterEntityFactory::createCell(' '),
                     WriterEntityFactory::createCell(' '),
-                    WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
-                    WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
+                    WriterEntityFactory::createCell($rec->AccionesMes),
+                    WriterEntityFactory::createCell($rec->GastadoAcumulado),
                     WriterEntityFactory::createCell($rec->nPresupuestoAutorizado),
                     WriterEntityFactory::createCell(' '),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),
-                    WriterEntityFactory::createCell($rec->personasbeneficiadas),   
+                    WriterEntityFactory::createCell($rec->accionesacumulado),
+                    WriterEntityFactory::createCell($rec->PorGastarMes),
+                    WriterEntityFactory::createCell($rec->GastadoMes),    
                    
                     
                 ];

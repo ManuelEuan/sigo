@@ -140,6 +140,11 @@ class C_reportesPOA extends CI_Controller {
                             ->setFontItalic()
                             ->build();
 
+            $amaStyle = (new StyleBuilder())
+            ->setBackgroundColor('FFD9A8')
+                ->setFontColor(Color::BLACK)
+                ->build();
+
             $cells =[
                 WriterEntityFactory::createCell('Programa Presupuestario',$azulStyle),
                 WriterEntityFactory::createCell($proPre->vProgramaPresupuestario)
@@ -258,22 +263,58 @@ class C_reportesPOA extends CI_Controller {
             $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
             $writer->addRow($singleRow);
 
+            $arrayaglomerados = array();
+            foreach ($records as $rec){
+                $resultado = $mrep->obtenerIdHija($rec->clave);
+            
+                foreach ($resultado as $key => $value) {
+                    array_push($arrayaglomerados, (int)$value->iIdActividadHija);
+                }
+            }
+
             foreach ($records as $rec)
             {
+                if(!in_array((int)$rec->clave, $arrayaglomerados)){
                 $cells = [
-                    WriterEntityFactory::createCell($rec->vNivelMIR),
-                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
-                    WriterEntityFactory::createCell($rec->clave),
-                    WriterEntityFactory::createCell($rec->indicador),
-                    WriterEntityFactory::createCell($rec->lineabase),
-                    WriterEntityFactory::createCell($rec->meta),
-                    WriterEntityFactory::createCell($rec->frecuencia),
-                    WriterEntityFactory::createCell($rec->unidadmedida),
+                    WriterEntityFactory::createCell($rec->vNivelMIR, $amaStyle),
+                    WriterEntityFactory::createCell($rec->vNombreResumenNarrativo, $amaStyle),
+                    WriterEntityFactory::createCell($rec->clave, $amaStyle),
+                    WriterEntityFactory::createCell($rec->indicador, $amaStyle),
+                    WriterEntityFactory::createCell($rec->lineabase, $amaStyle),
+                    WriterEntityFactory::createCell($rec->meta, $amaStyle),
+                    WriterEntityFactory::createCell($rec->frecuencia, $amaStyle),
+                    WriterEntityFactory::createCell($rec->unidadmedida, $amaStyle),
                 ];
 
 
                 $singleRow = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
+
+                $resultado = $mrep->obtenerIdHija($rec->clave);
+
+                foreach ($resultado as $key => $r) {
+
+                    $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
+
+                    foreach ($datosHija as $key => $d) {
+                        $cells = [
+                            WriterEntityFactory::createCell($rec->vNivelMIR),
+                            WriterEntityFactory::createCell($rec->vNombreResumenNarrativo),
+                            WriterEntityFactory::createCell($rec->clave),
+                            WriterEntityFactory::createCell($d->indicador),
+                            WriterEntityFactory::createCell($d->lineabase),
+                            WriterEntityFactory::createCell($d->meta),
+                            WriterEntityFactory::createCell($d->frecuencia),
+                            WriterEntityFactory::createCell($d->unidadmedida),
+                        ];
+                        $singleRow = WriterEntityFactory::createRow($cells);
+                        $writer->addRow($singleRow);
+                    }
+
+                }
+
+                }
+                
             }
 
             $writer->close();

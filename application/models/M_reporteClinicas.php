@@ -488,21 +488,22 @@ class M_reporteClinicas extends CI_Model {
       $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
 
       $sql = $select.$where.$group;*/
-
+      $coma = "','";
+      $barra = "' | '";
       $select = 'select "iIdActividad", "vActividad",
       "vNivelMIR",
       "vProgramaPresupuestario",
       "vDescripcion",
       "vNombreResumenNarrativo",
-      "vEntregable",
-      "iValor",
-      "nLineaBase",
-      "nMeta",
-      "vPeriodicidad",
-      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
-      (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
-      "vMedioVerifica",
-      "vSupuesto"
+            STRING_AGG (DISTINCT "vEntregable" ,' .$barra. ')  as indicador,
+            max("iValor") as ivalor,
+            max("nLineaBase") as nlineabase,  
+      max("nMeta") as meta,
+            STRING_AGG (DISTINCT"vPeriodicidad",' .$barra. ') as periodicidad,
+      array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma. ') AS vNombreVariable,
+      sum("nAvance") / sum("nMeta") * 100 as PorcentajeAvance,
+            STRING_AGG (DISTINCT "vMedioVerifica",' .$barra. ') as medioverifica,
+      STRING_AGG (DISTINCT "vSupuesto",' .$barra. ') as supuesto
       from vistaMir4
       ';
 
@@ -512,13 +513,47 @@ class M_reporteClinicas extends CI_Model {
         $where = $where.' AND "iIdDependencia" = '.$dep;
       }
 
-      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+      $group = 'group by "vActividad","vNivelMIR","vProgramaPresupuestario", "vDescripcion","vNombreResumenNarrativo", "vActividad","iIdActividad"';
 
       $sql = $select.$where.$group;
 
       $query =  $this->db->query($sql);
       return $query;
     }
+
+    public function obtenerDatosHija($idAct){
+      $coma = "','";
+      if($idAct != ''){
+        $sql = 'select "iIdActividad", "vActividad",
+        "vNivelMIR",
+        "vProgramaPresupuestario",
+        "vDescripcion",
+        "vNombreResumenNarrativo",
+        "vEntregable",
+        "iValor",
+        "nLineaBase",
+        "nMeta",
+        "vPeriodicidad",
+        array_to_string(array_agg(DISTINCT "vNombreVariable"), '.$coma.') AS vNombreVariable,
+        (sum("nAvance") / avg("nMeta")) * 100 as PorcentajeAvance,
+        "vMedioVerifica",
+        "vSupuesto"
+        from vistaMir4
+        WHERE vistamir4."iIdActividad" = '.$idAct.'
+        group by "vActividad","vNivelMIR","vProgramaPresupuestario", "nMeta", "vDescripcion","vNombreResumenNarrativo", "vActividad", "vEntregable", "iValor", "nLineaBase","vPeriodicidad", "vMedioVerifica", "vSupuesto", "iIdActividad"';
+        $query =  $this->db->query($sql)->result();
+        return $query;
+      }
+      
+    }
+
+  function obtenerIdHija($idact)
+  {
+    $sql = 'SELECT "ActividadAglomerada"."iIdActividadHija" FROM "ActividadAglomerada" WHERE "ActividadAglomerada"."iIdActividadPadre" =' . $idact;
+
+    $query =  $this->db->query($sql)->result();
+    return $query;
+  }
 
 }
 

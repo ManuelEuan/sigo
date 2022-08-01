@@ -946,4 +946,29 @@ class M_pat extends CI_Model
 
 		return $this->db->query($sql)->result();
 	}
+
+	/**
+	 * Obtiene las actividades tipo POA en base al catalogoId de los POAS
+	 * @param string  $catalogoId
+	 * @param string   $tipo
+	 * @return array
+	 */
+	public function getActividadesPOA($catalogoID="2022-00732", $catalogo='poa') {	
+		$this->db->select("iIdActividad, vtipoactividad ");
+		$this->db->from('Actividad');
+		$this->db->where('vtipoactividad', $catalogo);
+		$this->db->where('vcattipoactividad', $catalogoID);
+		return $this->db->get()->result();
+	}
+
+	/**
+	 * Actualiza los montos autorizados de las actividades que han sido capturadas como POA
+	 * @param array  $actividades
+	 * @param float  $monto
+	 * @return array
+	 */
+	public function updateMontoActividades($actividades, $monto) {
+		$this->db->where_in("iIdActividad", $actividades);
+    	$this->db->update("DetalleActividad" ,["nPresupuestoAutorizado" => $monto]);
+	}
 }
