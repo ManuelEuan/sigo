@@ -120,6 +120,12 @@
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="updatePOAS();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Sincronizar con Picaso
                                         </button>
+                                        <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="actualizarNuevos();">
+                                            <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Alineación con Picaso 
+                                        </button>
+                                        <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="cargar('//localhost/Trabajo/SIGO-QRO/index.php/C_proyectosPOA','#contenido');">
+                                            <i class="fa-solid fa-arrows-rotate"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -567,6 +573,22 @@
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
                 console.log(XMLHHttRequest);
+            }
+        });
+    }
+
+    /**
+     * Actualizar los proyectos nuevos y que no se han asignado
+     * 
+     */
+    function actualizarNuevos(){
+        console.log('Se va a actualizar')
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_pat/actualizarProyectosNuevos",
+            success: function (response) {
+                console.log('Respuesta: ' + response )
+                alerta(response, 'success');
             }
         });
     }

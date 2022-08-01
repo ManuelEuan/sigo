@@ -971,4 +971,21 @@ class M_pat extends CI_Model
 		$this->db->where_in("iIdActividad", $actividades);
     	$this->db->update("DetalleActividad" ,["nPresupuestoAutorizado" => $monto]);
 	}
+
+	public function obtenerProyectos(){
+		$this->db->select();
+		$this->db->from('proyectosPOA');
+		$query = $this->db->get();
+		$resultado = $query->result();
+		return $resultado;
+	}
+	public function insertarPoryecto($tabla, $data){
+		return $this->db->insert($tabla, $data);
+	}
+
+	public function actualizarPoryecto($tabla, $numProyecto, $data){
+		$this->db->where('numeroProyecto', $numProyecto);
+		return $this->db->update($tabla, $data);
+	}
+
 }

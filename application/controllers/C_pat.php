@@ -2187,6 +2187,43 @@ class C_pat extends CI_Controller
         
         return $arrayResultados;
     }
+
+    function actualizarProyectosNuevos(){
+        $catalogosPOA       = $this->getCatalogoPOA(false);
+        $datos              = json_decode($catalogosPOA, true);
+        $arrayElegidos     = array();
+        $respuestaElegidos = $this->pat->obtenerProyectos();
+
+        foreach ($respuestaElegidos as $key => $value) {
+            array_push($arrayElegidos, $value->numeroProyecto);
+        }
+
+        foreach ($datos['datos'] as $key => $value) {
+            //aqui va el insert
+            if(in_array($value['numeroProyecto'], $arrayElegidos)){
+                $this->pat->actualizarPoryecto('proyectosPOA', $value['numeroProyecto'], array(
+                    'aprobado'              => $value['aprobado'],
+                    'pagado'                => $value['pagado'],
+                    'dependenciaEjecutora'  => $value['dependenciaEjecutora'],
+                    'nombreProyecto'        => $value['nombreProyecto'],
+                    'fechaAprobacion'       => $value['fechaAprobacion']
+                    )
+                );
+            }else{
+                $this->pat->insertarPoryecto('proyectosPOA',array(
+                    'numeroProyecto'        => $value['numeroProyecto'],
+                    'aprobado'              => $value['aprobado'],
+                    'pagado'                => $value['pagado'],
+                    'dependenciaEjecutora'  => $value['dependenciaEjecutora'],
+                    'nombreProyecto'        => $value['nombreProyecto'],
+                    'fechaAprobacion'       => $value['fechaAprobacion']
+                    )
+                );
+            }
+        }
+
+        echo 'Finalizado';
+    }
  
 }
 ?>
