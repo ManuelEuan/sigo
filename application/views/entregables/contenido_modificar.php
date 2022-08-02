@@ -164,6 +164,17 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <div class="col-md-2 mb-3">
+                        <label>Tipo<span class="text-danger">*</span></label>
+                        <select name="tipoAlta" id="tipoAlta" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <option value="1" <?php if($iAcumulativo == 1) echo 'selected' ?>>Acumulativo </option>
+                            <option value="2" <?php if($iAcumulativo == 2) echo 'selected' ?>>Puntual</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
 
                     <select style="visibility:hidden" id="sujetoafectado" name="sujetoafectado" required class="input-lectura form-control" <?php if($av_capturados > 0) echo "disabled";?>>
                             <?= $sujeto_afectado ?>

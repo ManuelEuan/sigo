@@ -88,6 +88,7 @@ class C_entregables extends CI_Controller
                 $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
                 $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
                 $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+                $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
                 $Variable = $this->input->post('Variable', true);
                 $Letra = $this->input->post('Letra', true);
 
@@ -222,6 +223,7 @@ class C_entregables extends CI_Controller
         $data['idForma'] = $data['consulta']->iIdFormaInd;
         $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
         $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
+        $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
 
         if($all_edit > 1){
             $data['candado'] = false;
@@ -257,6 +259,7 @@ class C_entregables extends CI_Controller
             $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
             $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
             $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+            $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
 
             //Actualizar tabla variables
 
