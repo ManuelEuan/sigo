@@ -142,6 +142,18 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label>Tipo<span class="text-danger">*</span></label>
+                        <select name="tipoAlta" id="tipoAlta" required class="form-control">
+                            <option value="">Seleccionar...</option>
+                            <option value="1">Acumulativo </option>
+                            <option value="2">Puntual</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
                 </div>
 
 

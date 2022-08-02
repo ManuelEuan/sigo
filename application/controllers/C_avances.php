@@ -192,7 +192,7 @@ class C_avances extends CI_Controller {
                         $data['nAdolescenteH'] = EliminaComas($adolecenteH);
                         $data['nAdolescenteM'] = EliminaComas($adolecenteM);
 
-                        $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
+                        $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
 
                         $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
                         $data['iBeneficiariosTotales'] = $totalAvance;
@@ -224,7 +224,7 @@ class C_avances extends CI_Controller {
                     $data['nAdolescenteM'] = EliminaComas($adolecenteM);
                     //$data['nEjercido'] = 0;
 
-                    $data['iAprobado'] = 0; //EliminaComas($lenguaindM);
+                    $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
 
                     $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
                     $data['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
