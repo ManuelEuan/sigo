@@ -994,8 +994,7 @@ class C_avances extends CI_Controller {
                     </blockquote>
                 </div>';
         $acciones_rev = '';
-        if($acceso_rev > 1) $acciones_rev = '<a class="dropdown-item" href="javascript:void(0)" onclick="revisarSeleccionados(\''.$mes.'\',1);">Aprobar</a>
-                        <a class="dropdown-item" href="javascript:void(0)" onclick="revisarSeleccionados(\''.$mes.'\',0);">Rechazar</a>';
+        if($acceso_rev > 1) $acciones_rev = '<a class="dropdown-item" href="javascript:void(0)" onclick="revisarSeleccionados(\''.$mes.'\',0);">Rechazar</a>';
         if($acceso > 1) $html.= '<div class="row">
                     <div class="col-12 mb-4 text-right"><b><span id="e'.$mes.'">0</span></b> elemento(s) seleccionado(s) <div class="btn-group">
                             <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
