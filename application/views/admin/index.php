@@ -302,7 +302,7 @@
         }
 
         // Funciones para el manejo de cantidades
-        function soloDigitos(e,decReq) {
+        function soloDigitos(e,decReq,decNeg) {
             var isIE = document.all?true:false;
             var isNS = document.layers?true:false;
             var key = (isIE) ? event.keyCode : e.which;
@@ -311,8 +311,10 @@
             var dotOK = (key==46 && decReq=='OK' && (obj.value.indexOf(".")<0 || obj.value.length==0)) ? true:false;
             var isDel = (key==0 || key==8 ) ? true:false;
             var isEnter = (key==13) ? true:false;
+            var isNeg = (key==45 && decNeg=='MIN' && (obj.value.indexOf("-")<0 || obj.value.length==0)) ? true:false;
+
             //e.which = (!isNum && !dotOK && isNS) ? 0 : key;
-            return (isNum || dotOK || isDel || isEnter);
+            return (isNum || dotOK || isDel || isEnter || isNeg);
         }
     </script>
 </body>
