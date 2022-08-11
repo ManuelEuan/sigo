@@ -494,6 +494,10 @@ class M_entregables extends CI_Model{
 		$this->db->delete('VariableIndicador');
 		return true;
     }
+
+    public function insertCambio($data){
+		return $this->db->insert('Logs', $data);
+	}
 }
 
 ?>
