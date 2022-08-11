@@ -205,7 +205,6 @@
 
 
     $('#itotal').click(function(){
-    console.log('hola');
         if($(this).is(':checked')){
             document.getElementById("beneficiarioH").disabled = true;
             document.getElementById("beneficiarioM").disabled = true;
@@ -300,6 +299,13 @@
         var acceso =  '<?=$acceso?>';  
         $('#monto').prop('disabled', false);
 
+        //Actualizo el avance en el input solo lectura
+        let totalAvance = $("#totalAvance").text();
+        let myArray     = totalAvance.split("/");
+        let avance      = $("#avance").val();
+        let nuevoValor  = parseFloat(myArray[0]) + parseFloat(avance);
+        nuevoValor      = nuevoValor + "/" + myArray[1];
+
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_avances/insert", //Nombre del controlador
@@ -315,6 +321,7 @@
                     accordion[parseInt(mes)] = false;
                     $('#monto').prop('disabled', true);
                     $('#monto').val(monto);
+                    $("#totalAvance").text(nuevoValor);
                 }else {
                     alerta('Error al guardar', 'error');
                 }
