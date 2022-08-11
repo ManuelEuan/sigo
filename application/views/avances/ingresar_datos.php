@@ -386,17 +386,11 @@
     }
 
     function changeInput(){
-
-        const full = document.getElementsByClassName('full');
-        const arr = [...full].map(input => input.value);
-
-        console.log(arr);
-
+        const full  = document.getElementsByClassName('full');
+        const arr   = [...full].map(input => input.value);
         var formula = '<?= $vFormula ?: '' ?>'
-
-        contadorValores = 0;
-
-        var estructuraFinal = ''
+        var estructuraFinal = '';
+        contadorValores     = 0;
 
         for(i = 0; i <= formula.length; i++){
             if(formula[i] != undefined){
@@ -409,17 +403,8 @@
             
             }
         }
-        console.log(formula)
-        console.log(estructuraFinal)
-        console.log(eval(estructuraFinal))
-
-        total =  eval(estructuraFinal)
-
-        if(total < 0){
-            document.getElementById("avance").value = 0;
-        }else{
-            document.getElementById("avance").value = total;
-        }
+        total =  eval(estructuraFinal);
+        document.getElementById("avance").value = total;
     }
 
     function ValidarBeneficiariosM(){
