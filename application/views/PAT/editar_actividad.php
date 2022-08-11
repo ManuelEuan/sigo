@@ -27,7 +27,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 </div>
             </div>
 
-            <form class="needs-validation was-validated" onsubmit="guardarDetalles(this,event);">
+            <form class="needs-validation was-validated" id="frmForm" onsubmit="guardarDetalles(this,event);">
                 <div class="form-row">
                     <legend>Datos generales</legend>
                     <div class="col-md-10 mb-10">
@@ -473,6 +473,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 <input type="text" value="<?= base_url(); ?>" id="url" style="display: none">
 <script src="<?= base_url() ?>/assets/jquery.maskMoney.js"></script>
 <script>
+    var formAntiguo = '';
     var isIE = document.all ? true : false;
     var isNS = document.layers ? true : false;
     var peticion = true;
@@ -576,6 +577,8 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         <?php
         }
         ?>
+        
+        //console.log($("#frmForm").serialize());
 
         idDependenciaGuardado = <?php echo $consulta[0]->iIdDependencia ?>;
 
@@ -725,7 +728,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
     }
 
     function obtenerAreasResp(idDependencia) {
-
+        
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_pat/obtenerAreasRESP",
@@ -733,6 +736,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 idDependencia: idDependencia
             },
             success: function(resp) {
+                
                 var parsedData = JSON.parse(resp);
                 for (let i = 0; i <= parsedData.length; i++) {
                     if (parsedData[i]?.vAreaResponsable != undefined) {
@@ -749,6 +753,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
                     }
                 }
+                formAntiguo = $("#frmForm").serialize();
 
             },
             error: function(XMLHHttRequest, textStatus, errorThrown) {
@@ -957,6 +962,19 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
     }
 
     function guardarDetalles(f, e) {
+        /*var cambiosN = '';
+        var cambiosA = '';
+        var ArrAntiguo = formAntiguo.split("&");
+        var ArrNuevo = $(f).serialize().split("&");
+        //console.log('Arr Nuevo: '+ ArrNuevo);
+        ArrNuevo.forEach( function(valorN, indice, array) {
+            if(ArrAntiguo.includes(valorN)){
+            }else{
+                cambiosN += '/' + valorN;
+                cambiosA += '/' + ArrAntiguo[indice];
+            }
+        });*/
+
         var inicio = document.getElementById('fINICIO').value;
         var fin = document.getElementById('fFIN').value;
         let tipo = $('select[id=vTipoActividad]').val();
@@ -979,6 +997,20 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 success: function(resp) {
                     if (resp == 'Correcto') {
                         //filtrar(e);
+                        /*if(cambiosN != ''){
+                            $.ajax({
+                                type: "POST",
+                                url: "<?= base_url() ?>C_pat/guardarLog",
+                                data: {
+                                    cambiosN:cambiosN,
+                                    cambiosA:cambiosA
+                                },
+                                success: function (response) {
+                                    console.log(response)
+                                }
+                            });
+                        }*/
+                        
                         alerta('Guardado exitosamente', 'success');
                         setTimeout(function() {
                             back();

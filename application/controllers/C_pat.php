@@ -2225,5 +2225,20 @@ class C_pat extends CI_Controller
         echo 'Finalizado';
     }
  
+    function guardarLog(){
+        $cambiosA = $this->input->post('cambiosA', TRUE);
+        $cambiosN = $this->input->post('cambiosN', TRUE);
+        $hoy = date('Y-m-d H:i:s');
+
+        $resp = $this->pat->insertCambio(array(
+            'iTipoCambio' => 'Acción',
+            'iAntesCambio' => $cambiosA,
+            'iDespuesCambio' => $cambiosN,
+            'iFechaCambio' => $hoy,
+            'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+            'iAprovacion' => 0,
+        ));
+        return $resp;
+    }
 }
 ?>

@@ -12,7 +12,7 @@
             <br>
             
             <?php if($av_capturados) echo '<small>Los campos deshabilitados no pueden modificarse debido a que el indicador cuenta con avances capturados en este o en años anteriores.</small>'; ?>
-            <form class="needs-validation was-validated" onsubmit="modificarEntregables(this,event);">
+            <form class="needs-validation was-validated" id="frmForm" onsubmit="modificarEntregables(this,event);">
                 <div class="form-row">
                     <div class="col-md-6 mb-3">
                         <label>Nombre del indicador <span class="text-danger">*</span></label>
@@ -298,6 +298,7 @@
 <script>
     
     var areaReponsableArray = []
+    var formAntiguo = '';
 
     var myArea = {};
 
@@ -318,6 +319,8 @@
 
     $(document).ready(function(){
         $(".select2").select2();
+        formAntiguo = $("#frmForm").serialize();
+        
     });
     $(document).ready(function(){
          <?php if($acceso == 1){ ?>
@@ -328,6 +331,7 @@
         }
         ?>
         $("#compromiso, #componente").select2();
+        
     });
 
     function cargarComponente() {
@@ -357,6 +361,18 @@
 
     function modificarEntregables(f, e) {
         e.preventDefault();
+        
+        /*var cambiosN = '';
+        var cambiosA = '';
+        var ArrAntiguo = formAntiguo.split("&");
+        var ArrNuevo = $(f).serialize().split("&");
+        ArrNuevo.forEach( function(valorN, indice, array) {
+            if(ArrAntiguo.includes(valorN)){
+            }else{
+                cambiosN += '/' + valorN;
+                cambiosA += '/' + ArrAntiguo[indice];
+            }
+        });*/
 
         $.ajax({
             type: "POST",
@@ -365,7 +381,19 @@
 
             success: function(resp) {
                 if (resp >0) {
-
+                    /*if(cambiosN != ''){
+                        $.ajax({
+                            type: "POST",
+                            url: "<?= base_url() ?>C_pat/guardarLog",
+                            data: {
+                                cambiosN:cambiosN,
+                                cambiosA:cambiosA
+                            },
+                            success: function (response) {
+                                    console.log(response)
+                            }
+                        });
+                    }*/
                     CalcularPorcentajeActividad();
                     alerta('Modificado exitosamente', 'success');
                     regresarmodulo();

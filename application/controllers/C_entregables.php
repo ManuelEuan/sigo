@@ -1,6 +1,5 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
 class C_entregables extends CI_Controller
 {
     function __construct()
@@ -231,14 +230,76 @@ class C_entregables extends CI_Controller
             $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
         }
         $new_array = array_merge($data,$data3);
+        //echo json_encode(count($data['Variables']));
         $this->load->view('entregables/contenido_modificar', $new_array);
+    }
+
+    public function obtenerDatosAntiguos($idEnt, $idAct){
+        $lib = new Class_options();
+        $seg = new Class_seguridad();
+
+        $data = array();
+
+        $data['id_ent'] = $idEnt;//$this->input->post('id',TRUE);
+        $data['id_detact'] = $idAct;//$this->input->post('id2',TRUE);
+
+        $data3['eje'] = $this->me->mostrarEje();
+        $data3['consulta1'] = $this->me->preparar_update($data['id_detact']);
+        
+        $arrMunicipios = array();
+        $municipios = $this->me->mostrar_entregables_municipio($data['id_ent']);
+        foreach ($municipios as $row) {
+            $arrMunicipios[] = $row->iIdMunicipio;
+        }
+        $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
+
+        $data['consulta'] = $this->me->mostrar_entregable_actual($data['id_ent'], $data['id_detact']);
+        $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
+
+        if($componente != NULL){
+            $data['componente'] = $lib->options_tabla('componentes_compromiso',$componente->iIdComponente,'cp.iIdCompromiso = '.$componente->iIdCompromiso.'');
+            $data['compromiso'] = $lib->options_tabla('compromisos',$componente->iIdCompromiso);
+        }else{
+            $data['componente'] = '<option value="0">Seleccionar...</option>';
+            $data['compromiso'] = $lib->options_tabla('compromisos');
+        }
+        $data['unidadmedida'] = $lib->options_tabla('unidades_medida',$data['consulta']->iIdUnidadMedida);
+        $data['periodicidad'] = $lib->options_tabla('periodicidad',$data['consulta']->iIdPeriodicidad);
+        $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado',$data['consulta']->iIdSujetoAfectado);
+        $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
+        $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
+
+        //Agregados Saul
+        $data['formaIndicador'] = $this->me->obtenerForma();
+        $data['dimension'] = $this->me->obtenerDimension();
+        $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
+        
+        $data['baseIndicador'] = $data['consulta']->nLineaBase;
+        $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
+        $data['areaCalculo'] = $data['consulta']->vFormula;
+
+        $data['idForma'] = $data['consulta']->iIdFormaInd;
+        $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
+        $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
+        $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
+
+        if($all_edit > 1){
+            $data['candado'] = false;
+        } else {
+            $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
+        }
+        $new_array = array_merge($data,$data3);
+        return $new_array;
     }
 
     //Funcion para editar
     public function update(){
-
+        $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
+        
         if(isset($_POST['entregable']) && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_entregable']) && isset($_POST['id_detalleactividad']) && isset($_POST['metamodificada']))
         {
+            $datosCambiados = array();
+            $datosAntiguos = array();
             $seg = new Class_seguridad();
             $id_ent = $this->input->post('id_entregable');
             // Para saber que campos no debemos actualizar
@@ -248,22 +309,59 @@ class C_entregables extends CI_Controller
             } else {
                 $candado = ($this->me->avances_capturados($id_ent) > 0) ? true:false;
             }
-
+            //
             $data['vEntregable'] = $this->input->post('entregable',TRUE);
+            if($datosViejos['consulta']->vEntregable != $data['vEntregable']){
+                $datosCambiados['vEntregable'] = $data['vEntregable'];
+                $datosAntiguos['vEntregable'] = $datosViejos['consulta']->vEntregable;
+            }
+            //
             $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
+            if($datosViejos['consulta']->iIdPeriodicidad != $data['iIdPeriodicidad']){
+                $datosCambiados['iIdPeriodicidad'] = $data['iIdPeriodicidad'];
+                $datosAntiguos['iIdPeriodicidad'] = $datosViejos['consulta']->iIdPeriodicidad;
+            }
             $data['vNombreEntregable'] = '.';
-
             //Agregado Saul
             $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
+            if($datosViejos['consulta']->iIdFormaInd != $data['iIdFormaInd']){
+                $datosCambiados['iIdFormaInd'] = $data['iIdFormaInd'];
+                $datosAntiguos['iIdFormaInd'] = $datosViejos['consulta']->iIdFormaInd;
+            }
             $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
+            if($datosViejos['consulta']->iIdDimensionInd != $data['iIdDimensionInd']){
+                $datosCambiados['iIdDimensionInd'] = $data['iIdDimensionInd'];
+                $datosAntiguos['iIdDimensionInd'] = $datosViejos['consulta']->iIdDimensionInd;
+            }
             $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
+            if($datosViejos['consulta']->nLineaBase!= $data['nLineaBase']){
+                $datosCambiados['nLineaBase'] = $data['nLineaBase'];
+                $datosAntiguos['nLineaBase'] = $datosViejos['consulta']->nLineaBase;
+            }
             $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
+            if($datosViejos['consulta']->vMedioVerifica!= $data['vMedioVerifica']){
+                $datosCambiados['vMedioVerifica'] = $data['vMedioVerifica'];
+                $datosAntiguos['vMedioVerifica'] = $datosViejos['consulta']->vMedioVerifica;
+            }
             $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
+                $datosCambiados['vFormula'] = $data['vFormula'];
+                $datosAntiguos['vFormula'] = $datosViejos['consulta']->vFormula;
+            }
             $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
+            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
+                $datosCambiados['vFormula'] = $data['vFormula'];
+                $datosAntiguos['vFormula'] = $datosViejos['consulta']->iAcumulativo;
+            }
 
             //Actualizar tabla variables
 
             $Variable = $this->input->post('Variable', true);
+            if(count($Variable) != count($datosViejos['Variables'])){
+                echo 'iguales';
+                $datosCambiados['Variable'] = $Variable;
+                $datosAntiguos['Variable'] = $datosViejos['Variables'];
+            }
             $Letra = $this->input->post('Letra', true);
             $idVariable = $this->input->post('idVariable', true);
 
@@ -328,6 +426,17 @@ class C_entregables extends CI_Controller
                     }
                 }
             }
+
+            /*$hoy = date('Y-m-d H:i:s');
+
+            $resp = $this->me->insertCambio(array(
+                'iTipoCambio' => 'Indicador',
+                'iAntesCambio' => strval(json_encode($datosAntiguos)),
+                'iDespuesCambio' => strval(json_encode($datosCambiados)),
+                'iFechaCambio' => $hoy,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'iAprovacion' => 0,
+            ));*/
 
         }else{
             echo 'error';
