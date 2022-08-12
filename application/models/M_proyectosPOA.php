@@ -15,6 +15,17 @@ class M_proyectosPOA extends CI_Model{
 		return $resultado;
     }
 
+	function obtenerSeleccionados(){
+
+		$sql = 'SELECT * FROM "DetalleActividad" detAct
+            INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
+			INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
+			INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"';
+		
+		return $this->db->query($sql)->result();
+
+	}
+
 }
 
 ?>

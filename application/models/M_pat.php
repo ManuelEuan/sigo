@@ -988,4 +988,8 @@ class M_pat extends CI_Model
 		return $this->db->update($tabla, $data);
 	}
 
+	public function insertCambio($data){
+		return $this->db->insert('Logs', $data);
+	}
+
 }
