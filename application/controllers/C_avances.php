@@ -304,7 +304,7 @@ class C_avances extends CI_Controller {
                     $hoy = date('Y-m-d H:i:s');
 
                     $resp = $this->ma->insertCambio(array(
-                        'iTipoCambio' => 'Indicador',
+                        'iTipoCambio' => 'Avance',
                         'iAntesCambio' => 'Avance Creado',
                         'iDespuesCambio' => strval(json_encode($dataNuevo)),
                         'iFechaCambio' => $hoy,
@@ -1252,7 +1252,7 @@ class C_avances extends CI_Controller {
             $hoy = date('Y-m-d H:i:s');
 
             $resp = $this->ma->insertCambio(array(
-                'iTipoCambio' => 'Indicador',
+                'iTipoCambio' => 'Avance',
                 'iAntesCambio' => 'Registro: '.$this->input->post('id',true).' Estatus: 1',
                 'iDespuesCambio' => 'Registro Eliminado: '.$this->input->post('id',true).' Estatus: 0',
                 'iFechaCambio' => $hoy,
@@ -1279,6 +1279,17 @@ class C_avances extends CI_Controller {
                             'dFechaActualiza' => date("Y-m-d h:i:s")
                         );
             $this->M_seguridad->actualiza_registro('Avance',$where,$data,$con);
+            
+            $hoy = date('Y-m-d H:i:s');
+
+            $resp = $this->ma->insertCambio(array(
+                'iTipoCambio' => 'Avance',
+                'iAntesCambio' => 'Registro: '.$value,
+                'iDespuesCambio' => 'Registro Eliminado: '.$value.' Estatus: 0',
+                'iFechaCambio' => $hoy,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'iAprovacion' => 0,
+            ));
             
         }
 
