@@ -294,10 +294,10 @@ class C_entregables extends CI_Controller
 
     //Funcion para editar
     public function update(){
-        $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
         
         if(isset($_POST['entregable']) && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_entregable']) && isset($_POST['id_detalleactividad']) && isset($_POST['metamodificada']))
         {
+            $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
             $datosCambiados = array();
             $datosAntiguos = array();
             $seg = new Class_seguridad();
@@ -344,21 +344,20 @@ class C_entregables extends CI_Controller
                 $datosAntiguos['vMedioVerifica'] = $datosViejos['consulta']->vMedioVerifica;
             }
             $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
-            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
+            if($datosViejos['consulta']->vFormula != $data['vFormula']){
                 $datosCambiados['vFormula'] = $data['vFormula'];
                 $datosAntiguos['vFormula'] = $datosViejos['consulta']->vFormula;
             }
             $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
-            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
-                $datosCambiados['vFormula'] = $data['vFormula'];
-                $datosAntiguos['vFormula'] = $datosViejos['consulta']->iAcumulativo;
+            if($datosViejos['consulta']->iAcumulativo != $data['iAcumulativo']){
+                $datosCambiados['iAcumulativo'] = $data['iAcumulativo'];
+                $datosAntiguos['iAcumulativo'] = $datosViejos['consulta']->iAcumulativo;
             }
 
             //Actualizar tabla variables
 
             $Variable = $this->input->post('Variable', true);
             if(count($Variable) != count($datosViejos['Variables'])){
-                echo 'iguales';
                 $datosCambiados['Variable'] = $Variable;
                 $datosAntiguos['Variable'] = $datosViejos['Variables'];
             }
@@ -375,9 +374,27 @@ class C_entregables extends CI_Controller
             if(!$candado)
             {
                 $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
+                if($datosViejos['consulta']->iIdSujetoAfectado != $data['iIdSujetoAfectado']){
+                    $datosCambiados['iIdSujetoAfectado'] = $data['iIdSujetoAfectado'];
+                    $datosAntiguos['iIdSujetoAfectado'] = $datosViejos['consulta']->iIdSujetoAfectado;
+                }
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
+                if($datosViejos['consulta']->iIdUnidadMedida != $data['iIdUnidadMedida']){
+                    $datosCambiados['iIdUnidadMedida'] = $data['iIdUnidadMedida'];
+                    $datosAntiguos['iIdUnidadMedida'] = $datosViejos['consulta']->iIdUnidadMedida;
+                }
                 $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
-                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;    
+                if($datosViejos['consulta']->iMunicipalizacion != $data['iMunicipalizacion']){
+                    $datosCambiados['iMunicipalizacion'] = $data['iMunicipalizacion'];
+                    $datosAntiguos['iMunicipalizacion'] = $datosViejos['consulta']->iMunicipalizacion;
+                }
+                
+                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;
+                if($datosViejos['consulta']->iMismosBeneficiarios != $data['iMismosBeneficiarios']){
+                    $datosCambiados['iMismosBeneficiarios'] = $data['iMismosBeneficiarios'];
+                    $datosAntiguos['iMismosBeneficiarios'] = $datosViejos['consulta']->iMismosBeneficiarios;
+                }
+                 
             }
 
             $where = "iIdEntregable =".$id_ent;
@@ -389,10 +406,34 @@ class C_entregables extends CI_Controller
                 $table2 = 'DetalleEntregable';
                 
                 $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
+                if($datosViejos['consulta']->nMeta != $data2['nMeta']){
+                    $datosCambiados['nMeta'] = $data2['nMeta'];
+                    $datosAntiguos['nMeta'] = $datosViejos['consulta']->nMeta;
+                }
+
                 $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
+                if($datosViejos['consulta']->nMetaModificada != $data2['nMetaModificada']){
+                    $datosCambiados['nMetaModificada'] = $data2['nMetaModificada'];
+                    $datosAntiguos['nMetaModificada'] = $datosViejos['consulta']->nMetaModificada;
+                }
+                
                 $data2['dFechaInicio'] = $this->input->post('fechainicio',TRUE);
+                if($datosViejos['consulta']->dFechaInicio != $data2['dFechaInicio']){
+                    $datosCambiados['dFechaInicio'] = $data2['dFechaInicio'];
+                    $datosAntiguos['dFechaInicio'] = $datosViejos['consulta']->dFechaInicio;
+                }
+                
                 $data2['dFechaFin'] = $this->input->post('fechafin',TRUE);
+                if($datosViejos['consulta']->dFechaFin != $data2['dFechaFin']){
+                    $datosCambiados['dFechaFin'] = $data2['dFechaFin'];
+                    $datosAntiguos['dFechaFin'] = $datosViejos['consulta']->dFechaFin;
+                }
+
                 $data2['iAnexo'] = (isset($_POST['anexo'])) ? 1:0;
+                if($datosViejos['consulta']->iAnexo != $data2['iAnexo']){
+                    $datosCambiados['iAnexo'] = $data2['iAnexo'];
+                    $datosAntiguos['iAnexo'] = $datosViejos['consulta']->iAnexo;
+                }
 
                 if($this->me->modificacion_general($where2,$table2,$data2)){
 
@@ -418,6 +459,10 @@ class C_entregables extends CI_Controller
                 $municipios = $this->input->post('municipios',true);
 
                 if(isset($_POST['municipios'])){
+                    if(count($municipios) != count($datosViejos['municipios'])){
+                        $datosCambiados['municipios'] = $municipios;
+                        $datosAntiguos['municipios'] = $datosViejos['municipios'];
+                    }
                     foreach ($municipios as $value) {
                     $muni['iIdEntregable'] = $id_ent;
                     $muni['iIdMunicipio'] = $value;
@@ -427,7 +472,7 @@ class C_entregables extends CI_Controller
                 }
             }
 
-            /*$hoy = date('Y-m-d H:i:s');
+            $hoy = date('Y-m-d H:i:s');
 
             $resp = $this->me->insertCambio(array(
                 'iTipoCambio' => 'Indicador',
@@ -436,7 +481,7 @@ class C_entregables extends CI_Controller
                 'iFechaCambio' => $hoy,
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
-            ));*/
+            ));
 
         }else{
             echo 'error';

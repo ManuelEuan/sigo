@@ -997,19 +997,6 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 success: function(resp) {
                     if (resp == 'Correcto') {
                         //filtrar(e);
-                        /*if(cambiosN != ''){
-                            $.ajax({
-                                type: "POST",
-                                url: "<?= base_url() ?>C_pat/guardarLog",
-                                data: {
-                                    cambiosN:cambiosN,
-                                    cambiosA:cambiosA
-                                },
-                                success: function (response) {
-                                    console.log(response)
-                                }
-                            });
-                        }*/
                         
                         alerta('Guardado exitosamente', 'success');
                         setTimeout(function() {

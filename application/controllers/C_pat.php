@@ -559,10 +559,126 @@ class C_pat extends CI_Controller
     }
 
     /* Guardar edición */
+    public function obtenerDatosAntiguos($idAct){
+        $_SESSION['carritoFinan'] = null;
+        $_SESSION['carritoUbpP'] = null;
+        $_SESSION['valores'] = null;
+        $_SESSION['valLinInfo'] = null;
+        $data3['eje'] = $this->pat->mostrarEje();
+
+            $seg    = new Class_seguridad();
+            $opt    = new Class_options();
+            $id     = $idAct;//$this->input->post('id',true); // iIdDetalleActividad
+            $data3['consulta']  = $this->pat->preparar_update($id);
+            $obtenerRol = $this->pat->getRol($_SESSION[PREFIJO.'_idusuario']);
+
+            //Obtengo el select de los ejes
+            $ejes           = '';
+            $dependencias   = '';
+            $retos          = '';
+            $catPoas        = '';
+
+
+            // $objReto        = $this->pat->getReto($data3['consulta'][0]->iReto);
+            $arrRetos       = $this->pat->getRetosDependencia($_SESSION[PREFIJO.'_iddependencia']);
+            // var_dump($arrRetos);
+
+            $objReto        = $this->pat->getReto((int)$data3['consulta'][0]->iReto);
+            //$arrRetos       = $this->pat->getRetosPorDependencia($objReto[0]->iIdDependencia);
+            if($obtenerRol[0]->iIdRol == 1){
+                $arrRetos = $this->pat->obtenerRetosEje($data3['consulta'][0]->iideje);
+            }else{
+                $arrRetos  = $this->pat->getRetosPorDEP($_SESSION[PREFIJO.'_iddependencia']);
+            }
+            
+
+            $arrDependencias= [];
+            $dependencia    = '';
+
+            if($data3['consulta'][0]->iideje != ''){
+                $arrDependencias = $this->pat->getDependenciaPorEje($data3['consulta'][0]->iideje);
+            }
+
+            foreach ($data3['eje']  as $row) {
+                $selected =  $row->iIdEje == $data3['consulta'][0]->iideje ? 'selected' : '';
+                $ejes .= '<option value="'.$row->iIdEje.'" '.$selected.'>'.$row->vEje.'</option>';
+            }
+
+            foreach ($arrDependencias as $dep) {
+                $selected =  $dep->iIdDependencia == $data3['consulta'][0]->iIdDependencia ? 'selected' : '';
+                $dependencias .= '<option value="'.$dep->iIdDependencia.'" '.$selected.'>'.$dep->vDependencia.'</option>';
+            }
+
+            foreach ($arrRetos as $value) {
+                $selected =  $value->iIdReto == $data3['consulta'][0]->iReto ? 'selected' : '';
+                $retos .= '<option value="'.$value->iIdReto.'" '.$selected.'>'.$value->vDescripcion.'</option>';
+            }
+            
+
+            $iIdActividad       = $data3['consulta'][0]->iIdActividad;   // Obtenemos el Id de l actividad
+            $data3['finan']     = $this->pat->mostrarFinanciamiento($data3['consulta'][0]->iAnio);
+            $data3['ubp']       = $this->pat->mostrarUbp($data3['consulta'][0]->iAnio);
+            $all_sec            = $seg->tipo_acceso(9,$_SESSION[PREFIJO.'_idusuario']);
+            $all_dep            = $seg->tipo_acceso(10,$_SESSION[PREFIJO.'_idusuario']);
+            $data3['per_ods']   = $seg->tipo_acceso(41,$_SESSION[PREFIJO.'_idusuario']);
+            $data3['alineacion']    = $this->pat->getCarritoSelec($iIdActividad);
+
+            if($all_sec > 0 && $all_dep > 0) {
+                $data3['ejes']          = $ejes;
+                $data3['dependencias']  = $dependencias;
+                $data3['retos']         = $retos;
+                // var_dump('No eres dependencia');
+            }else{
+                // var_dump(' eres dependencia');
+
+            }
+            $data3['retos']         = $retos;
+
+            $this->pintarT_financiamiento($id);
+            $this->pintarT_ubps($id);
+            $data3['montoFinal']    = $this->sumaMonto();
+            $data3['consulta2']     = $this->pat->preparar_update2($id);
+            
+            //Se trabaja con el catalogo de POAS
+            $arrayDependencias  = $this->pat->getDependenciaById($data3['consulta'][0]->iIdDependencia );
+            $dependencia        = $arrayDependencias[0]->vDependencia;
+            //$catalogosPOA       = $this->validarListaPOAEdit($id);
+            $dependencia        = $this->eliminar_tildes($dependencia);
+            
+            /*foreach ($catalogosPOA as $value) {
+                $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
+                if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
+                    $selected =  $value['numeroProyecto'] == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
+                    $catPoas .= '<option value="'.$value['numeroProyecto'].'" '.$selected.'>'.$value['nombreProyecto'].'</option>'; 
+                }
+            }*/
+
+            // var_dump($iIdActividad);
+            // var_dump($data3['consulta'][0]->iIdDependencia );
+
+            $data3['proyectoPrioritario']    = $this->pat->obtenerProyectosPrioritarios();
+            $data3['programaPresupuestario']    = $this->pat->obtenerProgramaPresupuestario();
+            $data3['nivelesMIR']    = $this->pat->obtenerNivelesMIR();
+            $data3['resumenNarrativo']    = $this->pat->obtenerResumenNarrativo();
+            $data3['actividadAglo']    = $this->pat->obtenerActividadAglomerada($iIdActividad);
+            $data3['actividadAgloValue']    = $this->pat->obtenerActividades($data3['consulta'][0]->iIdDependencia);
+            // var_dump($data3['actividadAglo'] );
+            // var_dump($data3['actividadAgloValue'] );
+            $data3['ODS']    = $this->pat->obtenerODS();
+           
+            $seg = new Class_seguridad();
+            $data3['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
+            //$data3['catalogosPOA']  = $catalogosPOA;
+            //$data3['catPoas']       = $catPoas;
+
+            return $data3;
+        
+    }
 
     public function guardarAct()
     {
         if (isset($_POST['id']) && isset($_POST['idAct']) && isset($_POST['NombAct']) && isset($_POST['objGeneral']) && isset($_POST['descripcion'])) {
+            $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id',true));
             $iIdDependencia =  $_SESSION[PREFIJO.'_iddependencia'];
             if(isset($_POST['depAct'])){
                 $iIdDependencia = $this->input->post('depAct');
@@ -581,7 +697,7 @@ class C_pat extends CI_Controller
             $incluyeMIR = $this->input->post('icluyeMIR', true);
             $incluyeAglomeraMIR = $this->input->post('tieneAglomeracion', true);
             $idActividadAglomera = $this->input->post('idActividad', true);
-            $idNivelMIR = $this->input->post('idNivelMIR', true);
+            $idNivelMIR = $this->input->post('idNivelMIR', true) ?: null;
             $valorMIR = 0;
             $valorAglomeraMIR = 0;
 
@@ -632,11 +748,142 @@ class C_pat extends CI_Controller
             if($iIdDependencia > 0) $data['iIdDependencia'] = $iIdDependencia;
             $where['iIdActividad'] = $idActividad;
             $this->mseg->actualiza_registro('Actividad', $where, $data, $con);
+            //Validacion Campos//
+            $datosCambiados = array();
+            $datosAntiguos = array();
+
+            if($datosViejos['consulta'][0]->vActividad != $this->input->post('NombAct',true)){
+                $datosCambiados['vActividad'] = $this->input->post('NombAct',true);
+                $datosAntiguos['vActividad'] = $datosViejos['consulta'][0]->vActividad;
+            }
+
+            if($datosViejos['consulta'][0]->vObjetivo != $this->input->post('objGeneral',true)){
+                $datosCambiados['vObjetivo'] = $this->input->post('objGeneral',true);
+                $datosAntiguos['vObjetivo'] = $datosViejos['consulta'][0]->vObjetivo;
+            }
+
+            if($datosViejos['consulta'][0]->vDescripcion != $this->input->post('descripcion',true)){
+                $datosCambiados['vDescripcion'] = $this->input->post('descripcion',true);
+                $datosAntiguos['vDescripcion'] = $datosViejos['consulta'][0]->vDescripcion;
+            }
+
+            if($datosViejos['consulta'][0]->iODS != $this->input->post('selectODS',true)){
+                $datosCambiados['iODS'] = $this->input->post('selectODS',true);
+                $datosAntiguos['iODS'] = $datosViejos['consulta'][0]->iODS;
+            }
+
+            if($datosViejos['consulta'][0]->vResponsable != $this->input->post('iAreaResponsable',true)){
+                $datosCambiados['vResponsable'] = $this->input->post('iAreaResponsable',true);
+                $datosAntiguos['vResponsable'] = $datosViejos['consulta'][0]->vResponsable;
+            }
+
+            if($datosViejos['consulta'][0]->vCargo != $this->input->post('vCargo',true)){
+                $datosCambiados['vCargo'] = $this->input->post('vCargo',true);
+                $datosAntiguos['vCargo'] = $datosViejos['consulta'][0]->vCargo;
+            }
+
+            if($datosViejos['consulta'][0]->vCorreo != $this->input->post('vCorreo',true)){
+                $datosCambiados['vCorreo'] = $this->input->post('vCorreo',true);
+                $datosAntiguos['vCorreo'] = $datosViejos['consulta'][0]->vCorreo;
+            }
+
+            if($datosViejos['consulta'][0]->vTelefono != $this->input->post('vTelefono',true)){
+                $datosCambiados['vTelefono'] = $this->input->post('vTelefono',true);
+                $datosAntiguos['vTelefono'] = $datosViejos['consulta'][0]->vTelefono;
+            }
+
+            if($datosViejos['consulta'][0]->vJustificaCambio != $this->input->post('vJustificaCambio',true)){
+                $datosCambiados['vJustificaCambio'] = $this->input->post('vJustificaCambio',true);
+                $datosAntiguos['vJustificaCambio'] = $datosViejos['consulta'][0]->vJustificaCambio;
+            }
+
+            if($datosViejos['consulta'][0]->vAccion != $this->input->post('vAccion',true)){
+                $datosCambiados['vAccion'] = $this->input->post('vAccion',true);
+                $datosAntiguos['vAccion'] = $datosViejos['consulta'][0]->vAccion;
+            }
+
+            if($datosViejos['consulta'][0]->vEstrategia != $this->input->post('vEstrategia',true)){
+                $datosCambiados['vEstrategia'] = $this->input->post('vEstrategia',true);
+                $datosAntiguos['vEstrategia'] = $datosViejos['consulta'][0]->vEstrategia;
+            }
+
+            if($datosViejos['consulta'][0]->iReto != $this->input->post('iReto',true)){
+                $datosCambiados['iReto'] = $this->input->post('iReto',true);
+                $datosAntiguos['iReto'] = $datosViejos['consulta'][0]->iReto;
+            }
+
+            if($datosViejos['consulta'][0]->iideje != $idEje){
+                $datosCambiados['iideje'] = $idEje;
+                $datosAntiguos['iideje'] = $datosViejos['consulta'][0]->iideje;
+            }
+
+            if($datosViejos['consulta'][0]->vtipoactividad != $this->input->post('vTipoActividad',true)){
+                $datosCambiados['vtipoactividad'] = $this->input->post('vTipoActividad',true);
+                $datosAntiguos['vtipoactividad'] = $datosViejos['consulta'][0]->vtipoactividad;
+            }
+
+            if($datosViejos['consulta'][0]->vcattipoactividad != $this->input->post('valCatPoas',true)){
+                $datosCambiados['vcattipoactividad'] = $this->input->post('valCatPoas',true);
+                $datosAntiguos['vcattipoactividad'] = $datosViejos['consulta'][0]->vcattipoactividad;
+            }
+
+            if($datosViejos['consulta'][0]->iIncluyeMIR != $valorMIR){
+                $datosCambiados['iIncluyeMIR'] = $valorMIR;
+                $datosAntiguos['iIncluyeMIR'] = $datosViejos['consulta'][0]->iIncluyeMIR;
+            }
+
+            if($datosViejos['consulta'][0]->iAglomeraMIR != $valorAglomeraMIR){
+                $datosCambiados['iAglomeraMIR'] = $valorAglomeraMIR;
+                $datosAntiguos['iAglomeraMIR'] = $datosViejos['consulta'][0]->iAglomeraMIR;
+            }
+
+            if($datosViejos['consulta'][0]->iIdActividadMIR != 0){
+                $datosAntiguos['iIdActividadMIR'] = 0;
+            }
+
+            if($datosViejos['consulta'][0]->iIdNivelMIR != $idNivelMIR){
+                $datosCambiados['iIdNivelMIR'] = $idNivelMIR;
+                $datosAntiguos['iIdNivelMIR'] = $datosViejos['consulta'][0]->iIdNivelMIR;
+            }
+            }
+
+            if(isset($_POST['ProgramaPresupuestario'])){
+                if($datosViejos['consulta'][0]->iIdProgramaPresupuestario != $this->input->post('ProgramaPresupuestario',true)){
+                    $datosCambiados['iIdProgramaPresupuestario'] = $this->input->post('ProgramaPresupuestario',true);
+                    $datosAntiguos['iIdProgramaPresupuestario'] = $datosViejos['consulta'][0]->iIdProgramaPresupuestario;
+                }
+            }
+
+            if(isset($_POST['resumenNarrativo'])){
+                if($datosViejos['consulta'][0]->vResumenNarrativo != $this->input->post('resumenNarrativo',true)){
+                    $datosCambiados['vResumenNarrativo'] = $this->input->post('resumenNarrativo',true);
+                    $datosAntiguos['vResumenNarrativo'] = $datosViejos['consulta'][0]->vResumenNarrativo;
+                }
+            }
+
+            if(isset($_POST['txtSupuesto'])){
+                if($datosViejos['consulta'][0]->vSupuesto != $this->input->post('txtSupuesto',true)){
+                    $datosCambiados['vSupuesto'] = $this->input->post('txtSupuesto',true);
+                    $datosAntiguos['vSupuesto'] = $datosViejos['consulta'][0]->vSupuesto;
+                }
+            }
+
+            if(isset($_POST['selectProyectoPrioritario'])){
+                if($datosViejos['consulta'][0]->iIdProyectoPrioritario != $this->input->post('selectProyectoPrioritario',true)){
+                    $datosCambiados['iIdProyectoPrioritario'] = $this->input->post('selectProyectoPrioritario',true);
+                    $datosAntiguos['iIdProyectoPrioritario'] = $datosViejos['consulta'][0]->iIdProyectoPrioritario;
+                }
+            }
+            //Aqui termina calidacion
             $this->pat->borrarActividadAgromerada($idActividad);
 
 
             foreach($idActividadAglomera as $t){
                 $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idActividad, 'iIdActividadHija' => $t));
+            }
+            if(count($datosViejos['actividadAglo']) != count($this->input->post('idActividad', true))){
+                $datosCambiados['iIdProyectoPrioritario'] = $this->input->post('idActividad', true);
+                $datosAntiguos['iIdProyectoPrioritario'] = $datosViejos['actividadAglo'];
             }
 
 
@@ -653,6 +900,37 @@ class C_pat extends CI_Controller
             );
             $where1['iIdDetalleActividad'] = $id;
             $this->mseg->actualiza_registro('DetalleActividad', $where1, $data1, $con);
+            //Otras validaciones
+            if($datosViejos['consulta'][0]->iIdActividad != $idActividad){
+                $datosCambiados['iIdActividad'] = $idActividad;
+                $datosAntiguos['iIdActividad'] = $datosViejos['consulta'][0]->iIdActividad;
+            }
+
+            if($datosViejos['consulta'][0]->iAnio != $this->input->post('annio',true)){
+                $datosCambiados['iAnio'] = $this->input->post('annio',true);
+                $datosAntiguos['iAnio'] = $datosViejos['consulta'][0]->iAnio;
+            }
+
+            if($datosViejos['consulta'][0]->dInicio != $this->input->post('fINICIO',true)){
+                $datosCambiados['dInicio'] = $this->input->post('fINICIO',true);
+                $datosAntiguos['dInicio'] = $datosViejos['consulta'][0]->dInicio;
+            }
+
+            if($datosViejos['consulta'][0]->dFin != $this->input->post('fFIN',true)){
+                $datosCambiados['dFin'] = $this->input->post('fFIN',true);
+                $datosAntiguos['dFin'] = $datosViejos['consulta'][0]->dFin;
+            }
+
+            if($datosViejos['consulta'][0]->nPresupuestoModificado != floatval(EliminaComas($this->input->post('nPresupuestoModificado',true)))){
+                $datosCambiados['nPresupuestoModificado'] = floatval(EliminaComas($this->input->post('nPresupuestoModificado',true)));
+                $datosAntiguos['nPresupuestoModificado'] = $datosViejos['consulta'][0]->nPresupuestoModificado;
+            }
+
+            if($datosViejos['consulta'][0]->nPresupuestoAutorizado != floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true)))){
+                $datosCambiados['nPresupuestoAutorizado'] = floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true)));
+                $datosAntiguos['nPresupuestoAutorizado'] = $datosViejos['consulta'][0]->nPresupuestoAutorizado;
+            }
+            //Fin Validaciones
 
             //Eliminar ActividadLineaAccion
             $del = $this->mseg->elimina_registro('ActividadLineaAccion',$where, $con);
@@ -697,6 +975,16 @@ class C_pat extends CI_Controller
                     $this->mseg->inserta_registro_no_pk('DetalleActividadUBP', $UBP, $con);
                 }
             }
+            $hoy = date('Y-m-d H:i:s');
+
+            $resp = $this->pat->insertCambio(array(
+                'iTipoCambio' => 'Acción',
+                'iAntesCambio' => strval(json_encode($datosAntiguos)),
+                'iDespuesCambio' => strval(json_encode($datosCambiados)),
+                'iFechaCambio' => $hoy,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'iAprovacion' => 0,
+            ));
 
             // Finalizar transaccion
             if ($this->mseg->terminar_transaccion($con) == true) {
@@ -704,7 +992,7 @@ class C_pat extends CI_Controller
             } else {
                 echo 'Error';
             }
-        }
+        
     }
 
     public function guardarInforme()
@@ -2226,7 +2514,7 @@ class C_pat extends CI_Controller
     }
  
     function guardarLog(){
-        $cambiosA = $this->input->post('cambiosA', TRUE);
+        /*$cambiosA = $this->input->post('cambiosA', TRUE);
         $cambiosN = $this->input->post('cambiosN', TRUE);
         $hoy = date('Y-m-d H:i:s');
 
@@ -2238,7 +2526,7 @@ class C_pat extends CI_Controller
             'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
             'iAprovacion' => 0,
         ));
-        return $resp;
+        return $resp;*/
     }
 }
 ?>

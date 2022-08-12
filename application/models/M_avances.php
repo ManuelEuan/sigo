@@ -298,4 +298,8 @@ class M_avances extends CI_Model
         return $resultado;
     }
 
+    public function insertCambio($data){
+		return $this->db->insert('Logs', $data);
+	}
+
 }
