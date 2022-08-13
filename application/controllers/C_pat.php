@@ -23,40 +23,35 @@ class C_pat extends CI_Controller
     }
 
     public function index() {
-        $seg = new Class_seguridad();
-        $opt = new Class_options();
+        $seguridad          = new Class_seguridad();
+        $opciones           = new Class_options();
+        $data['all_sec']    = $seguridad->tipo_acceso(9,$_SESSION[PREFIJO.'_idusuario']);
+        $data['all_dep']    = $seguridad->tipo_acceso(10,$_SESSION[PREFIJO.'_idusuario']);
+        $data['p_clonar']   = $seguridad->tipo_acceso(32,$_SESSION[PREFIJO.'_idusuario']);
+        $data['acceso']     = $seguridad->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
+        $data['year']       = date('Y');
+        $dependencias       = $sec = 0;
 
-        $data['all_sec'] = $all_sec = $seg->tipo_acceso(9,$_SESSION[PREFIJO.'_idusuario']);
-        $data['all_dep'] = $all_dep = $seg->tipo_acceso(10,$_SESSION[PREFIJO.'_idusuario']);
-        $data['p_clonar'] = $p_clonar = $seg->tipo_acceso(32,$_SESSION[PREFIJO.'_idusuario']);
-        $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
-        $aux = array();
-        $dep = $sec = 0;
-
-        if($all_sec > 0) $data['ejes'] = $opt->options_tabla('eje',"");
-        else
-        { 
+        if($data['all_sec'] > 0)
+            $data['ejes'] = $opciones->options_tabla('eje',"");
+        else { 
             $sec = $_SESSION[PREFIJO.'_ideje'];
             $where['iIdEje'] = $_SESSION[PREFIJO.'_ideje'];
         }
 
-        if($all_dep > 0)
-        { 
-            $data['dependencias'] = (isset($where['iIdEje'])) ? $opt->options_tabla('dependencia',"",$where):$opt->options_tabla('dependencia',"",'iActivo = 3');
-        }
+        if($data['all_dep'] > 0)
+            $data['dependencias'] = (isset($where['iIdEje'])) ? $opciones->options_tabla('dependencia',"",$where):$opciones->options_tabla('dependencia',"",'iActivo = 3');
         else
-        {
-            $dep = $_SESSION[PREFIJO.'_iddependencia'];
-        }
-        
-        $data['year'] = date('Y');
-        $data['actividad'] = $result = $this->pat->mostrar_act(null,$data['year'],$sec, $dep);
-        foreach ($result as $row)
-        {
+            $dependencias = $_SESSION[PREFIJO.'_iddependencia'];
+
+        $data['actividad'] = $this->pat->mostrar_act(null,$data['year'],$sec, $dependencias);
+       
+
+        /*  foreach ($data['actividad'] as $row) {
             $aux[$row->iIdActividad] = $this->imgs_ods($row->iIdActividad);
+            break;
         }
-        
-        $data['ods'] = $aux;
+        $data['ods'] = $aux; */
         $this->load->view('PAT/inicio_PAT', $data);
     }
 

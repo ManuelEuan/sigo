@@ -98,43 +98,23 @@ class M_dependencias extends CI_Model
 	}
 
 	/**
-	 * Retorna las dependencias en base al ODS
-	 * @param int $odsID
+	 * Retorna los ods en base a los campos solicitados para el dashboard.
+	 * @return array
 	 */
 	public function getDependenciasxODS(){
-		$sql = 'SELECT ods."iIdOds", ods."vOds", d."vDependencia", da."iIdDetalleActividad", sum(av."nBeneficiariosH") as hombres, sum(av."nBeneficiariosM") as mujeres FROM "ODS" ods
+		$sql = 'SELECT ods."iIdOds", ods."vOds", d."vDependencia", da."iIdDetalleActividad", d."vNombreCorto" as depCorto, a."vActividad", 
+						sum(av."nBeneficiariosH") as hombres, da."nPresupuestoModificado", da."nPresupuestoAutorizado",
+						sum(av."nBeneficiariosM") as mujeres FROM "ODS" ods
 				INNER JOIN "Actividad" a ON ods."iIdOds" = a."iODS"
 				INNER JOIN "DetalleActividad" da ON a."iIdActividad" = da."iIdActividad"
 				INNER JOIN "Dependencia" d ON a."iIdDependencia"  = d."iIdDependencia"
-				inner join "DetalleEntregable" de on de."iIdDetalleActividad"  = da."iIdDetalleActividad" 
-				inner join "Avance" av on de."iIdDetalleEntregable" = av."iIdDetalleEntregable"
+				INNER JOIN "DetalleEntregable" de on de."iIdDetalleActividad"  = da."iIdDetalleActividad" 
+				INNER JOIN "Avance" av on de."iIdDetalleEntregable" = av."iIdDetalleEntregable"
 				WHERE a."iActivo" = 1
-				group by ods."iIdOds", ods."vOds", d."vDependencia", da."iIdDetalleActividad" ';
+				group by ods."iIdOds", ods."vOds", d."vDependencia", da."iIdDetalleActividad", a."vActividad", da."nPresupuestoModificado",
+						da."nPresupuestoAutorizado", d."vNombreCorto"';
 
 		return $this->db->query($sql)->result();
-	}
-
-	/**
-	 * Retorna el avance en base a dependencia, actividad y/o detalle de actividad 
-	 * @param string $tipo
-	 * @param int $filtroID
-	 */
-	public function getAvance(string $tipo = 'dependencia', int $filtroID) {
-		$this->db->select('av.iIdAvance, av.nBeneficiariosH, av.nBeneficiariosM, a.iIdDependencia, de.iIdDetalleEntregable, da.iIdDetalleActividad, a.iIdActividad');
-		$this->db->from('Avance av');
-		$this->db->join('DetalleEntregable de', 'av.iIdDetalleEntregable = de.iIdDetalleEntregable', 'INNER');
-		$this->db->join('DetalleActividad da', 'de.iIdDetalleActividad = da.iIdDetalleActividad', 'INNER');
-		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');
-		$this->db->where('de.iActivo', 1);
-
-		if($tipo == 'dependencia')
-			$this->db->where('a.iIdDependencia', $filtroID);
-		elseif($tipo == 'actividad')
-			$this->db->where('a.iIdActividad', $filtroID);
-		elseif($tipo == 'detalleActividad')
-			$this->db->where('de.iIdDetalleActividad', $filtroID);
-
-		return $this->db->get()->result();
 	}
 
 	/**
@@ -150,13 +130,6 @@ class M_dependencias extends CI_Model
 
 		
 		return $this->db->get()->result();
-	}
-
-	/**
-	 * Retorna los proyectos priooritarios
-	 */
-	public function getPrioritarios(){
-
 	}
 }
 
