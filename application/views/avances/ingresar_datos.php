@@ -205,7 +205,6 @@
 
 
     $('#itotal').click(function(){
-    console.log('hola');
         if($(this).is(':checked')){
             document.getElementById("beneficiarioH").disabled = true;
             document.getElementById("beneficiarioM").disabled = true;
@@ -300,6 +299,13 @@
         var acceso =  '<?=$acceso?>';  
         $('#monto').prop('disabled', false);
 
+        //Actualizo el avance en el input solo lectura
+        let totalAvance = $("#totalAvance").text();
+        let myArray     = totalAvance.split("/");
+        let avance      = $("#avance").val();
+        let nuevoValor  = parseFloat(myArray[0]) + parseFloat(avance);
+        nuevoValor      = nuevoValor + "/" + myArray[1];
+
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_avances/insert", //Nombre del controlador
@@ -315,6 +321,7 @@
                     accordion[parseInt(mes)] = false;
                     $('#monto').prop('disabled', true);
                     $('#monto').val(monto);
+                    $("#totalAvance").text(nuevoValor);
                 }else {
                     alerta('Error al guardar', 'error');
                 }
@@ -386,17 +393,11 @@
     }
 
     function changeInput(){
-
-        const full = document.getElementsByClassName('full');
-        const arr = [...full].map(input => input.value);
-
-        console.log(arr);
-
+        const full  = document.getElementsByClassName('full');
+        const arr   = [...full].map(input => input.value);
         var formula = '<?= $vFormula ?: '' ?>'
-
-        contadorValores = 0;
-
-        var estructuraFinal = ''
+        var estructuraFinal = '';
+        contadorValores     = 0;
 
         for(i = 0; i <= formula.length; i++){
             if(formula[i] != undefined){
@@ -409,17 +410,8 @@
             
             }
         }
-        console.log(formula)
-        console.log(estructuraFinal)
-        console.log(eval(estructuraFinal))
-
-        total =  eval(estructuraFinal)
-
-        if(total < 0){
-            document.getElementById("avance").value = 0;
-        }else{
-            document.getElementById("avance").value = total;
-        }
+        total =  eval(estructuraFinal);
+        document.getElementById("avance").value = total;
     }
 
     function ValidarBeneficiariosM(){
