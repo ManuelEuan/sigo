@@ -799,7 +799,7 @@ class C_avances extends CI_Controller {
                     <div class="row">
                         <div class="col-6 col-xs-12">
                             <blockquote>
-                                <strong>'.Decimal($avance_total).'/'.Decimal($consulta->nMeta).'</strong>
+                                <strong id="totalAvance">'.Decimal($avance_total).'/'.Decimal($consulta->nMeta).'</strong>
                                 <h6><i class="mdi mdi-flag"></i>&nbsp;Total Avance</h6>
                             </blockquote>
                         </div>
