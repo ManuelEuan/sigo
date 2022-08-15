@@ -1,7 +1,7 @@
 <div class="row" id="divbusqueda">
         <div class="col-md-12">
             <div class="card card-body">
-                <h1 class="card-title">Programa Operativo Anual</h1>
+                <h1 class="card-title">Logs</h1>
                 <hr class="m-t-0">
                 <div class="form-body">
                     <div class="card-body">
@@ -63,7 +63,7 @@
                                     <td><?= $p->iAprovacion ?></td>
                                     <td><?= $p->iIdUsuario ?></td>
                                     <td>
-                                        <select name="" id="">
+                                        <select class="form-control" name="" id="">
                                             <option value="">seleccione</option>
                                             <option value="<?= $p->iIdLog ?>">Aprobar</option>
                                         </select>

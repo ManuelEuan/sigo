@@ -1,7 +1,7 @@
 <div class="row" id="divbusqueda">
         <div class="col-md-12">
             <div class="card card-body">
-                <h1 class="card-title">Programa Operativo Anual</h1>
+                <h1 class="card-title">Picasso</h1>
                 <hr class="m-t-0">
                 <div class="form-body">
                     <div class="card-body">
@@ -33,7 +33,7 @@
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="actualizarNuevos();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Alineación con Picaso 
                                         </button>
-                                    
+                                            <button onclick="cargar('//localhost/Trabajo/SIGO-QRO/index.php/C_logs','#contenido');">Logs</button>
                                     </div>
                                 </div>
                             </div>
