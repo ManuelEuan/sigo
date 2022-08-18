@@ -328,6 +328,7 @@
                     $('#monto').prop('disabled', true);
                     $('#monto').val(monto);
                     $("#totalAvance").text(nuevoValor);
+                    recalcular();
                 }else {
                     alerta('Error al guardar', 'error');
                 }
@@ -335,6 +336,29 @@
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                  alerta('Ha ocurrido un erro, contacte al administrador', 'error');
+            }
+        });
+    }
+
+    function recalcular(){
+        console.log('se calcula')
+        //event.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "<?= base_url() ?>C_entregables/calcular_porcentaje_avance", //Nombre del controlador
+            data: {
+                'id_detact': <?= $id_detact ?>
+            },
+
+            success: function(resp) {
+                if (resp == true) {
+                    console.log('correcto')
+                } else {
+                    console.log('error')
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+
             }
         });
     }

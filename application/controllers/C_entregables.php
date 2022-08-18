@@ -816,8 +816,15 @@ class C_entregables extends CI_Controller
                                         $value->nMeta = ($value->nMetaModificada > 0) ? $value->nMetaModificada:$value->nMeta;
                                         $avances_noaprobados = $ma->num_avances_no_aprobados($value->iIdDetalleEntregable);
                                         $icon = ($avances_noaprobados > 0) ? '<i style="color:#E5BE01; font-size:24px;" class="mdi mdi-new-box md-24" title="Hay '.$avances_noaprobados.' avance(s) sin aprobar"></i>':'';
-//Aqui
-                                        $avance = $ma->suma_avances_total($value->iIdDetalleEntregable)->total_avance;
+//Aqui                                  
+                                        $tipo = $ma->obtenerTipo($value->iIdDetalleEntregable);
+                                        if($tipo[0]->tipo == 2){
+                                            $ultimoAvance = $ma->obtenerUltimoAvance($value->iIdDetalleEntregable);
+                                            $avance = ($ultimoAvance->avance/$value->nMeta);
+                                        }else{
+                                            $avance = $ma->suma_avances_total($value->iIdDetalleEntregable)->total_avance;
+                                        }
+                                        
                                         
                                         $contenido = "'¿Esta usted seguro?',EliminarEntregable,'$value->iIdDetalleEntregable'";
                                         $checked = ($value->iSuspension) ? 'checked':'';
@@ -958,7 +965,8 @@ class C_entregables extends CI_Controller
 	public function calcular_porcentaje_avance(){
 
         if(isset($_POST['id_detact'])){
-
+            $this->load->model('M_avances');
+            $ma = new M_avances();
             $id_detact = $this->input->post('id_detact',true);
             $total = 0;
             //Se obtienen los entregables de una determinada actividad
@@ -974,8 +982,14 @@ class C_entregables extends CI_Controller
                 $unidadmeta = ($meta > 0) ? ($meta/100):0;
 
                 //Se obtiene el avance reportado y se divide entre el 1% de la meta del entregable para obtener el porcentaje base
-                $consulta2 = $this->me->suma_avances_total($id_detent);
-                $avancereportado = $consulta2->total_avance;
+                $consulta2 = $this->me->suma_avances_total($id_detent);//Aqui
+                $tipo = $ma->obtenerTipo($id_detent);
+                if($tipo[0]->tipo == 2){
+                    $ultimoAvance = $ma->obtenerUltimoAvance($id_detent);
+                    $avancereportado = ($ultimoAvance->avance/$meta);
+                }else{
+                    $avancereportado = $consulta2->total_avance;
+                }
                 $porcentajeavance = ($unidadmeta > 0) ? ($avancereportado/$unidadmeta):0;
 
                 if($porcentajeavance > 100){
