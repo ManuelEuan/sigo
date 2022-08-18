@@ -57,7 +57,7 @@ class C_entregables extends CI_Controller
         if(isset($_POST['entregable']) && isset($_POST['unidadmedida']) && isset($_POST['sujetoafectado']) 
         && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_detalleactividad'])){
 
-            if($_POST['meta'] > 0){
+            if($_POST['meta']){
 
                 $data['vEntregable'] = $this->input->post('entregable',TRUE);
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
@@ -88,6 +88,7 @@ class C_entregables extends CI_Controller
                 $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
                 $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
                 $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
+                $data['iAutorizado'] = 1;
                 $Variable = $this->input->post('Variable', true);
                 $Letra = $this->input->post('Letra', true);
 
@@ -122,6 +123,7 @@ class C_entregables extends CI_Controller
                     $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
                     $data2['dFechaInicio'] = $this->input->post('fechainicio',true);
                     $data2['dFechaFin'] = $this->input->post('fechafin',true);
+                    $data2['iAutorizado'] = 1;
 
                     $cantidadEntregables = $this->validar_entregables($this->input->post('id_detalleactividad',TRUE));
 
@@ -328,6 +330,8 @@ class C_entregables extends CI_Controller
             
             $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
 
+            $data['iAutorizado'] = 0;
+
             //Actualizar tabla variables
 
             $Variable = $this->input->post('Variable', true);
@@ -371,6 +375,8 @@ class C_entregables extends CI_Controller
                 $data2['dFechaFin'] = $this->input->post('fechafin',TRUE);
                 
                 $data2['iAnexo'] = (isset($_POST['anexo'])) ? 1:0;
+
+                $data2['iAutorizado'] = 0;
                 
                 if($this->me->modificacion_general($where2,$table2,$data2)){
 
@@ -810,7 +816,7 @@ class C_entregables extends CI_Controller
                                         $value->nMeta = ($value->nMetaModificada > 0) ? $value->nMetaModificada:$value->nMeta;
                                         $avances_noaprobados = $ma->num_avances_no_aprobados($value->iIdDetalleEntregable);
                                         $icon = ($avances_noaprobados > 0) ? '<i style="color:#E5BE01; font-size:24px;" class="mdi mdi-new-box md-24" title="Hay '.$avances_noaprobados.' avance(s) sin aprobar"></i>':'';
-
+//Aqui
                                         $avance = $ma->suma_avances_total($value->iIdDetalleEntregable)->total_avance;
                                         
                                         $contenido = "'¿Esta usted seguro?',EliminarEntregable,'$value->iIdDetalleEntregable'";

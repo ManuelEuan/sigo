@@ -54,6 +54,10 @@ class C_avances extends CI_Controller {
 
         $data['vFormula'] = $Formula->vFormula;
 
+        $tipo = $this->ma->obtenerTipo($id_detent);
+
+        $data['tipo'] = $tipo[0]->tipo;
+
     	$this->load->view('avances/principal',$data);
 
     }
@@ -232,6 +236,7 @@ class C_avances extends CI_Controller {
                         $data['nTerceraEdadM'] = EliminaComas($terceraM);
                         $data['nAdolescenteH'] = EliminaComas($adolecenteH);
                         $data['nAdolescenteM'] = EliminaComas($adolecenteM);
+                        $data['iAutorizado'] = 1;
 
                         $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
 
@@ -263,6 +268,7 @@ class C_avances extends CI_Controller {
                     $data['nTerceraEdadM'] = EliminaComas($terceraM);
                     $data['nAdolescenteH'] = EliminaComas($adolecenteH);
                     $data['nAdolescenteM'] = EliminaComas($adolecenteM);
+                    $data['iAutorizado'] = 1;
                     //$data['nEjercido'] = 0;
 
                     $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
@@ -751,13 +757,17 @@ class C_avances extends CI_Controller {
 
         $totales = $this->ma->suma_avances_total($id_detent);
         $consulta = $this->ma->mostrar_actividadentregable($id_detent);
-
-        $avance_total = $monto_total = $total_beneficiarios = $total_discapacitados = $total_mayahablantes = 0;
-
-        $avance_total = $totales->total_avance;
-
+        $ultimoAvance = $this->ma->obtenerUltimoAvance($id_detent);
+        $tipo = $this->ma->obtenerTipo($id_detent);
+            
+        if($tipo[0]->tipo == 2){
+            $avance_total = $ultimoAvance->avance;
+        }else{
+            $avance_total = $monto_total = $total_beneficiarios = $total_discapacitados = $total_mayahablantes = 0;
+            $avance_total = $totales->total_avance;
+        }
+        
         $monto_total = $totales->monto_total;
-
 
         $total_beneficiarios = $totales->total_beneficiarios;
         $total_discapacitados = $totales->total_discapacitados;
@@ -1230,6 +1240,7 @@ class C_avances extends CI_Controller {
         $data['vObservaciones'] = $this->input->post('observaciones',TRUE);
         $data['iIdUsuarioActualiza'] = $_SESSION[PREFIJO.'_idusuario'];
         $data['dFechaActualiza'] = date("Y-m-d h:i:s");
+        $data['iAutorizado'] = 0;
 
         $where["iIdAvance"] = $this->input->post('idavance',TRUE);
         

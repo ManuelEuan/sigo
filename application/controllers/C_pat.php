@@ -519,6 +519,7 @@ class C_pat extends CI_Controller
                 'vSupuesto'         => $this->input->post('txtSupuesto',true)?: null,
                 'iIdProgramaPresupuestario' => $this->input->post('ProgramaPresupuestario',true) ?: null,
                 'iIdProyectoPrioritario'    => $this->input->post('selectProyectoPrioritario',true)?: null,
+                'iAutorizado' => 1,
             );
 
             $idAct = $this->pat->agregarAct($data);
@@ -544,6 +545,7 @@ class C_pat extends CI_Controller
                     'dUltActTexto'              => null,
                     'dFechaElim'                => null,
                     'vClavePOA'                 => $clavePOA == '' || is_null($clavePOA) ? null : $this->input->post('catPoas',true),
+                    'iAutorizado' => 1,
                 );
 
                 $insert = $this->pat->agregarDetAct($data1);
@@ -737,6 +739,7 @@ class C_pat extends CI_Controller
                 'vResumenNarrativo' => $this->input->post('resumenNarrativo',true) ?: null,
                 'vSupuesto' => $this->input->post('txtSupuesto',true)?: null,
                 'iIdProyectoPrioritario' => $this->input->post('selectProyectoPrioritario',true)?: null,
+                'iAutorizado' => 0,
             );
 
 
@@ -764,6 +767,7 @@ class C_pat extends CI_Controller
                 'nPresupuestoModificado' => floatval(EliminaComas($this->input->post('nPresupuestoModificado',true))),
                 'nPresupuestoAutorizado' => floatval(EliminaComas($this->input->post('nPresupuestoAutorizado',true))),
                 'vClavePOA' => $this->input->post('catPoas',true) ?: null,
+                'iAutorizado' => 0,
             );
             $where1['iIdDetalleActividad'] = $id;
             $this->mseg->actualiza_registro('DetalleActividad', $where1, $data1, $con);
