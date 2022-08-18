@@ -341,7 +341,7 @@
     }
 
     function recalcular(){
-        console.log('se calcula')
+
         //event.preventDefault();
         $.ajax({
             type: "POST",
@@ -352,9 +352,9 @@
 
             success: function(resp) {
                 if (resp == true) {
-                    console.log('correcto')
+
                 } else {
-                    console.log('error')
+
                 }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {

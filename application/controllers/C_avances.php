@@ -761,7 +761,7 @@ class C_avances extends CI_Controller {
         $tipo = $this->ma->obtenerTipo($id_detent);
             
         if($tipo[0]->tipo == 2){
-            $avance_total = ($ultimoAvance->avance/$consulta->nMeta);
+            $avance_total = $ultimoAvance->avance;
         }else{
             $avance_total = $monto_total = $total_beneficiarios = $total_discapacitados = $total_mayahablantes = 0;
             $avance_total = $totales->total_avance;
