@@ -131,6 +131,28 @@ class M_avances extends CI_Model
         return $query;
     }
 
+    public function obtenerUltimoAvance($id_detent,$dFecha=''){
+        $this->db->select('nAvance as avance');
+        $this->db->from('Avance');
+        $this->db->where('iIdDetalleEntregable', $id_detent);
+        $this->db->where('iActivo', 1);
+        $this->db->where('iAprobado', 1);
+        if($dFecha != '') $this->db->where('dFecha', $dFecha);
+        $this->db->order_by('iIdAvance', 'DESC');
+        $this->db->limit(1);
+        $query = $this->db->get()->row();
+        
+        return $query;
+    }
+
+    public function obtenerTipo($id_detent){
+        $sql = 'SELECT "Entregable"."iAcumulativo" as tipo FROM "DetalleEntregable"
+        LEFT JOIN "Entregable" ON "Entregable"."iIdEntregable" = "DetalleEntregable"."iIdEntregable"
+        WHERE "DetalleEntregable"."iIdDetalleEntregable" =' . $id_detent;
+        $query =  $this->db->query($sql);
+		return $query->result();
+    }
+
     public function Min_avance_total($id_detent,$dFecha=''){
         
         $this->db->select('COALESCE(sum("nAvance"),0) AS total_avance, MAX("nEjercido") AS monto_total, 
@@ -297,5 +319,9 @@ class M_avances extends CI_Model
 		$resultado = $query->row();
         return $resultado;
     }
+
+    public function insertCambio($data){
+		return $this->db->insert('Logs', $data);
+	}
 
 }

@@ -57,7 +57,7 @@ class C_entregables extends CI_Controller
         if(isset($_POST['entregable']) && isset($_POST['unidadmedida']) && isset($_POST['sujetoafectado']) 
         && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_detalleactividad'])){
 
-            if($_POST['meta'] > 0){
+            if($_POST['meta']){
 
                 $data['vEntregable'] = $this->input->post('entregable',TRUE);
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
@@ -88,6 +88,7 @@ class C_entregables extends CI_Controller
                 $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
                 $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
                 $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
+                $data['iAutorizado'] = 1;
                 $Variable = $this->input->post('Variable', true);
                 $Letra = $this->input->post('Letra', true);
 
@@ -122,6 +123,7 @@ class C_entregables extends CI_Controller
                     $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
                     $data2['dFechaInicio'] = $this->input->post('fechainicio',true);
                     $data2['dFechaFin'] = $this->input->post('fechafin',true);
+                    $data2['iAutorizado'] = 1;
 
                     $cantidadEntregables = $this->validar_entregables($this->input->post('id_detalleactividad',TRUE));
 
@@ -294,10 +296,10 @@ class C_entregables extends CI_Controller
 
     //Funcion para editar
     public function update(){
-        $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
         
         if(isset($_POST['entregable']) && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_entregable']) && isset($_POST['id_detalleactividad']) && isset($_POST['metamodificada']))
         {
+            $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
             $datosCambiados = array();
             $datosAntiguos = array();
             $seg = new Class_seguridad();
@@ -311,57 +313,29 @@ class C_entregables extends CI_Controller
             }
             //
             $data['vEntregable'] = $this->input->post('entregable',TRUE);
-            if($datosViejos['consulta']->vEntregable != $data['vEntregable']){
-                $datosCambiados['vEntregable'] = $data['vEntregable'];
-                $datosAntiguos['vEntregable'] = $datosViejos['consulta']->vEntregable;
-            }
-            //
+            
             $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
-            if($datosViejos['consulta']->iIdPeriodicidad != $data['iIdPeriodicidad']){
-                $datosCambiados['iIdPeriodicidad'] = $data['iIdPeriodicidad'];
-                $datosAntiguos['iIdPeriodicidad'] = $datosViejos['consulta']->iIdPeriodicidad;
-            }
+            
             $data['vNombreEntregable'] = '.';
             //Agregado Saul
             $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
-            if($datosViejos['consulta']->iIdFormaInd != $data['iIdFormaInd']){
-                $datosCambiados['iIdFormaInd'] = $data['iIdFormaInd'];
-                $datosAntiguos['iIdFormaInd'] = $datosViejos['consulta']->iIdFormaInd;
-            }
+            
             $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
-            if($datosViejos['consulta']->iIdDimensionInd != $data['iIdDimensionInd']){
-                $datosCambiados['iIdDimensionInd'] = $data['iIdDimensionInd'];
-                $datosAntiguos['iIdDimensionInd'] = $datosViejos['consulta']->iIdDimensionInd;
-            }
+            
             $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
-            if($datosViejos['consulta']->nLineaBase!= $data['nLineaBase']){
-                $datosCambiados['nLineaBase'] = $data['nLineaBase'];
-                $datosAntiguos['nLineaBase'] = $datosViejos['consulta']->nLineaBase;
-            }
+            
             $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
-            if($datosViejos['consulta']->vMedioVerifica!= $data['vMedioVerifica']){
-                $datosCambiados['vMedioVerifica'] = $data['vMedioVerifica'];
-                $datosAntiguos['vMedioVerifica'] = $datosViejos['consulta']->vMedioVerifica;
-            }
+            
             $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
-            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
-                $datosCambiados['vFormula'] = $data['vFormula'];
-                $datosAntiguos['vFormula'] = $datosViejos['consulta']->vFormula;
-            }
+            
             $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
-            if($datosViejos['consulta']->vFormula!= $data['vFormula']){
-                $datosCambiados['vFormula'] = $data['vFormula'];
-                $datosAntiguos['vFormula'] = $datosViejos['consulta']->iAcumulativo;
-            }
+
+            $data['iAutorizado'] = 0;
 
             //Actualizar tabla variables
 
             $Variable = $this->input->post('Variable', true);
-            if(count($Variable) != count($datosViejos['Variables'])){
-                echo 'iguales';
-                $datosCambiados['Variable'] = $Variable;
-                $datosAntiguos['Variable'] = $datosViejos['Variables'];
-            }
+            
             $Letra = $this->input->post('Letra', true);
             $idVariable = $this->input->post('idVariable', true);
 
@@ -375,9 +349,13 @@ class C_entregables extends CI_Controller
             if(!$candado)
             {
                 $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
+                
                 $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
+                
                 $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
-                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;    
+                
+                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;
+                
             }
 
             $where = "iIdEntregable =".$id_ent;
@@ -389,11 +367,17 @@ class C_entregables extends CI_Controller
                 $table2 = 'DetalleEntregable';
                 
                 $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
+
                 $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
+                
                 $data2['dFechaInicio'] = $this->input->post('fechainicio',TRUE);
+                
                 $data2['dFechaFin'] = $this->input->post('fechafin',TRUE);
+                
                 $data2['iAnexo'] = (isset($_POST['anexo'])) ? 1:0;
 
+                $data2['iAutorizado'] = 0;
+                
                 if($this->me->modificacion_general($where2,$table2,$data2)){
 
                     $detalleentregable = $this->me->obtener_id_detallentregable($id_ent);
@@ -427,16 +411,16 @@ class C_entregables extends CI_Controller
                 }
             }
 
-            /*$hoy = date('Y-m-d H:i:s');
+            $hoy = date('Y-m-d H:i:s');
 
             $resp = $this->me->insertCambio(array(
                 'iTipoCambio' => 'Indicador',
-                'iAntesCambio' => strval(json_encode($datosAntiguos)),
-                'iDespuesCambio' => strval(json_encode($datosCambiados)),
+                'iAntesCambio' => strval(json_encode($datosViejos['consulta'])),
+                'iDespuesCambio' => '['.strval(json_encode($data)).','.strval(json_encode($data2)).','.strval(json_encode($data3)).']',
                 'iFechaCambio' => $hoy,
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
-            ));*/
+            ));
 
         }else{
             echo 'error';
@@ -832,7 +816,7 @@ class C_entregables extends CI_Controller
                                         $value->nMeta = ($value->nMetaModificada > 0) ? $value->nMetaModificada:$value->nMeta;
                                         $avances_noaprobados = $ma->num_avances_no_aprobados($value->iIdDetalleEntregable);
                                         $icon = ($avances_noaprobados > 0) ? '<i style="color:#E5BE01; font-size:24px;" class="mdi mdi-new-box md-24" title="Hay '.$avances_noaprobados.' avance(s) sin aprobar"></i>':'';
-
+//Aqui
                                         $avance = $ma->suma_avances_total($value->iIdDetalleEntregable)->total_avance;
                                         
                                         $contenido = "'¿Esta usted seguro?',EliminarEntregable,'$value->iIdDetalleEntregable'";

@@ -54,6 +54,10 @@ class C_avances extends CI_Controller {
 
         $data['vFormula'] = $Formula->vFormula;
 
+        $tipo = $this->ma->obtenerTipo($id_detent);
+
+        $data['tipo'] = $tipo[0]->tipo;
+
     	$this->load->view('avances/principal',$data);
 
     }
@@ -76,14 +80,24 @@ class C_avances extends CI_Controller {
     //Funcion para insertar
     public function insert(){
             if(isset($_POST['mes_corte']) && isset($_POST['avance'])){
+                $dataNuevo = array();
                 
                 $data['iIdDetalleEntregable'] = $this->input->post('id_detent',TRUE);
+                $dataNuevo['iIdDetalleEntregable'] = $this->input->post('id_detent',TRUE);
+
                 $data['nAvance'] = EliminaComas($this->input->post('avance',TRUE));
+                $dataNuevo['nAvance'] = $this->input->post('avance',TRUE);
+
                 $data['nEjercido'] = EliminaComas($this->input->post('monto',TRUE)) == "" ? 0 : EliminaComas($this->input->post('monto',TRUE));
+                $dataNuevo['nEjercido'] = EliminaComas($this->input->post('monto',TRUE)) == "" ? 0 : EliminaComas($this->input->post('monto',TRUE));
+
                 $data['iActivo'] = 1;
+                $dataNuevo['iActivo'] = 1;
 
                 $Letras = $this->input->post('letra',TRUE);
+                $dataNuevo['Letras'] = $Letras;
                 $Valores = $this->input->post('valores',TRUE);
+                $dataNuevo['Valores'] = $Valores;
 
                 //echo "Monto=";
                 //echo $data['nEjercido'] ;
@@ -97,65 +111,92 @@ class C_avances extends CI_Controller {
                 $fecha = $anio.'-'.$mes.'-'.$dia;
 
                 $data['dFecha'] = $fecha;
+                $dataNuevo['dFecha'] = $fecha;
+
                 $data['iIdUsuarioActualiza'] = $_SESSION[PREFIJO.'_idusuario'];
+                $dataNuevo['iIdUsuarioActualiza'] = $_SESSION[PREFIJO.'_idusuario'];
+
                 $data['dFechaActualiza'] = date("Y-m-d h:i:s");
+                $dataNuevo['dFechaActualiza'] = date("Y-m-d h:i:s");
                 
                 if(isset($_POST['nBeneficiariosH']) && $_POST['nBeneficiariosH'] != ''){
                     $beneficiarioH = $this->input->post('nBeneficiariosH',TRUE);
+                    $dataNuevo['nBeneficiariosH'] = $beneficiarioH;
                 }else{
                     $beneficiarioH = 0;
+                    $dataNuevo['nBeneficiariosH'] = 0;
                 }
                 if(isset($_POST['nBeneficiariosM']) && $_POST['nBeneficiariosM'] != ''){
                     $beneficiarioM = $this->input->post('nBeneficiariosM',TRUE);
+                    $dataNuevo['nBeneficiariosM'] = $beneficiarioM;
                 }else{
                     $beneficiarioM = 0;
+                    $dataNuevo['nBeneficiariosM'] = 0;
                 }
                 if(isset($_POST['nDiscapacitadosH']) && $_POST['nDiscapacitadosH'] != '' ){
                     $discapacitadoH = $this->input->post('nDiscapacitadosH',TRUE);
+                    $dataNuevo['nDiscapacitadosH'] = $discapacitadoH;
                 }else{
                     $discapacitadoH = 0;
+                    $dataNuevo['nDiscapacitadosH'] = 0;
                 }
                 if(isset($_POST['nDiscapacitadosM']) && $_POST['nDiscapacitadosM'] != ''){
                     $discapacitadoM = $this->input->post('nDiscapacitadosM',TRUE);
+                    $dataNuevo['nDiscapacitadosM'] = $discapacitadoM;
                 }else{
                     $discapacitadoM = 0;
+                    $dataNuevo['nDiscapacitadosM'] = 0;
                 }
                 if(isset($_POST['nLenguaH']) && $_POST['nLenguaH'] != ''){
                     $lenguaindH = $this->input->post('nLenguaH',TRUE);
+                    $dataNuevo['nLenguaH'] = $lenguaindH;
                 }else{
                     $lenguaindH = 0;
+                    $dataNuevo['nLenguaH'] = 0;
                 }
                 if(isset($_POST['nLenguaM']) && $_POST['nLenguaM'] != ''){
                     $lenguaindM = $this->input->post('nLenguaM',TRUE);
+                    $dataNuevo['nLenguaM'] = $lenguaindM;
                 }else{
                     $lenguaindM = 0;
+                    $dataNuevo['nLenguaM'] = 0;
                 }
                 if(isset($_POST['nTerceraEdadH']) && $_POST['nTerceraEdadH'] != ''){
                     $terceraH = $this->input->post('nTerceraEdadH',TRUE);
+                    $dataNuevo['nTerceraEdadH'] = $terceraH;
                 }else{
                     $terceraH = 0;
+                    $dataNuevo['nTerceraEdadH'] = 0;
                 }
                 if(isset($_POST['nTerceraEdadM']) && $_POST['nTerceraEdadM'] != ''){
                     $terceraM = $this->input->post('nTerceraEdadM',TRUE);
+                    $dataNuevo['nTerceraEdadM'] = $terceraM;
                 }else{
                     $terceraM = 0;
+                    $dataNuevo['nTerceraEdadM'] = $terceraM;
                 }
                 if(isset($_POST['nAdolescenteH']) && $_POST['nAdolescenteH'] != ''){
                     $adolecenteH = $this->input->post('nAdolescenteH',TRUE);
+                    $dataNuevo['nAdolescenteH'] = $adolecenteH;
                 }else{
                     $adolecenteH = 0;
+                    $dataNuevo['nAdolescenteH'] = $adolecenteH;
                 }
                 if(isset($_POST['nAdolescenteM']) && $_POST['nAdolescenteM'] != ''){
                     $adolecenteM = $this->input->post('nAdolescenteM',TRUE);
+                    $dataNuevo['nAdolescenteM'] = $adolecenteM;
                 }else{
                     $adolecenteM = 0;
+                    $dataNuevo['nAdolescenteM'] = $adolecenteM;
                 }
 
                 if(isset($_POST['observaciones']) && $_POST['observaciones'] != ''){
                     $observaciones = $this->input->post('observaciones',TRUE);
+                    $dataNuevo['observaciones'] = $observaciones;
                 }
                 else{
                     $observaciones = ' ';
+                    $dataNuevo['observaciones'] = $observaciones;
                 }
                 if(isset($_POST['txtTotal']) && $_POST['txtTotal'] != ''){
                     $totalAvance = $this->input->post('txtTotal',TRUE);
@@ -167,17 +208,21 @@ class C_avances extends CI_Controller {
                     if($sumah == $totalAvance){
                         $beneficiarioH = $totalHround;
                         $beneficiarioM = $dividirTotalM;
+                        $dataNuevo['TbeneficiarioH'] = $beneficiarioH;
+                        $dataNuevo['TbeneficiarioM'] = $beneficiarioM;
                     }else{
                         echo 'Algo fallo';
                     }
                 }
                 else{
                     $totalAvance = 0;
+                    $dataNuevo['totalAvance'] = $totalAvance;
                 }
                 $result = false;
                 $table = 'Avance';
                 if(isset($_POST['municipios'])){
                     $arrMunicipios = $this->input->post('municipios',TRUE);
+                    $dataNuevo['arrMunicipios'] = $arrMunicipios;
                     foreach ($arrMunicipios as $value) {
                         $data['iMunicipio'] = $value;
                         $data['vObservaciones'] = $observaciones;
@@ -191,6 +236,7 @@ class C_avances extends CI_Controller {
                         $data['nTerceraEdadM'] = EliminaComas($terceraM);
                         $data['nAdolescenteH'] = EliminaComas($adolecenteH);
                         $data['nAdolescenteM'] = EliminaComas($adolecenteM);
+                        $data['iAutorizado'] = 1;
 
                         $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
 
@@ -222,12 +268,33 @@ class C_avances extends CI_Controller {
                     $data['nTerceraEdadM'] = EliminaComas($terceraM);
                     $data['nAdolescenteH'] = EliminaComas($adolecenteH);
                     $data['nAdolescenteM'] = EliminaComas($adolecenteM);
+                    $data['iAutorizado'] = 1;
                     //$data['nEjercido'] = 0;
 
                     $data['iAprobado'] = 1; //EliminaComas($lenguaindM);
 
                     $data['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
                     $data['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
+
+                    //Validacion
+                    $dataNuevo['iMunicipio'] = 0;
+                    $dataNuevo['vObservaciones'] = $observaciones;
+                    $dataNuevo['nBeneficiariosH'] = EliminaComas($beneficiarioH);
+                    $dataNuevo['nBeneficiariosM'] = EliminaComas($beneficiarioM);
+                    $dataNuevo['nDiscapacitadosH'] = EliminaComas($discapacitadoH);
+                    $dataNuevo['nDiscapacitadosM'] = EliminaComas($discapacitadoM);
+                    $dataNuevo['nLenguaH'] = EliminaComas($lenguaindH);
+                    $dataNuevo['nLenguaM'] = EliminaComas($lenguaindM);
+                    $dataNuevo['nTerceraEdadH'] = EliminaComas($terceraH);
+                    $dataNuevo['nTerceraEdadM'] = EliminaComas($terceraM);
+                    $dataNuevo['nAdolescenteH'] = EliminaComas($adolecenteH);
+                    $dataNuevo['nAdolescenteM'] = EliminaComas($adolecenteM);
+                    //$data['nEjercido'] = 0;
+
+                    $dataNuevo['iAprobado'] = 1; //EliminaComas($lenguaindM);
+
+                    $dataNuevo['iEmpresas'] = $this->input->post('empresa',TRUE) ?: 0;
+                    $dataNuevo['iBeneficiariosTotales'] = $this->input->post('txtTotal',TRUE) ?: 0;
 
                     $idInsertado = $this->ma->guardado_general($table,$data);
 
@@ -240,6 +307,16 @@ class C_avances extends CI_Controller {
                     }
                 }
                 if($result){
+                    $hoy = date('Y-m-d H:i:s');
+
+                    $resp = $this->ma->insertCambio(array(
+                        'iTipoCambio' => 'Avance',
+                        'iAntesCambio' => 'Avance Creado',
+                        'iDespuesCambio' => strval(json_encode($dataNuevo)),
+                        'iFechaCambio' => $hoy,
+                        'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                        'iAprovacion' => 0,
+                    ));
                     echo true;
                 }else echo false;
 
@@ -680,13 +757,17 @@ class C_avances extends CI_Controller {
 
         $totales = $this->ma->suma_avances_total($id_detent);
         $consulta = $this->ma->mostrar_actividadentregable($id_detent);
-
-        $avance_total = $monto_total = $total_beneficiarios = $total_discapacitados = $total_mayahablantes = 0;
-
-        $avance_total = $totales->total_avance;
-
+        $ultimoAvance = $this->ma->obtenerUltimoAvance($id_detent);
+        $tipo = $this->ma->obtenerTipo($id_detent);
+            
+        if($tipo[0]->tipo == 2){
+            $avance_total = $ultimoAvance->avance;
+        }else{
+            $avance_total = $monto_total = $total_beneficiarios = $total_discapacitados = $total_mayahablantes = 0;
+            $avance_total = $totales->total_avance;
+        }
+        
         $monto_total = $totales->monto_total;
-
 
         $total_beneficiarios = $totales->total_beneficiarios;
         $total_discapacitados = $totales->total_discapacitados;
@@ -1159,6 +1240,7 @@ class C_avances extends CI_Controller {
         $data['vObservaciones'] = $this->input->post('observaciones',TRUE);
         $data['iIdUsuarioActualiza'] = $_SESSION[PREFIJO.'_idusuario'];
         $data['dFechaActualiza'] = date("Y-m-d h:i:s");
+        $data['iAutorizado'] = 0;
 
         $where["iIdAvance"] = $this->input->post('idavance',TRUE);
         
@@ -1177,6 +1259,17 @@ class C_avances extends CI_Controller {
                         );
 
             echo ($this->M_seguridad->actualiza_registro('Avance',$where,$data)) ? true:false;
+
+            $hoy = date('Y-m-d H:i:s');
+
+            $resp = $this->ma->insertCambio(array(
+                'iTipoCambio' => 'Avance',
+                'iAntesCambio' => 'Registro: '.$this->input->post('id',true).' Estatus: 1',
+                'iDespuesCambio' => 'Registro Eliminado: '.$this->input->post('id',true).' Estatus: 0',
+                'iFechaCambio' => $hoy,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'iAprovacion' => 0,
+            ));
 
             $this->ma->eliminarVariableAvance($where["iIdAvance"]);
         }else echo false;
@@ -1197,6 +1290,17 @@ class C_avances extends CI_Controller {
                             'dFechaActualiza' => date("Y-m-d h:i:s")
                         );
             $this->M_seguridad->actualiza_registro('Avance',$where,$data,$con);
+            
+            $hoy = date('Y-m-d H:i:s');
+
+            $resp = $this->ma->insertCambio(array(
+                'iTipoCambio' => 'Avance',
+                'iAntesCambio' => 'Registro: '.$value,
+                'iDespuesCambio' => 'Registro Eliminado: '.$value.' Estatus: 0',
+                'iFechaCambio' => $hoy,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'iAprovacion' => 0,
+            ));
             
         }
 

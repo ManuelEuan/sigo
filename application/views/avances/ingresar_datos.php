@@ -303,7 +303,13 @@
         let totalAvance = $("#totalAvance").text();
         let myArray     = totalAvance.split("/");
         let avance      = $("#avance").val();
-        let nuevoValor  = parseFloat(myArray[0]) + parseFloat(avance);
+        var tipo = <?= $tipo ?: 1 ?>;
+        var nuevoValor
+        if(tipo == 2){
+            nuevoValor  = parseFloat(avance);
+        }else{
+            nuevoValor  = parseFloat(myArray[0]) + parseFloat(avance);
+        }
         nuevoValor      = nuevoValor + "/" + myArray[1];
 
         $.ajax({
@@ -401,7 +407,7 @@
 
         for(i = 0; i <= formula.length; i++){
             if(formula[i] != undefined){
-                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')'){
+                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')' && formula[i] != ' '){
                     estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], arr[contadorValores]))
                     contadorValores = contadorValores + 1
                 }else{
