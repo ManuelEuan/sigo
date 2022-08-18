@@ -820,7 +820,7 @@ class C_entregables extends CI_Controller
                                         $tipo = $ma->obtenerTipo($value->iIdDetalleEntregable);
                                         if($tipo[0]->tipo == 2){
                                             $ultimoAvance = $ma->obtenerUltimoAvance($value->iIdDetalleEntregable);
-                                            $avance = ($ultimoAvance->avance/$value->nMeta);
+                                            $avance = $ultimoAvance->avance;
                                         }else{
                                             $avance = $ma->suma_avances_total($value->iIdDetalleEntregable)->total_avance;
                                         }
