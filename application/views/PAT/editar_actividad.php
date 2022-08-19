@@ -1191,7 +1191,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             $('#nPresupuestoAutorizado').val('0');
         } else {
             if (actividad == 'poa') {
-                createSelectPOA();
+                //createSelectPOA();
             }
         }
     });
@@ -1217,8 +1217,8 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                 dependenciaID = $('#iddependenciaSesion').val();
             }
 
-            console.log("dependenciaID", dependenciaID);
-            console.log("arrayDep", arrayDep);
+            /*console.log("dependenciaID", dependenciaID);
+            console.log("arrayDep", arrayDep);*/
             arrayDep.forEach(element => {
                 if (element.id == dependenciaID) {
                     nombreDep = removeAccents(element.valor);
@@ -1238,7 +1238,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
             if (peticion) {
                 var id = $('#id').val();
-                $.ajax({
+                /*$.ajax({
                     type: "POST",
                     url: "<?= base_url() ?>C_pat/validarListaPOA",
                     data: {
@@ -1264,7 +1264,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                     error: function(XMLHHttRequest, textStatus, errorThrown) {
                         //console.log(XMLHHttRequest);
                     }
-                });
+                });*/
 
             } else {
                 proyectos.forEach((value) => {

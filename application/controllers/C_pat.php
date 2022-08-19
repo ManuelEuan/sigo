@@ -239,16 +239,17 @@ class C_pat extends CI_Controller
             //Se trabaja con el catalogo de POAS
             $arrayDependencias  = $this->pat->getDependenciaById($data3['consulta'][0]->iIdDependencia );
             $dependencia        = $arrayDependencias[0]->vDependencia;
-            $catalogosPOA       = $this->validarListaPOAEdit($id);
+            //$catalogosPOA       = $this->validarListaPOAEdit($id);
             $dependencia        = $this->eliminar_tildes($dependencia);
             
-            foreach ($catalogosPOA as $value) {
+            /*foreach ($catalogosPOA as $value) {
                 $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
                 if(strtoupper($valorFinanzas) == strtoupper($dependencia)) {
                     $selected =  $value['numeroProyecto'] == $data3['consulta'][0]->vcattipoactividad ? 'selected' : '';
                     $catPoas .= '<option value="'.$value['numeroProyecto'].'" '.$selected.'>'.$value['nombreProyecto'].'</option>'; 
                 }
-            }
+            }*/
+            $catPoas = '';
 
             // var_dump($iIdActividad);
             // var_dump($data3['consulta'][0]->iIdDependencia );
@@ -2117,7 +2118,7 @@ class C_pat extends CI_Controller
      * @return void
      */
     public function updateMontoActividades(){
-        $catalogoPOAS   = $this->getCatalogoPOA(false);
+        /*$catalogoPOAS   = $this->getCatalogoPOA(false);
         $datos          = json_decode($catalogoPOAS, true);
 
         foreach ($datos['datos'] as $key => $value) {
@@ -2131,7 +2132,7 @@ class C_pat extends CI_Controller
                 $this->pat->updateMontoActividades($array, $value['aprobado']);
         }
 
-        echo("finalizo");
+        echo("finalizo");*/
     }
 
     /**
@@ -2172,8 +2173,8 @@ class C_pat extends CI_Controller
     }
 
     function actualizarValoresPOA(){
-        $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
-        echo var_dump($catalogosPOA);
+        /*$catalogosPOA   = json_decode($this->getCatalogoPOA(false));
+        echo var_dump($catalogosPOA);*/
     }
 
     /**
@@ -2213,7 +2214,7 @@ class C_pat extends CI_Controller
     }
 
     function validarListaPOA(){
-        $catalogosPOA       = $this->getCatalogoPOA(false);
+        /*$catalogosPOA       = $this->getCatalogoPOA(false);
         $datos              = json_decode($catalogosPOA, true);
         $arrayResultados    = array();
         $arrayElegidos      = array();
@@ -2260,12 +2261,12 @@ class C_pat extends CI_Controller
             }
         }
         
-        echo json_encode($arrayResultados);
+        echo json_encode($arrayResultados);*/
     }
 
 
     function validarListaPOAEdit($id){
-        $catalogosPOA       = $this->getCatalogoPOA(false);
+        /*$catalogosPOA       = $this->getCatalogoPOA(false);
         $datos              = json_decode($catalogosPOA, true);
         $arrayElegidos      = array();
         $arrayResultados    = array();
@@ -2314,11 +2315,11 @@ class C_pat extends CI_Controller
             }
         }
         
-        return $arrayResultados;
+        return $arrayResultados;*/
     }
 
     function actualizarProyectosNuevos(){
-        $catalogosPOA       = $this->getCatalogoPOA(false);
+        /*$catalogosPOA       = $this->getCatalogoPOA(false);
         $datos              = json_decode($catalogosPOA, true);
         $arrayElegidos     = array();
         $respuestaElegidos = $this->pat->obtenerProyectos();
@@ -2351,7 +2352,7 @@ class C_pat extends CI_Controller
             }
         }
 
-        echo 'Finalizado';
+        echo 'Finalizado';*/
     }
  
     function guardarLog(){
