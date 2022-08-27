@@ -2172,8 +2172,8 @@ class C_pat extends CI_Controller
     }
 
     function actualizarValoresPOA(){
-        /*$catalogosPOA   = json_decode($this->getCatalogoPOA(false));
-        echo var_dump($catalogosPOA);*/
+        $catalogosPOA   = json_decode($this->getCatalogoPOA(false));
+        echo var_dump($catalogosPOA);
     }
 
     /**
