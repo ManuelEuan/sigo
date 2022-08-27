@@ -235,7 +235,7 @@
 <script type="text/javascript">
     $(document).ready(function(){
 
-        //obtenerPOAS();
+        obtenerPOAS();
         $('.count').each(function () {
             $(this).prop('Counter',0).animate({
                 Counter: $(this).text()

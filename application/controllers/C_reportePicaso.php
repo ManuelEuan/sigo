@@ -112,8 +112,8 @@ class C_reportePicaso extends CI_Controller {
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
 
-        /*$catalogosPOA   = $this->getCatalogoPOA(false);
-        $datos = json_decode($catalogosPOA, true);*/
+        $catalogosPOA   = $this->getCatalogoPOA(false);
+        $datos = json_decode($catalogosPOA, true);
 
 
 
@@ -141,7 +141,7 @@ class C_reportePicaso extends CI_Controller {
                 $singleRow = WriterEntityFactory::createRow($cells,$rowStyle); 
                 $writer->addRow($singleRow);
 
-                /*foreach ($datos['datos'] as $value) {
+                foreach ($datos['datos'] as $value) {
                     $valorFinanzas = $this->eliminar_tildes($value['dependenciaEjecutora']);
 
                         $cells = [
@@ -157,7 +157,7 @@ class C_reportePicaso extends CI_Controller {
                         $singleRow = WriterEntityFactory::createRow($cells);
                         $writer->addRow($singleRow);
                     
-                }*/
+                }
 
                 $writer->close();
             

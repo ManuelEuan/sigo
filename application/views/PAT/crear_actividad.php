@@ -1086,7 +1086,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                 $("#mostrarPOAS").html(html);
 
                 if (peticion) {
-                    /*$.ajax({
+                    $.ajax({
                         type: "POST",
                         url: "<?= base_url() ?>C_pat/validarListaPOA",
                         success: function(resp) {
@@ -1104,7 +1104,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         error: function(XMLHHttRequest, textStatus, errorThrown) {
                             console.log(XMLHHttRequest);
                         }
-                    });*/
+                    });
                 } else {
                     proyectos.forEach((value) => {
                         let nombreFinanzas = removeAccents(value.dependenciaEjecutora);

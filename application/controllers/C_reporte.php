@@ -128,8 +128,8 @@ class C_reporte extends CI_Controller {
         $obtenerRol = $mrep->getRol($_SESSION[PREFIJO.'_idusuario']);
         $query = $mrep->reporte_pat($anio,$eje,$dep,$tabla,$whereString, $obtenerRol[0]->iIdRol);
 
-        //$catalogosPOA   = $this->getCatalogoPOA(false);
-        //$datos = json_decode($catalogosPOA, true);
+        $catalogosPOA   = $this->getCatalogoPOA(false);
+        $datos = json_decode($catalogosPOA, true);
 
         $arrayResultados = array();
 
@@ -258,11 +258,11 @@ class C_reporte extends CI_Controller {
             foreach ($records as $rec)
             {
                 $proyecto = '';
-                /*foreach ($datos['datos'] as $key => $value) {
+                foreach ($datos['datos'] as $key => $value) {
                     if($rec->vcattipoactividad == $value['numeroProyecto']){
                         $proyecto = $value['nombreProyecto'];
                     }
-                }*/
+                }
                 
                 $cells = [
                     WriterEntityFactory::createCell($rec->ejedependencia),
