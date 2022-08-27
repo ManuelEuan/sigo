@@ -381,6 +381,24 @@ class C_entregables extends CI_Controller
                 if($this->me->modificacion_general($where2,$table2,$data2)){
 
                     $detalleentregable = $this->me->obtener_id_detallentregable($id_ent);
+                    $this->load->library('Class_mail');
+                    $correo =  $_SESSION[PREFIJO.'_correo'];
+                    $mail = new Class_mail();
+    
+                    $template = 'templates/entregable-actualizada.html';
+                    $mensaje = file_get_contents($template);
+                    // vActividad
+                    $nombre = htmlentities($this->input->post('entregable',TRUE), ENT_QUOTES, "UTF-8");
+                    // $url = base_url().'C_seguridad/confirmar_correo?id='.$idusuario.'&token='.$token;
+                    $mensaje = str_replace('{{var_nombre_dest}}', $this->input->post('entregable',TRUE), $mensaje);
+                    $mensaje = str_replace('{{var_url}}', $correo, $mensaje);
+    
+                    // $mensaje ="Hola mundo";
+                    
+                    $asunto = utf8_decode('Se ha detectado una nueva actualización');
+    
+                    if($mail->enviar_correo($correo,$asunto,$mensaje)) echo '';		    			
+                    else echo 'No se ha podido enviar el correo';
                     echo  $detalleentregable->iIdDetalleEntregable;
                 }
             }
