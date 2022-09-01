@@ -218,6 +218,15 @@ class M_entregables extends CI_Model{
 
     }
 
+    public function obtenerAntes($id_entregable, $id_detact){
+        $sql = 'SELECT e."vEntregable", e."iIdPeriodicidad", e."vNombreEntregable", e."iIdFormaInd", e."iIdDimensionInd", e."nLineaBase", e."vMedioVerifica", e."vFormula", e."iAcumulativo", e."iAutorizado", e."iIdSujetoAfectado", e."iIdUnidadMedida", e."iMunicipalizacion", e."iMismosBeneficiarios", de."nMeta", de."nMetaModificada", de."dFechaInicio", de."dFechaFin", de."iAnexo", de."iAutorizado" FROM "Entregable" as e
+        INNER JOIN "DetalleEntregable" as de ON e."iIdEntregable" = de."iIdEntregable"
+        INNER JOIN "UnidadMedida" as um ON e."iIdUnidadMedida" = um."iIdUnidadMedida"
+        WHERE e."iIdEntregable" = '.$id_entregable.' AND de."iIdDetalleActividad" = '.$id_detact;
+        return $this->db->query($sql)->result();
+
+    }
+
     //Muestra las metas de los entregables por municipios
     public function mostrar_metas_municipios($id_mun,$id_detent){
 

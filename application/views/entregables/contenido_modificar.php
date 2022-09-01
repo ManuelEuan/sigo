@@ -381,19 +381,7 @@
 
             success: function(resp) {
                 if (resp >0) {
-                    /*if(cambiosN != ''){
-                        $.ajax({
-                            type: "POST",
-                            url: "<?= base_url() ?>C_pat/guardarLog",
-                            data: {
-                                cambiosN:cambiosN,
-                                cambiosA:cambiosA
-                            },
-                            success: function (response) {
-                                    console.log(response)
-                            }
-                        });
-                    }*/
+
                     CalcularPorcentajeActividad();
                     alerta('Modificado exitosamente', 'success');
                     regresarmodulo();

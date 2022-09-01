@@ -20,4 +20,34 @@ class C_logs extends CI_Controller
 
         $this->load->view('Logs/index', $data);
     }
+
+    public function obtenerCambios(){
+        $id = $this->input->post('id',true);
+        //$cambios = $this->ml->obtenerCambios();
+    }
+
+    public function detalle(){
+        $id = $this->input->post('id',true);
+        $cambios = $this->ml->obtenerCambios($id);
+
+        /**
+         * Aqui va todo
+         */
+        $tipo = $cambios->iTipoCambio;
+
+        switch ($tipo) {
+            case 'Indicador':
+                # code...
+                
+                break;
+            
+            default:
+                # code...
+                break;
+        }
+
+        $data['cambios'] = $cambios;
+        $this->load->view('Logs/detalle', $data);
+    }
+
 }

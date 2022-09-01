@@ -255,7 +255,7 @@ class C_entregables extends CI_Controller
         }
         $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
 
-        $data['consulta'] = $this->me->mostrar_entregable_actual($data['id_ent'], $data['id_detact']);
+        $data['consulta'] = $this->me->obtenerAntes($data['id_ent'], $data['id_detact']);
         $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
 
         if($componente != NULL){
@@ -412,14 +412,15 @@ class C_entregables extends CI_Controller
             }
 
             $hoy = date('Y-m-d H:i:s');
-
+            $merge = array_merge($data, $data2);
             $resp = $this->me->insertCambio(array(
                 'iTipoCambio' => 'Indicador',
-                'iAntesCambio' => strval(json_encode($datosViejos['consulta'])),
-                'iDespuesCambio' => '['.strval(json_encode($data)).','.strval(json_encode($data2)).','.strval(json_encode($data3)).']',
+                'iAntesCambio' => strval(json_encode($datosViejos['consulta'][0])),
+                'iDespuesCambio' => strval(json_encode($merge)),
                 'iFechaCambio' => $hoy,
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
+                'vNombre' => $this->input->post('entregable',TRUE),
             ));
 
         }else{

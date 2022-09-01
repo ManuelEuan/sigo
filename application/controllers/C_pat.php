@@ -824,6 +824,7 @@ class C_pat extends CI_Controller
                 'iFechaCambio' => $hoy,
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
+                'iIdCambio' => $idActividad,
             ));
 
             // Finalizar transaccion
