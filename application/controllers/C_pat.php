@@ -829,6 +829,24 @@ class C_pat extends CI_Controller
 
             // Finalizar transaccion
             if ($this->mseg->terminar_transaccion($con) == true) {
+                $this->load->library('Class_mail');
+                $correo =  $_SESSION[PREFIJO.'_correo'];
+                $mail = new Class_mail();
+
+                $template = 'templates/actividad-actualizada.html';
+                $mensaje = file_get_contents($template);
+                // vActividad
+                $nombre = htmlentities($this->input->post('NombAct',true), ENT_QUOTES, "UTF-8");
+                // $url = base_url().'C_seguridad/confirmar_correo?id='.$idusuario.'&token='.$token;
+                $mensaje = str_replace('{{var_nombre_dest}}', $this->input->post('NombAct',true), $mensaje);
+                $mensaje = str_replace('{{var_url}}', $correo, $mensaje);
+
+                // $mensaje ="Hola mundo";
+                
+                $asunto = utf8_decode('Se ha detectado una nueva actualización');
+
+                if($mail->enviar_correo($correo,$asunto,$mensaje)) echo '';		    			
+                else echo 'No se ha podido enviar el correo';
                 echo 'Correcto';
             } else {
                 echo 'Error';

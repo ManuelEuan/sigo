@@ -64,6 +64,8 @@ class C_seguridad extends CI_Controller {
 							$_SESSION[PREFIJO.'_rol'] = $du->vRol;
 	                        $_SESSION[PREFIJO.'_nombre'] = $du->vNombre.' '.$du->vPrimerApellido.' '.$du->vSegundoApellido ;
 	                        $_SESSION[PREFIJO.'_usuario'] = $du->vUsuario;
+	                        $_SESSION[PREFIJO.'_correo'] = $du->vCorreo;
+
 	                        
 	                        echo 'correcto';
 	                    } else echo 'Datos incorrectos';

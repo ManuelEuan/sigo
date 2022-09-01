@@ -43,44 +43,42 @@
         </div>
     </div>
 </div>
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-bordered display" style="width:100%" id="grid">
-                        <thead>
-                            <tr>
-                                <th>Numero de Proyecto</th>
-                                <th>Aprobado</th>
-                                <th>Pagado</th>
-                                <th>Dependencia</th>
-                                <th>Nombre Proyecto</th>
-                                <th>Fecha Aprobacion</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($proyectos as $p){ ?>
-                                <tr>
-                                    
-                                    <td><?= $p->numeroProyecto?></td>
-                                    <td><?= $p->aprobado ?></td>
-                                    <td><?= $p->pagado ?></td>
-                                    <td><?= $p->dependenciaEjecutora ?></td>
-                                    <td><?= $p->nombreProyecto ?></td>
-                                    <td><?= $p->fechaAprobacion ?></td>
-                                    
-                                </tr>
-                            <?php } ?>
-                        </tbody>
-                    </table>
+<div id="selectTipo" class="selectTipo">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radSelectTipo" id="selectParticipacion" value="actual" checked>
+                        <label class="form-check-label" for="selectParticipacion" style="font-size: 16px;">Existente</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radSelectTipo" id="selectIntervencion" value="nuevo">
+                        <label class="form-check-label" for="selectIntervencion">Nuevos registros</label>
+                    </div>
                 </div>
-            </div>
+<div id="divPicasoAct">
+        <div id="contenedor" class="content">
+            <?php 
+            
+            include_once('proyecto_list.php');
+            ?>
         </div>
-    </div>
-</div>
+     </div>
+  
+        <div id="divPicasoNew" class="content">
+            <?php 
+            
+            include_once('poa_list.php');
+            ?>
+        </div>
+
+
+
+
+
+
+
 
 <script>
+    $("#divPicasoNew").hide();
+
     $(document).ready(function() {
         table = $('#grid').DataTable({
             "displayStart":parseInt($('#start').val()),
@@ -97,6 +95,30 @@
         //actualizarAvances();
     });
 
+    $('input[type=radio][name=radSelectTipo]').change(function() {
+            if(this.value == 'actual') {
+               $("#divPicasoAct").show();
+               $("#divPicasoNew").hide();
+               tipoRegistro = 'actual';
+           
+               console.log('Picaso actual')
+
+         
+
+            }
+            else if(this.value == 'nuevo'){
+                $("#divPicasoNew").show();
+                $("#divPicasoAct").hide();
+                tipoRegistro = 'nuevo';
+              
+
+               console.log('Picaso Nuevo')
+           
+
+
+
+            }
+    });
     function listar(valor)
     {
 
