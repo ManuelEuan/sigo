@@ -35,7 +35,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" id="contenedor">
     <div class="col-12">
         <div class="card">
             <div class="card-body">
@@ -44,8 +44,7 @@
                         <thead>
                             <tr>
                                 <th>Tipo Cambio</th>
-                                <th>Antes</th>
-                                <th>Despues</th>
+                                <th>Nombre</th>
                                 <th>Fecha</th>
                                 <th>Aprobado</th>
                                 <th>idUsuario</th>
@@ -57,8 +56,7 @@
                                 <tr>
                                     
                                     <td><?= $p->iTipoCambio ?></td>
-                                    <td><?= $p->iAntesCambio ?></td>
-                                    <td><?= $p->iDespuesCambio ?></td>
+                                    <td><button class="btn btn-success" onclick="verDetalles(<?= $p->iIdLog ?>);"> <?= ($p->vNombre != '') ? $p->vNombre : 'Ver' ?> </button></td>
                                     <td><?= $p->iFechaCambio ?></td>
                                     <td><?= $p->iAprovacion ?></td>
                                     <td><?= $p->iIdUsuario ?></td>
@@ -87,4 +85,8 @@
         });
 
     });
+
+    function verDetalles(idLog){
+        cargar('<?= base_url() ?>C_logs/detalle', '#contenedor', 'POST', 'id=' + idLog);
+    }
 </script>
