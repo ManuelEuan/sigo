@@ -329,7 +329,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     <hr>
 
                     <br><br>
-
+                    <?php if (!isset($ejes) && !isset($dependencias)) { ?>
                     <div class="content">
 
                         <div class="row">
@@ -358,6 +358,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         </div>
 
                     </div>
+                    <?php } ?>
                     <br>
                     <div class="content">
                         <div class="row">
@@ -430,7 +431,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         <div class="row">
                             <div class="col-md-12 mb-10">
                                 <label for="validationCustom04">Supuesto</label>
-                                <textarea class="form-control input-lectura" id="txtSupuesto" name="txtSupuesto" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?= htmlspecialchars($consulta->vDescripcion) ?></textarea>
+                                <textarea class="form-control input-lectura" id="txtSupuesto" name="txtSupuesto" aria-invalid="false" placeholder="" cols="40" rows="5" style=""><?= htmlspecialchars($consulta->vDescripcion) ?></textarea>
                                 <div class="invalid-feedback">
                                     Este campo no puede estar vacio.
                                 </div>

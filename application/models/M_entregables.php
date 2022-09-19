@@ -507,6 +507,16 @@ class M_entregables extends CI_Model{
     public function insertCambio($data){
 		return $this->db->insert('Logs', $data);
 	}
+
+    public function tieneMIR($idDetalle){
+        $sql = 'SELECT "iIncluyeMIR" FROM "Actividad"
+        LEFT JOIN "DetalleActividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"
+        LEFT JOIN "DetalleEntregable" ON "DetalleEntregable"."iIdDetalleActividad" = "DetalleActividad"."iIdDetalleActividad"
+        LEFT JOIN "Entregable" ON "Entregable"."iIdEntregable" = "DetalleEntregable"."iIdEntregable"
+        WHERE "Entregable"."iIdEntregable" = '. $idDetalle;
+        return $this->db->query($sql)->result();
+    }
+
 }
 
 ?>
