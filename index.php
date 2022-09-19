@@ -73,11 +73,8 @@ switch (ENVIRONMENT)
 
 	case 'testing':
 	case 'production':
-		//@ini_set('log_errors','On');
-		//@ini_set('display_errors','Off');
-
-		error_reporting(-1);
-		ini_set('display_errors', 1);
+		@ini_set('log_errors','On');
+		@ini_set('display_errors','Off');
 		 
 		if (version_compare(PHP_VERSION, '5.3', '>='))
 		{
