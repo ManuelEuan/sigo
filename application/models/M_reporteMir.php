@@ -334,8 +334,8 @@ return $resultado;
     {
       $barra = "' | '";
       $select ='SELECT DISTINCT
-			STRING_AGG (DISTINCT "Entregable"."vEntregable",' .$barra. ') as indicador,
-			STRING_AGG (DISTINCT "Entregable"."vMedioVerifica",' .$barra. ') as vmedioverifica,
+			STRING_AGG ("Entregable"."vEntregable",' .$barra. ') as indicador,
+			STRING_AGG ("Entregable"."vMedioVerifica",' .$barra. ') as vmedioverifica,
       "PED2019Eje"."vEje", 
       "Dependencia"."vDependencia", 
       "Actividad"."iIdActividad", 
