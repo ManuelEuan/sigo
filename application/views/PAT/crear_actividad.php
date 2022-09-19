@@ -329,7 +329,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     <hr>
 
                     <br><br>
-                    <?php if (!isset($ejes) && !isset($dependencias)) { ?>
+                    <?php if (isset($ejes) && isset($dependencias)) { ?>
                     <div class="content">
 
                         <div class="row">

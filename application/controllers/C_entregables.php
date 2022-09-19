@@ -47,6 +47,7 @@ class C_entregables extends CI_Controller
         $data['dimension'] = $this->me->obtenerDimension();
 
         $data['municipios'] = $lib->options_multiselect('municipios',[]);
+        $rsp = $this->me->tieneMIR($data['id_detact']);
         $incluyeMIR = false;
         if($rsp[0]->iIncluyeMIR == 1){
             $incluyeMIR = true;
@@ -231,7 +232,7 @@ class C_entregables extends CI_Controller
         $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
         $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
         $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
-        $rsp = $this->me->tieneMIR($data['id_ent']);
+        $rsp = $this->me->tieneMIR($data['id_detact']);
         if($rsp[0]->iIncluyeMIR == 1){
             $incluyeMIR = true;
         }

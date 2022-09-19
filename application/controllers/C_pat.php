@@ -529,8 +529,10 @@ class C_pat extends CI_Controller
             //     $this->pat->insertarActividadAgromerada(array('iIdActividadPadre' => 1, 'iIdActividadHija' => $t));
             // }
             // $tematicas = $this->input->post('idActividadd', true);
-            foreach($idActividadAglomera as $t){
-                $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
+            if(isset($idActividadAglomera)){
+                foreach($idActividadAglomera as $t){
+                    $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
+                }
             }
 
             if ($idAct > 0) {
