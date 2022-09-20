@@ -47,7 +47,8 @@
                                 <th>Nombre</th>
                                 <th>Fecha</th>
                                 <th>Aprobado</th>
-                                <th>idUsuario</th>
+                                <th>Nombre usuario</th>
+                                <th>Dependencia</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -59,13 +60,22 @@
                                     <td><button class="btn btn-success" onclick="verDetalles(<?= $p->iIdLog ?>);"> <?= ($p->vNombre != '') ? $p->vNombre : 'Ver' ?> </button></td>
                                     <td><?= $p->iFechaCambio ?></td>
                                     <td><?= $p->iAprovacion ?></td>
-                                    <td><?= $p->iIdUsuario ?></td>
-                                    <td>
-                                        <select class="form-control" name="" id="">
-                                            <option value="">seleccione</option>
-                                            <option value="<?= $p->iIdLog ?>">Aprobar</option>
-                                        </select>
-                                    </td>
+                                    <td><?= $p->uNombre .' '.$p->vPrimerApellido.' '. $p->vSegundoApellido?></td>
+                                    <td><?= $p->vDependencia?></td>
+                                    <?php 
+                                        if($p->iAprovacion == 0){?>
+                                        
+                                            <td><button class="btn btn-success" onclick="aprobarCambios(<?= $p->iIdLog.' ,'. $p->iIdCambio ?>);"> Aprobar Cambios </button></td>
+                                            
+                                    <?php 
+                                        }else{
+                                    ?>
+                                            <td><button class="btn btn-success" disable>Cambios aprobados</button></td>
+                                            
+                                    <?php 
+                                        }
+                                    ?>
+
                                 </tr>
                             <?php } ?>
                         </tbody>
@@ -76,12 +86,13 @@
     </div>
 </div>
 
+
 <script>
     $(document).ready(function() {
         table = $('#grid').DataTable({
             "displayStart":parseInt($('#start').val()),
             "pageLength": parseInt($('#length').val()),
-            "order": [[ 2, "asc" ]]
+            "order": [[ 2, "DESC" ]]
         });
 
     });
@@ -89,4 +100,71 @@
     function verDetalles(idLog){
         cargar('<?= base_url() ?>C_logs/detalle', '#contenedor', 'POST', 'id=' + idLog);
     }
+    
+    function aprobarCambios(iIdAccion, iIdCambio) {
+        var1 = iIdAccion || '';
+            swal({
+                title: '¿Desea aprobar los cambios?',
+                /*text: mensaje,*/
+                //icon: 'info',
+                type: "warning",   
+                showCancelButton: true,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "Confirmar",   
+                cancelButtonText: "Cancelar",
+            }).then((confirm) => {
+
+                if(confirm.hasOwnProperty('value')){
+                    console.log(iIdAccion);
+                    $.ajax({
+                        type: "POST",
+                        url: "<?= base_url() ?>C_logs/aprobarCambios",
+                        data: {
+                            iIdAccion: iIdAccion,
+                            iIdCambio: iIdCambio
+                        },
+                        success: function(resp) {
+                            // $('#idActividad').empty();
+                            // var parsedData = JSON.parse(resp);
+                            // for (let i = 0; i <= parsedData.length; i++) {
+                            //     if (parsedData[i]?.vActividad != undefined) {
+                            //         //$('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
+                            //     }
+                            // }
+                            // $('.selectpicker').selectpicker('refresh');
+
+
+                        },
+                        error: function(XMLHHttRequest, textStatus, errorThrown) {
+                            console.log(XMLHHttRequest);
+                        }
+                    });
+                } 
+            });
+
+        // $.ajax({
+        //     type: "POST",
+        //     url: "<?= base_url() ?>C_logs/aprobarCambios",
+        //     data: {
+        //         iIdAccion: iIdAccion
+        //     },
+        //     success: function(resp) {
+        //         // $('#idActividad').empty();
+        //         // var parsedData = JSON.parse(resp);
+        //         // for (let i = 0; i <= parsedData.length; i++) {
+        //         //     if (parsedData[i]?.vActividad != undefined) {
+        //         //         //$('#idActividad').append('<option value="' + parsedData[i]?.iIdActividad + '">' + parsedData[i]?.vActividad + '</option>')
+        //         //     }
+        //         // }
+        //         // $('.selectpicker').selectpicker('refresh');
+
+
+        //     },
+        //     error: function(XMLHHttRequest, textStatus, errorThrown) {
+        //         console.log(XMLHHttRequest);
+        //     }
+        // });
+
+        }
+
 </script>
