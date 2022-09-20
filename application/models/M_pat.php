@@ -329,6 +329,17 @@ class M_pat extends CI_Model
 
 		return $this->db->query($sql)->result();
 	}
+	public function obtenerAntes($id)
+	{
+		$sql = 'SELECT act."iIdActividad",detAct."iAnio", detAct."dInicio", detAct."dFin", detAct."iReactivarEconomia", detAct."nPresupuestoModificado", detAct."nPresupuestoAutorizado", detAct."vClavePOA", detAct."iAutorizado",act."vActividad", act."vNombreActividad",  act."vObjetivo", act."vDescripcion",act."iODS", act."vResponsable", act."vCargo", act."vCorreo", act."vTelefono", act."vJustificaCambio", act."vAccion", act."vEstrategia", act."iReto", act.iideje, act.vtipoactividad, act.vcattipoactividad, act."iIncluyeMIR", act."iAglomeraMIR",act."iIdActividadMIR","iIdNivelMIR", act."iIdProgramaPresupuestario", act."vResumenNarrativo", act."vSupuesto",act."iIdProyectoPrioritario", act."iIdDependencia"  FROM "DetalleActividad" detAct
+		INNER JOIN "Actividad" act on act."iIdActividad" = detAct."iIdActividad" 
+		INNER JOIN "Dependencia" d on d."iIdDependencia" = act."iIdDependencia" 
+		INNER JOIN "DependenciaEje" de on de."iIdDependencia" = d."iIdDependencia"  
+		WHERE detAct."iIdDetalleActividad" ='.$id.'
+		LIMIT 1';
+
+		return $this->db->query($sql)->result();
+	}
 
 	public function validaralineaneacionactividad($idactividad)
 	{

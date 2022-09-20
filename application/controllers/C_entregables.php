@@ -372,8 +372,8 @@ class C_entregables extends CI_Controller
             $where = "iIdEntregable =".$id_ent;
             $table = 'Entregable';
 
-            if($this->me->modificacion_general($where,$table,$data))
-            {                
+            // if($this->me->modificacion_general($where,$table,$data))
+            // {                
                 $where2 = array('iIdEntregable' => $id_ent, 'iIdDetalleActividad' => $this->input->post('id_detalleactividad',TRUE));
                 $table2 = 'DetalleEntregable';
                 
@@ -412,7 +412,7 @@ class C_entregables extends CI_Controller
                     else echo 'No se ha podido enviar el correo';
                     echo  $detalleentregable->iIdDetalleEntregable;
                 }
-            }
+            // }
 
             if($this->me->eliminar_compromiso($id_ent)){
 
@@ -450,6 +450,8 @@ class C_entregables extends CI_Controller
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
                 'vNombre' => $this->input->post('entregable',TRUE),
+                'iIdCambio' => $id_ent,
+
             ));
 
         }else{

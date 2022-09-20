@@ -568,7 +568,7 @@ class C_pat extends CI_Controller
             $seg    = new Class_seguridad();
             $opt    = new Class_options();
             $id     = $idAct;//$this->input->post('id',true); // iIdDetalleActividad
-            $data3['consulta']  = $this->pat->preparar_update($id);
+            $data3['consulta']  = $this->pat->obtenerAntes($id);
             $obtenerRol = $this->pat->getRol($_SESSION[PREFIJO.'_idusuario']);
 
             //Obtengo el select de los ejes
@@ -747,7 +747,7 @@ class C_pat extends CI_Controller
 
             if($iIdDependencia > 0) $data['iIdDependencia'] = $iIdDependencia;
             $where['iIdActividad'] = $idActividad;
-            $this->mseg->actualiza_registro('Actividad', $where, $data, $con);
+            // $this->mseg->actualiza_registro('Actividad', $where, $data, $con);
             //Validacion Campos//
             $datosCambiados = array();
             $datosAntiguos = array();
@@ -819,11 +819,11 @@ class C_pat extends CI_Controller
                 }
             }
             $hoy = date('Y-m-d H:i:s');
-
+            $merge = array_merge($data1,$data);
             $resp = $this->pat->insertCambio(array(
                 'iTipoCambio' => 'Acción',
-                'iAntesCambio' => strval(json_encode($datosViejos['consulta'])),
-                'iDespuesCambio' => '['.strval(json_encode($data)).','.strval(json_encode($data1)).']',
+                'iAntesCambio' => strval(json_encode($datosViejos['consulta'][0])),
+                'iDespuesCambio' => strval(json_encode($merge)),
                 'iFechaCambio' => $hoy,
                 'iAprovacion' => 0,
                 'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
