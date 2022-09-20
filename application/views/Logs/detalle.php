@@ -1,13 +1,14 @@
 <div class="container">
-    <h1><?= $cambios->iTipoCambio ?></h1>
+    <!-- <h1><?= $cambios?></h1> -->
     <table class="table table-striped table-bordered display" style="width:100%" >
         <thead>
+            <th>Campo</th>
             <th>Antes</th>
             <th>Despues</th>
         </thead>
         <tbody>
-            <td></td>
-            <td></td>
+            <?= $cambios?>
+          
         </tbody>
     </table>
 </div>

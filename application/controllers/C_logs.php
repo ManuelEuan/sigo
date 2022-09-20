@@ -35,9 +35,44 @@ class C_logs extends CI_Controller
          */
         $tipo = $cambios->iTipoCambio;
 
+
+        $antes = json_decode($cambios->iAntesCambio);
+        $despues = json_decode($cambios->iDespuesCambio);
+        $result ='';
+        $arrayAntes = array();
+
+        foreach($antes as $value){
+            array_push($arrayAntes, $value);
+        }
+
         switch ($tipo) {
             case 'Indicador':
                 # code...
+                foreach($despues as $key => $value ){
+
+                    // $result =$antes[$key];
+                  
+                    if(!in_array($value, $arrayAntes)){
+                        $result .= '
+                            <tr>
+                            <td ><p >'.$key.'</p></td>
+                            <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
+                            <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
+                            </tr>';
+                    }else{
+                        $result .= '
+                           <tr> 
+                           <td ><p >'.$key.'</p></td>
+                           <td>'.$value.'</td>
+                           <td>'.$antes->$key.'</td></tr>';
+
+                    }
+                    // var_dump($despues);
+                    // var_dump($antes);
+
+                }
+
+                
                 
                 break;
             
@@ -46,7 +81,7 @@ class C_logs extends CI_Controller
                 break;
         }
 
-        $data['cambios'] = $cambios;
+        $data['cambios'] = $result;
         $this->load->view('Logs/detalle', $data);
     }
 
