@@ -455,6 +455,17 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                             </div>
                         </div>
                     </div>
+                    <div class="content">
+                    <div class="form-row">
+                    <div class="col-md-12 mb-12">
+                        <label for="vJustificaCambio">Justificación del cambio</label>
+                        <textarea class="form-control input-lectura" id="vJustificaCambio" name="vJustificaCambio" aria-invalid="false" required placeholder="" cols="40" rows="5" style=""><?= htmlspecialchars($consulta[0]->vJustificaCambio) ?></textarea>
+                        <div class="invalid-feedback">
+                            Este campo no puede estar vacio.
+                        </div>
+                    </div>
+                </div>
+                    </div>
 
                     <div class="content">
                         <br><br>
