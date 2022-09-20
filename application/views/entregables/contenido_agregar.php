@@ -22,7 +22,7 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
-
+                    <?php if($incluyeMIR){ ?>
                     <div class="col-md-2 mb-3">
                         <label for="validationCustom04">Forma Indicador<span class="text-danger">*</span></label>
                         <select id="formaIndicador" name="formaIndicador" required class="form-control">
@@ -37,9 +37,10 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <?php } ?>
                       <input type="hidden" id="" name="" required class="form-control" value=1>
 
-                   
+                    <?php if($incluyeMIR){ ?>
                     <div class="col-md-2 mb-3">
                         <label>Dimensión<span class="text-danger">*</span></label>
                         <select name="selectDimension" id="selectDimension" required class="form-control">
@@ -54,6 +55,7 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <?php } ?>
                     
                 </div>
 
@@ -61,7 +63,11 @@
                 <!--- Este va a variar -->
                 <div class="form-row" id="divVariables">
                     <div class="col-md-3 mb-3">
-                        <label>Variable A<span class="text-danger">*</span> <button type="button" onclick="agregarVariable();" style="border: none;">+</button></label>
+                        <label>Variable A<span class="text-danger">*</span>
+                        <?php if($incluyeMIR){ ?>
+                        <button type="button" onclick="agregarVariable();" style="border: none;">+</button>
+                        <?php } ?>
+                        </label>
                         <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
                         <input type="text" id="A" name="Variable[]" class="form-control" required="required" placeholder="A">
                         <div class="invalid-feedback">
@@ -71,6 +77,7 @@
                 </div>
 
                 <div class="form-row">
+                    <?php if($incluyeMIR){ ?>
                     <div class="col-md-2 mb-3">
                         <label for="validationCustom04">Base Indicador<span class="text-danger">*</span></label>
                         <input type="number" id="baseIndicador" name="baseIndicador" class="form-control" required="required" placeholder="">
@@ -78,9 +85,10 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <?php } ?>
                       <input type="hidden" id="" name="" required class="form-control" value=1>
 
-                   
+                    <?php if($incluyeMIR){ ?>
                     <div class="col-md-2 mb-3">
                         <label>Medio Verificación<span class="text-danger">*</span></label>
                         <input type="text" id="medioVerificacion" name="medioVerificacion" class="form-control" required="required" placeholder="">
@@ -88,6 +96,7 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <?php } ?>
 
                     <div class="col-md-8 mb-3">
                         <label>Area para calculo de variable<span class="text-danger">*</span></label>

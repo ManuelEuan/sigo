@@ -529,8 +529,10 @@ class C_pat extends CI_Controller
             //     $this->pat->insertarActividadAgromerada(array('iIdActividadPadre' => 1, 'iIdActividadHija' => $t));
             // }
             // $tematicas = $this->input->post('idActividadd', true);
-            foreach($idActividadAglomera as $t){
-                $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
+            if(isset($idActividadAglomera)){
+                foreach($idActividadAglomera as $t){
+                    $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idAct, 'iIdActividadHija' => $t));
+                }
             }
 
             if ($idAct > 0) {
@@ -752,9 +754,10 @@ class C_pat extends CI_Controller
             //Aqui termina calidacion
             $this->pat->borrarActividadAgromerada($idActividad);
 
-
-            foreach($idActividadAglomera as $t){
-                $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idActividad, 'iIdActividadHija' => $t));
+            if(isset($idActividadAglomera)){
+                foreach($idActividadAglomera as $t){
+                    $this->pat->insertarAgromerada(array('iIdActividadPadre' => $idActividad, 'iIdActividadHija' => $t));
+                }
             }
 
             // Actualizamos la tabla DetalleActividad
@@ -822,8 +825,9 @@ class C_pat extends CI_Controller
                 'iAntesCambio' => strval(json_encode($datosViejos['consulta'])),
                 'iDespuesCambio' => '['.strval(json_encode($data)).','.strval(json_encode($data1)).']',
                 'iFechaCambio' => $hoy,
-                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
                 'iAprovacion' => 0,
+                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                'vNombre' => $this->input->post('NombAct',true),
                 'iIdCambio' => $idActividad,
             ));
 
@@ -1071,9 +1075,11 @@ class C_pat extends CI_Controller
     {
         $data = $_SESSION['carritoFinan'];
         $total = 0;
-        foreach ($data as $r) {
-            if ($r->iActivo == 1) {
-                $total = bcadd($total, $r->monto, 2);
+        if(isset($data)){
+            foreach ($data as $r) {
+                if ($r->iActivo == 1) {
+                    $total = bcadd($total, $r->monto, 2);
+                }
             }
         }
         return $total;

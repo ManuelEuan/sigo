@@ -204,7 +204,7 @@
                                     </div>
                                 </div> 
                                 
-                                <div class="row mb-2">
+                                <!-- <div class="row mb-2">
                                      <div class="col-4 text-center mb-2">
                                         <h4 class="m-b-0" style="font-weight:700"><?=number_format($value['hombres'], 0)?> </h4>
                                         <span class="font-14">Hombres</span>
@@ -217,7 +217,7 @@
                                         <h4 class="m-b-0" style="font-weight:700"><?=number_format(intval($value['hombres']) + intval($value['mujeres']), 0)?></h4>
                                         <span class="font-14">Totales</span>
                                     </div>
-                                </div>  
+                                </div>   -->
                             </div>
                         </div>
                     </div>

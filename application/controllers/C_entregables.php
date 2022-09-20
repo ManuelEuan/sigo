@@ -47,6 +47,12 @@ class C_entregables extends CI_Controller
         $data['dimension'] = $this->me->obtenerDimension();
 
         $data['municipios'] = $lib->options_multiselect('municipios',[]);
+        $rsp = $this->me->tieneMIR($data['id_detact']);
+        $incluyeMIR = false;
+        if($rsp[0]->iIncluyeMIR == 1){
+            $incluyeMIR = true;
+        }
+        $data['incluyeMIR'] = $incluyeMIR;
 
         $this->load->view('entregables/contenido_agregar',$data);
     }
@@ -182,6 +188,7 @@ class C_entregables extends CI_Controller
         $seg = new Class_seguridad();
 
         $data = array();
+        $incluyeMIR = false;
 
         $data['id_ent'] = $this->input->post('id',TRUE);
         $data['id_detact'] = $this->input->post('id2',TRUE);
@@ -225,6 +232,11 @@ class C_entregables extends CI_Controller
         $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
         $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
         $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
+        $rsp = $this->me->tieneMIR($data['id_detact']);
+        if($rsp[0]->iIncluyeMIR == 1){
+            $incluyeMIR = true;
+        }
+        $data['incluyeMIR'] = $incluyeMIR;
 
         if($all_edit > 1){
             $data['candado'] = false;
@@ -232,7 +244,6 @@ class C_entregables extends CI_Controller
             $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
         }
         $new_array = array_merge($data,$data3);
-        //echo json_encode(count($data['Variables']));
         $this->load->view('entregables/contenido_modificar', $new_array);
     }
 
