@@ -37,88 +37,85 @@ class C_logs extends CI_Controller
          * Aqui va todo
          */
         $tipo = $cambios->iTipoCambio;
-
-
+        if($tipo == 'Indicador'){
+            $datosAntes = $this->ml->obtenerAntesIndicador($cambios->iIdCambio);
+        }
+        if($tipo == 'Acción'){
+            $datosAntes = $this->ml->obtenerAntesAccion($cambios->iIdCambio);
+        }
         $antes = json_decode($cambios->iAntesCambio);
         $despues = json_decode($cambios->iDespuesCambio);
         $result ='';
         $arrayAntes = array();
-
-        foreach($antes as $value){
-            array_push($arrayAntes, $value);
+        $arraySoloValores = array();
+        $arraySoloLlaves = array();
+        $valorFinal = array();
+        foreach($despues as $d){
+            array_push($arraySoloValores, $d);
         }
+        foreach($datosAntes[0] as $key => $k){
+            array_push($arraySoloLlaves, $key);
+        }
+
+        foreach($arraySoloLlaves as $key => $llave){
+            $valorFinal[$llave] = $arraySoloValores[$key];
+        }
+
+        //echo json_encode($valorFinal);
 
         switch ($tipo) {
             case 'Indicador':
                 # code...
-                foreach($despues as $key => $value ){
+                foreach($datosAntes[0] as $key => $value ){
 
                     // $result =$antes[$key];
-                  
-                    if($value != $antes->$key){
+                
+                    if($value != $valorFinal[$key]){
                         $result .= '
                                 <tr>
                                 <td ><p >'.$key.'</p></td>
                                 <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
-                                <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
+                                <td><p style="background-color: rgba(248,81,73,0.4);">'.$valorFinal[$key].'</p></td>
                                 </tr>';
-                      }else{
+                    }else{
                         $result .= '
-                               <tr> 
-                               <td ><p >'.$key.'</p></td>
-                               <td>'.$value.'</td>
-                               <td>'.$antes->$key.'</td></tr>';
-                      }
+                            <tr> 
+                            <td ><p >'.$key.'</p></td>
+                            <td>'.$value.'</td>
+                            <td>'.$valorFinal[$key].'</td></tr>';
+                    }
                     // var_dump($despues);
                     // var_dump($antes);
 
                 }
-
-                
-                
                 break;
             
             case 'Acción':
                 # code...
-                foreach($despues as $key => $value ){
+
+                foreach($datosAntes[0] as $key => $value ){
 
                     // $result =$antes[$key];
-                  if($value != $antes->$key){
-                    $result .= '
-                            <tr>
-                            <td ><p >'.$key.'</p></td>
-                            <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
-                            <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
-                            </tr>';
-                  }else{
-                    $result .= '
-                           <tr> 
-                           <td ><p >'.$key.'</p></td>
-                           <td>'.$value.'</td>
-                           <td>'.$antes->$key.'</td></tr>';
-                  }
-                    /*if(!in_array($value, $arrayAntes)){
+                
+                    if($value != $valorFinal[$key]){
                         $result .= '
-                            <tr>
-                            <td ><p >'.$key.'</p></td>
-                            <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
-                            <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
-                            </tr>';
+                                <tr>
+                                <td ><p >'.$key.'</p></td>
+                                <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
+                                <td><p style="background-color: rgba(248,81,73,0.4);">'.$valorFinal[$key].'</p></td>
+                                </tr>';
                     }else{
                         $result .= '
-                           <tr> 
-                           <td ><p >'.$key.'</p></td>
-                           <td>'.$value.'</td>
-                           <td>'.$antes->$key.'</td></tr>';
-
-                    }*/
+                            <tr> 
+                            <td ><p >'.$key.'</p></td>
+                            <td>'.$value.'</td>
+                            <td>'.$valorFinal[$key].'</td></tr>';
+                    }
                     // var_dump($despues);
                     // var_dump($antes);
 
                 }
 
-                
-                
                 break;
             
             default:
