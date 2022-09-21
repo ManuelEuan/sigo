@@ -337,8 +337,15 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                                         -->
                     <hr>
                     <br><br>
-                    <?php if (isset($ejes) && isset($dependencias)) { ?>
-                    <div class="content">
+                    <?php 
+                    $display = '';
+                    if (isset($ejes) && isset($dependencias)) {
+                        $display = 'style="display:block"';
+                    } else{
+                        $display = 'style="display:none"';
+                        
+                    }?>
+                    <div <?php echo $display?>  class="content">
 
                         <div class="row">
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -367,10 +374,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
 
                     </div>
-                    <?php } ?>
+                    
                     <br>
-                    <?php if (isset($ejes) && isset($dependencias)) { ?>
-                    <div class="content" id="divAglromeracion">
+                    
+                    <div <?php echo $display?>  class="content" id="divAglromeracion">
                         <div class="row">
 
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -400,10 +407,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
                         </div>
                     </div>
-                    <?php } ?>
+                 
                     <br>
-                    <?php if (isset($ejes) && isset($dependencias)) { ?>
-                    <div class="content" id="divPP">
+                   
+                    <div <?php echo $display?>  class="content" id="divPP">
                         <div class="row">
 
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -426,9 +433,9 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
 
                     </div>
-                    <?php } ?>
-                    <?php if (isset($ejes) && isset($dependencias)) { ?>
-                    <div class="content">
+                    
+                   
+                    <div <?php echo $display?>  class="content">
                         <div class="row">
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                                 <label for="resumenNarrativo" id="txtResumenNarrativo" name="txtResumenNarrativo">Resumen Narrativo</label>
@@ -448,9 +455,9 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                             </div>
                         </div>
                     </div>
-                    <?php } ?>
-                    <?php if (isset($ejes) && isset($dependencias)) { ?>
-                    <div class="content" id="divSupuesto">
+                    
+                   
+                    <div <?php echo $display?>  class="content" id="divSupuesto">
                         <div class="row">
                             <div class="col-md-12 mb-10">
                                 <label for="validationCustom04">Supuesto</label>
@@ -461,7 +468,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                             </div>
                         </div>
                     </div>
-                    <?php } ?>
+                
                     <div class="content">
                     <div class="form-row">
                     <div class="col-md-12 mb-12">
