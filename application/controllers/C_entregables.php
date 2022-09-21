@@ -92,7 +92,7 @@ class C_entregables extends CI_Controller
                 $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
                 $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
                 $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
-                $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+                $data['vFormula'] = $this->input->post('areaCalculo',TRUE) ?? 'A';
                 $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
                 $data['iAutorizado'] = 1;
                 $Variable = $this->input->post('Variable', true);
@@ -337,7 +337,7 @@ class C_entregables extends CI_Controller
             
             $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
             
-            $data['vFormula'] = $this->input->post('areaCalculo',TRUE);
+            $data['vFormula'] = $this->input->post('areaCalculo',TRUE) ?? 'A';
             
             $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
 

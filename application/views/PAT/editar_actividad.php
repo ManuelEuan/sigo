@@ -369,7 +369,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                     </div>
                     <?php } ?>
                     <br>
-                    <div class="content">
+                    <div class="content" id="divAglromeracion">
                         <div class="row">
 
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -400,7 +400,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
                     </div>
                     <br>
-                    <div class="content">
+                    <div class="content" id="divPP">
                         <div class="row">
 
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -779,8 +779,15 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         if ($(this).is(':checked')) {
             document.getElementById("idNivelMIR").disabled = false;
             $('#idNivelMIR').show();
+            document.getElementById("idActividad").disabled = false;
+            $('#divAglromeracion').show();
+            $('#divPP').show();
             $('#txtNivelMIR').show();
         } else {
+            $('#ProgramaPresupuestario').prop('selectedIndex', 0);
+            $('#divPP').hide();
+            $('#idActividad').prop('selectedIndex', 0);
+            $('#divAglromeracion').hide();
             $('#idNivelMIR').prop('selectedIndex', 0);
             $('#idNivelMIR').hide();
             $('#txtNivelMIR').hide();
