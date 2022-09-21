@@ -116,14 +116,14 @@
                                         if($p_clonar > 0){ ?>
                                             <button type="button" class="btn btn-warning" data-toggle="modal" style="margin-top:30px" data-target="#clonarModal" data-whatever="@getbootstrap"><i class="far fa-copy"></i>&nbsp;Clonar</button>
                                         <?php } ?>
-
+                                        <?php if(isset($ejes) && isset($dependencias)) { ?>
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="updatePOAS();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Sincronizar con Picaso
                                         </button>
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="actualizarNuevos();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Alineación con Picaso 
                                         </button>
-
+                                        <?php } ?>
                                     </div>
                                 </div>
                             </div>

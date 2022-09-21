@@ -369,6 +369,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                     </div>
                     <?php } ?>
                     <br>
+                    <?php if (isset($ejes) && isset($dependencias)) { ?>
                     <div class="content" id="divAglromeracion">
                         <div class="row">
 
@@ -399,7 +400,9 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
 
                         </div>
                     </div>
+                    <?php } ?>
                     <br>
+                    <?php if (isset($ejes) && isset($dependencias)) { ?>
                     <div class="content" id="divPP">
                         <div class="row">
 
@@ -423,7 +426,8 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                         </div>
 
                     </div>
-
+                    <?php } ?>
+                    <?php if (isset($ejes) && isset($dependencias)) { ?>
                     <div class="content">
                         <div class="row">
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -444,8 +448,9 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                             </div>
                         </div>
                     </div>
-
-                    <div class="content">
+                    <?php } ?>
+                    <?php if (isset($ejes) && isset($dependencias)) { ?>
+                    <div class="content" id="divSupuesto">
                         <div class="row">
                             <div class="col-md-12 mb-10">
                                 <label for="validationCustom04">Supuesto</label>
@@ -456,6 +461,7 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
                             </div>
                         </div>
                     </div>
+                    <?php } ?>
                     <div class="content">
                     <div class="form-row">
                     <div class="col-md-12 mb-12">
@@ -597,49 +603,50 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
         obtenerAreasResp(idDependenciaGuardado);
         obtenerActividades(idDependenciaGuardado)
 
-
-        <?php if ($consulta[0]->iAglomeraMIR == 1) { ?>
-            $('#recuadroactividad').show();
-        <?php } else { ?>
-            $('#recuadroactividad').hide();
-        <?php } ?>
-
-        <?php if ($consulta[0]->iIncluyeMIR == 1) { ?>
-            document.getElementById("idNivelMIR").disabled = false;
-            $('#idNivelMIR').show();
-            $('#txtNivelMIR').show();
-
-            <?php if ($consulta[0]->vResumenNarrativo != '' || $consulta[0]->vResumenNarrativo != null) { ?>
-                $('#txtResumenNarrativo').show();
-                $('#resumenNarrativo').show();
+        <?php if(isset($ejes) && isset($dependencias)) { ?>
+            <?php if ($consulta[0]->iAglomeraMIR == 1) { ?>
+                $('#recuadroactividad').show();
             <?php } else { ?>
-                $('#txtResumenNarrativo').hide();
-                $('#resumenNarrativo').hide();
+                $('#recuadroactividad').hide();
             <?php } ?>
 
-        <?php } else { ?>
-            $('#idNivelMIR').prop('selectedIndex', 0);
-            $('#idNivelMIR').hide();
-            $('#txtNivelMIR').hide();
-            document.getElementById("idNivelMIR").disabled = true;
+            <?php if ($consulta[0]->iIncluyeMIR == 1) { ?>
+                document.getElementById("idNivelMIR").disabled = false;
+                $('#idNivelMIR').show();
+                $('#txtNivelMIR').show();
 
-            $('#txtResumenNarrativo').hide();
-            $('#resumenNarrativo').hide();
-            $('#resumenNarrativo').prop('selectedIndex', 0);
-            document.getElementById("resumenNarrativo").disabled = true;
-        <?php } ?>
+                <?php if ($consulta[0]->vResumenNarrativo != '' || $consulta[0]->vResumenNarrativo != null) { ?>
+                    $('#txtResumenNarrativo').show();
+                    $('#resumenNarrativo').show();
+                <?php } else { ?>
+                    $('#txtResumenNarrativo').hide();
+                    $('#resumenNarrativo').hide();
+                <?php } ?>
 
-        $('#selectProyectoPrioritario').hide();
-        <?php if ($consulta[0]->iODS != 0 || $consulta[0]->iODS != '' || $consulta[0]->iODS != null) { ?>
-            $('#selectODS').show();
-        <?php } else { ?>
-            $('#selectODS').hide();
-        <?php } ?>
+            <?php } else { ?>
+                $('#idNivelMIR').prop('selectedIndex', 0);
+                $('#idNivelMIR').hide();
+                $('#txtNivelMIR').hide();
+                document.getElementById("idNivelMIR").disabled = true;
 
-        <?php if ($consulta[0]->iIdProyectoPrioritario != 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null) { ?>
-            $('#selectProyectoPrioritario').show();
-        <?php } else { ?>
+                $('#txtResumenNarrativo').hide();
+                $('#resumenNarrativo').hide();
+                $('#resumenNarrativo').prop('selectedIndex', 0);
+                document.getElementById("resumenNarrativo").disabled = true;
+            <?php } ?>
+
             $('#selectProyectoPrioritario').hide();
+            <?php if ($consulta[0]->iODS != 0 || $consulta[0]->iODS != '' || $consulta[0]->iODS != null) { ?>
+                $('#selectODS').show();
+            <?php } else { ?>
+                $('#selectODS').hide();
+            <?php } ?>
+
+            <?php if ($consulta[0]->iIdProyectoPrioritario != 0 || $consulta[0]->iIdProyectoPrioritario != '' || $consulta[0]->iIdProyectoPrioritario != null) { ?>
+                $('#selectProyectoPrioritario').show();
+            <?php } else { ?>
+                $('#selectProyectoPrioritario').hide();
+            <?php } ?>
         <?php } ?>
 
         $(".select2").select2();
@@ -783,7 +790,10 @@ if ($consulta[0]->vObjetivo != NULL && $consulta[0]->vDescripcion != NULL) {
             $('#divAglromeracion').show();
             $('#divPP').show();
             $('#txtNivelMIR').show();
+            $('#divSupuesto').show();
         } else {
+            $('#divSupuesto').hide();
+            $('#txtSupuesto').empty();
             $('#ProgramaPresupuestario').prop('selectedIndex', 0);
             $('#divPP').hide();
             $('#idActividad').prop('selectedIndex', 0);
