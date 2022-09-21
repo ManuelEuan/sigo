@@ -360,7 +360,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                     <?php } ?>
                     <br>
-                    <div class="content">
+                    <div class="content" id="divAglromeracion">
                         <div class="row">
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
                                 <label for="tieneAglomeracion">Tiene Aglomeracion</label>
@@ -380,7 +380,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         </div>
                     </div>
                     <br>
-                    <div class="content">
+                    <div class="content" id="divPP">
                         <div class="row">
 
                             <div class="col-md-2 col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -394,7 +394,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                             <div class="col-md-8">
                                 <div class="col-md-12">
                                     <select class="form-control" name="ProgramaPresupuestario" id="ProgramaPresupuestario">
-                                        <option value="">--Seleccione--</option>
+                                        <option value="0">--Seleccione--</option>
                                         <?php foreach ($programaPresupuestario as $pp) { ?>
                                             <option value="<?= $pp->iIdProgramaPresupuestario ?>"><?= $pp->vProgramaPresupuestario ?></option>
                                         <?php } ?>
@@ -479,7 +479,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $('.select-lectura').attr('disabled', true);
             $('.input-lectura').attr('readonly', 'readonly');
         <?php } ?>
-
+        //Aqui
+        $('#divPP').hide();
+        $('#divAglromeracion').hide();
         $('#idNivelMIR').hide();
         $('#selectProyectoPrioritario').hide();
         $('#txtResumenNarrativo').hide();
@@ -603,8 +605,15 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         if ($(this).is(':checked')) {
             document.getElementById("idNivelMIR").disabled = false;
             $('#idNivelMIR').show();
+            document.getElementById("idActividad").disabled = false;
+            $('#divAglromeracion').show();
+            $('#divPP').show();
             $('#txtNivelMIR').show();
         } else {
+            $('#ProgramaPresupuestario').prop('selectedIndex', 0);
+            $('#divPP').hide();
+            $('#idActividad').prop('selectedIndex', 0);
+            $('#divAglromeracion').hide();
             $('#idNivelMIR').prop('selectedIndex', 0);
             $('#idNivelMIR').hide();
             $('#txtNivelMIR').hide();
