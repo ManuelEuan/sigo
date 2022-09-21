@@ -134,8 +134,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                                 </div>
                             </div>
                         </div>
+                        <br>
                     <?php } ?>
-                    <br>
+                    
                     <div class="form-row">
                         <div class="col-md-1 mb-2">
                             <label for="checkODS">ODS </label>
@@ -328,8 +329,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                     <hr>
 
-                    <br><br>
+                    
                     <?php if (isset($ejes) && isset($dependencias)) { ?>
+                    <br><br>
                     <div class="content">
 
                         <div class="row">
@@ -358,8 +360,9 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                         </div>
 
                     </div>
-                    <?php } ?>
                     <br>
+                    <?php } ?>
+                    
                     <div class="content" id="divAglromeracion">
                         <div class="row">
                             <div class="col-md-2 mb-2" style="text-align: -webkit-right;">
@@ -427,7 +430,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
                     </div>
                     <br>
 
-                    <div class="content">
+                    <div class="content" id="divSupuesto">
                         <div class="row">
                             <div class="col-md-12 mb-10">
                                 <label for="validationCustom04">Supuesto</label>
@@ -489,6 +492,7 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
         $('#txtNivelMIR').hide();
         $('#recuadroactividad').hide();
         $('#selectODS').hide();
+        $('#divSupuesto').hide();
         $(".select2").select2();
         url = $("#url").val();
         sumaMontoFin();
@@ -609,7 +613,10 @@ if ($consulta->vObjetivo != NULL && $consulta->vDescripcion != NULL) {
             $('#divAglromeracion').show();
             $('#divPP').show();
             $('#txtNivelMIR').show();
+            $('#divSupuesto').show();
         } else {
+            $('#divSupuesto').hide();
+            $('#txtSupuesto').empty();
             $('#ProgramaPresupuestario').prop('selectedIndex', 0);
             $('#divPP').hide();
             $('#idActividad').prop('selectedIndex', 0);
