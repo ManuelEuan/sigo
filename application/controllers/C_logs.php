@@ -55,21 +55,20 @@ class C_logs extends CI_Controller
 
                     // $result =$antes[$key];
                   
-                    if(!in_array($value, $arrayAntes)){
+                    if($value != $antes->$key){
                         $result .= '
-                            <tr>
-                            <td ><p >'.$key.'</p></td>
-                            <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
-                            <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
-                            </tr>';
-                    }else{
+                                <tr>
+                                <td ><p >'.$key.'</p></td>
+                                <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
+                                <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
+                                </tr>';
+                      }else{
                         $result .= '
-                           <tr> 
-                           <td ><p >'.$key.'</p></td>
-                           <td>'.$value.'</td>
-                           <td>'.$antes->$key.'</td></tr>';
-
-                    }
+                               <tr> 
+                               <td ><p >'.$key.'</p></td>
+                               <td>'.$value.'</td>
+                               <td>'.$antes->$key.'</td></tr>';
+                      }
                     // var_dump($despues);
                     // var_dump($antes);
 
@@ -84,8 +83,21 @@ class C_logs extends CI_Controller
                 foreach($despues as $key => $value ){
 
                     // $result =$antes[$key];
-                  
-                    if(!in_array($value, $arrayAntes)){
+                  if($value != $antes->$key){
+                    $result .= '
+                            <tr>
+                            <td ><p >'.$key.'</p></td>
+                            <td><p style="background-color: rgba(248,81,73,0.4);">'.$antes->$key.'</p></td>
+                            <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
+                            </tr>';
+                  }else{
+                    $result .= '
+                           <tr> 
+                           <td ><p >'.$key.'</p></td>
+                           <td>'.$value.'</td>
+                           <td>'.$antes->$key.'</td></tr>';
+                  }
+                    /*if(!in_array($value, $arrayAntes)){
                         $result .= '
                             <tr>
                             <td ><p >'.$key.'</p></td>
@@ -99,7 +111,7 @@ class C_logs extends CI_Controller
                            <td>'.$value.'</td>
                            <td>'.$antes->$key.'</td></tr>';
 
-                    }
+                    }*/
                     // var_dump($despues);
                     // var_dump($antes);
 
@@ -146,7 +158,7 @@ class C_logs extends CI_Controller
 
                     // $result =$antes[$key];
                   
-                    if(!in_array($value, $arrayAntes)){
+                    if($value != $antes->$key){
                         $data[$key] = $value;
                         $where = "iIdEntregable =".$iIdCambio;
                         $table = 'Entregable';
@@ -179,7 +191,7 @@ class C_logs extends CI_Controller
 
                     // $result =$antes[$key];
                   
-                    if(!in_array($value, $arrayAntes)){
+                    if($value != $antes->$key){
                         $data[$key] = $value;
                         $where['iIdActividad'] = $iIdCambio;
                      

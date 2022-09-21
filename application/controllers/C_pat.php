@@ -819,7 +819,7 @@ class C_pat extends CI_Controller
                 }
             }
             $hoy = date('Y-m-d H:i:s');
-            $merge = array_merge($data1,$data);
+            $merge = array_merge($data,$data1);
             $resp = $this->pat->insertCambio(array(
                 'iTipoCambio' => 'Acción',
                 'iAntesCambio' => strval(json_encode($datosViejos['consulta'][0])),

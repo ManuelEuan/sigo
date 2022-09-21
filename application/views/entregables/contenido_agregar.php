@@ -97,7 +97,7 @@
                         </div>
                     </div>
                     <?php } ?>
-
+                    <?php if($incluyeMIR){ ?>
                     <div class="col-md-8 mb-3">
                         <label>Area para calculo de variable<span class="text-danger">*</span></label>
                         <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder=""  onkeypress="sinEspacios(event);"></textarea>
@@ -105,10 +105,8 @@
                             Este campo no puede estar vacio.
                         </div>
                     </div>
+                    <?php } ?>
                 </div>
-
-
-
                 <div class="form-row">
 
                     <div class="col-md-3 mb-3">
