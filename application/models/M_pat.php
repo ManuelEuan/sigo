@@ -213,7 +213,7 @@ class M_pat extends CI_Model
 		$this->db->from('Actividad');
 		$this->db->where('iIdDependencia', $idDependencia);
 		$this->db->where('iActivo', 1);*/
-		$this->db->select('a.iIdActividad,a.vDescripcion, 0 AS ods');
+		$this->db->select('a.iIdActividad,a.vDescripcion,a.vActividad, 0 AS ods');
 		$this->db->from('DetalleActividad da');
 		$this->db->join('Actividad a', 'da.iIdActividad = a.iIdActividad', 'INNER');
 		$this->db->join('Dependencia d', 'd.iIdDependencia = a.iIdDependencia', 'INNER');
