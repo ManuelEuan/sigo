@@ -241,16 +241,16 @@ class C_rclinica extends CI_Controller {
             }
 
             foreach ($records as $key => $rec) {
-
+                
                 if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
-                    $total = 0;
                     $resultado = $mrep->obtenerIdHija($rec->iIdActividad);
+                    $total = 0;
                     
     
                     foreach ($resultado as $key => $r) {
                         $datosHija = $mrep->obtenerDatosHija($r->iIdActividadHija);
                         foreach ($datosHija as $key => $d) {
-                            $total = $total + ($d->porcentajeavance / count($datosHija));
+                            $total = $total + ($d->avancepor / count($datosHija));
                         }
                     }
     
@@ -265,7 +265,7 @@ class C_rclinica extends CI_Controller {
                         WriterEntityFactory::createCell($rec->nlineabase, $amaStyle),
                         WriterEntityFactory::createCell((int)'100%', $amaStyle),
                         WriterEntityFactory::createCell($rec->periodicidad, $amaStyle),
-                        WriterEntityFactory::createCell($total.'%', $amaStyle),
+                        WriterEntityFactory::createCell($rec->porcentajeavance.'%', $amaStyle),
                         WriterEntityFactory::createCell($rec->medioverifica, $amaStyle),
                         WriterEntityFactory::createCell($rec->supuesto, $amaStyle),
                     ];
