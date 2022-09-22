@@ -330,8 +330,6 @@ class C_reporteCombinado extends CI_Controller
                     array_push($arrayaglomerados, (int)$value->iIdActividadHija);
                 }
             }
-
-                
                     foreach ($records as $rec) {
                         if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
                         $totalEne = 0;
@@ -388,19 +386,19 @@ class C_reporteCombinado extends CI_Controller
                             WriterEntityFactory::createCell($rec->unidadmedida),
                             WriterEntityFactory::createCell($rec->formula),
                             WriterEntityFactory::createCell($rec->umedioverifica),
-                            WriterEntityFactory::createCell($totalEne, $amaStyle),
-                            WriterEntityFactory::createCell($totalFeb, $amaStyle),
-                            WriterEntityFactory::createCell($totalMar, $amaStyle),
-                            WriterEntityFactory::createCell($totalAbr, $amaStyle),
-                            WriterEntityFactory::createCell($totalMay, $amaStyle),
-                            WriterEntityFactory::createCell($totalJun, $amaStyle),
-                            WriterEntityFactory::createCell($totalJul, $amaStyle),
-                            WriterEntityFactory::createCell($totalAgo, $amaStyle),
-                            WriterEntityFactory::createCell($totalSep, $amaStyle),
-                            WriterEntityFactory::createCell($totalOct, $amaStyle),
-                            WriterEntityFactory::createCell($totalNov, $amaStyle),
-                            WriterEntityFactory::createCell($totalDic, $amaStyle),
-                            WriterEntityFactory::createCell($totalAcumulado, $amaStyle),
+                            WriterEntityFactory::createCell($rec->enero, $amaStyle),
+                            WriterEntityFactory::createCell($rec->febrero, $amaStyle),
+                            WriterEntityFactory::createCell($rec->marzo, $amaStyle),
+                            WriterEntityFactory::createCell($rec->abril, $amaStyle),
+                            WriterEntityFactory::createCell($rec->mayo, $amaStyle),
+                            WriterEntityFactory::createCell($rec->junio, $amaStyle),
+                            WriterEntityFactory::createCell($rec->julio, $amaStyle),
+                            WriterEntityFactory::createCell($rec->agosto, $amaStyle),
+                            WriterEntityFactory::createCell($rec->septiembre, $amaStyle),
+                            WriterEntityFactory::createCell($rec->octubre, $amaStyle),
+                            WriterEntityFactory::createCell($rec->noviembre, $amaStyle),
+                            WriterEntityFactory::createCell($rec->diciembre, $amaStyle),
+                            WriterEntityFactory::createCell($total, $amaStyle),
                         ];
                         $singleRow = WriterEntityFactory::createRow($cells);
                         $writer->addRow($singleRow);
