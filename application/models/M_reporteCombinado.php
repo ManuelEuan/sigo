@@ -383,7 +383,7 @@ class M_reporteCombinado extends CI_Model
                            "Actividad"."vActividad" as accion,
                            "Actividad"."iIdActividad" as clave,
                            "Entregable"."vEntregable" as indicador,
-                           "Entregable"."nLineaBase" as meta,
+                           "DetalleEntregable"."nMeta" as meta,
                            "Periodicidad"."vPeriodicidad" as frecuencia,
                            "FormaIndicador"."vDescripcion" as operacion,
                            string_agg("VariableIndicador"."vNombreVariable", '.$coma. ') vvariable,

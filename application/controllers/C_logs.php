@@ -50,18 +50,161 @@ class C_logs extends CI_Controller
         $arraySoloValores = array();
         $arraySoloLlaves = array();
         $valorFinal = array();
-        foreach($despues as $d){
-            array_push($arraySoloValores, $d);
-        }
-        foreach($datosAntes[0] as $key => $k){
-            array_push($arraySoloLlaves, $key);
+
+        if($tipo == 'Acción'){
+
+            foreach($despues as $key => $d){
+                switch ($key) {
+                    case 'iIdDependencia':
+                        if(!empty($despues->iIdDependencia)){
+                            $dep = $this->ml->obtenerDependencia($despues->iIdDependencia);
+                            array_push($arraySoloValores, $dep[0]->vDependencia);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iIdProyectoPrioritario':
+                        if(!empty($despues->iIdProyectoPrioritario)){
+                            $proypri = $this->ml->obtenerProyPri($despues->iIdProyectoPrioritario);
+                            array_push($arraySoloValores, $proypri[0]->vProyectoPrioritario);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'vResumenNarrativo':
+                        if(!empty($despues->vResumenNarrativo) && $despues->vResumenNarrativo != '.'){
+                            $vRN = $this->ml->obtenerResumenNarrativo($despues->vResumenNarrativo);
+                            array_push($arraySoloValores, $vRN[0]->vNombreResumenNarrativo);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iIdProgramaPresupuestario':
+                        if(!empty($despues->iIdProgramaPresupuestario)){
+                            $progpres = $this->ml->obtenerProgramaPresu($despues->iIdProgramaPresupuestario);
+                            array_push($arraySoloValores, $progpres[0]->vProgramaPresupuestario);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iIdNivelMIR':
+                        if(!empty($despues->iIdNivelMIR)){
+                            $mir = $this->ml->obtenerMIR($despues->iIdNivelMIR);
+                            array_push($arraySoloValores, $mir[0]->vNivelMIR);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iideje':
+                        if(!empty($despues->iideje)){
+                            $eje = $this->ml->obtenerEje($despues->iideje);
+                            array_push($arraySoloValores, $eje[0]->vEje);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iReto':
+                        if(!empty($despues->iReto)){
+                            $reto = $this->ml->obtenerReto($despues->iReto);
+                            array_push($arraySoloValores, $reto[0]->vDescripcion);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+                        
+                    case 'vResponsable':
+                        if(!empty($despues->vResponsable) && $despues->vResponsable != '.'){
+                            $arearesp = $this->ml->obtenerAreaResp($despues->vResponsable);
+                            array_push($arraySoloValores, $arearesp[0]->vAreaResponsable);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+    
+                    case 'iODS':
+                        if(!empty($despues->iODS)){
+                            $ods = $this->ml->obternerODS($despues->iODS);
+                            array_push($arraySoloValores, $ods[0]->vOds);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+                    
+                    default:
+                        array_push($arraySoloValores, $d);
+                        break;
+                }
+            }
+
+            foreach($datosAntes[0] as $key => $k){
+                array_push($arraySoloLlaves, $key);
+            }
+    
+            foreach($arraySoloLlaves as $key => $llave){
+                $valorFinal[$llave] = $arraySoloValores[$key];
+            }
         }
 
-        foreach($arraySoloLlaves as $key => $llave){
-            $valorFinal[$llave] = $arraySoloValores[$key];
-        }
+        if($tipo == 'Indicador'){
 
-        //echo json_encode($valorFinal);
+            foreach($despues as $key => $d){
+                switch ($key) {
+                    case 'iIdPeriodicidad':
+                        if(!empty($despues->iIdPeriodicidad)){
+                            $rsp = $this->ml->obtenerPeriodicidad($despues->iIdPeriodicidad);
+                            array_push($arraySoloValores, $rsp[0]->vPeriodicidad);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+
+                    case 'iIdFormaInd':
+                        if(!empty($despues->iIdFormaInd)){
+                            $rsp = $this->ml->obtenerFormaInd($despues->iIdFormaInd);
+                            array_push($arraySoloValores, $rsp[0]->vDescripcion);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+
+                    case 'iIdDimensionInd':
+                        if(!empty($despues->iIdDimensionInd)){
+                            $rsp = $this->ml->obtenerDimenInd($despues->iIdDimensionInd);
+                            array_push($arraySoloValores, $rsp[0]->vDescripcion);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+                    
+                    case 'iIdUnidadMedida':
+                        if(!empty($despues->iIdUnidadMedida)){
+                            $rsp = $this->ml->obtenerUnidadMedida($despues->iIdUnidadMedida);
+                            array_push($arraySoloValores, $rsp[0]->vUnidadMedida);
+                        }else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
+
+                    default:
+                        array_push($arraySoloValores, $d);
+                        break;
+                }
+            }
+            foreach($datosAntes[0] as $key => $k){
+                array_push($arraySoloLlaves, $key);
+            }
+    
+            foreach($arraySoloLlaves as $key => $llave){
+                $valorFinal[$llave] = $arraySoloValores[$key];
+            }
+            
+        }
 
         switch ($tipo) {
             case 'Indicador':
