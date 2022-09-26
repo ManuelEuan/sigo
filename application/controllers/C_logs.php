@@ -190,6 +190,16 @@ class C_logs extends CI_Controller
                             array_push($arraySoloValores, $d);
                         }
                         break;
+                    case 'iAcumulativo':
+                        if(!empty($despues->iAcumulativo) && $despues->iAcumulativo == 1){
+                            array_push($arraySoloValores, 'Acumulativo');
+                        }elseif(!empty($despues->iAcumulativo) && $despues->iAcumulativo == 2){
+                            array_push($arraySoloValores, 'Puntual');
+                        }
+                        else{
+                            array_push($arraySoloValores, $d);
+                        }
+                        break;
 
                     default:
                         array_push($arraySoloValores, $d);

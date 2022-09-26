@@ -367,6 +367,14 @@ class C_entregables extends CI_Controller
                 
                 $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;
                 
+            }else{
+                $data['iIdSujetoAfectado'] = $datosViejos['consulta'][0]->iIdSujetoAfectado;
+                
+                $data['iIdUnidadMedida'] = $datosViejos['consulta'][0]->iIdUnidadMedida;
+                
+                $data['iMunicipalizacion']  = $datosViejos['consulta'][0]->iMunicipalizacion;
+                
+                $data['iMismosBeneficiarios'] = $datosViejos['consulta'][0]->iMismosBeneficiarios;
             }
 
             $where = "iIdEntregable =".$id_ent;
