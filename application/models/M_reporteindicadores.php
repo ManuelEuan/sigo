@@ -303,7 +303,7 @@ class M_reporteindicadores extends CI_Model {
 
 
 
-    public function reporte_pat($anio, $dep, $whereString=null)
+    public function reporte_pat($anio, $eje, $dep, $whereString=null, $pp)
     {
       $select ='SELECT "Dependencia"."vDependencia",
       "DetalleActividad"."iAnio",
@@ -325,19 +325,20 @@ class M_reporteindicadores extends CI_Model {
       JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
       JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
       JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+      LEFT JOIN "ProgramaPresupuestario" ON "ProgramaPresupuestario"."iIdProgramaPresupuestario" = "Actividad"."iIdProgramaPresupuestario"
       LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';
       // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
-      $from = 'FROM "DetalleEntregable"
-      JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
-      JOIN "DetalleActividad" ON "DetalleEntregable"."iIdDetalleActividad" = "DetalleActividad"."iIdDetalleActividad"
-      JOIN "Actividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"
-      JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-      JOIN "Dependencia" ON "Actividad"."iIdDependencia" = "Dependencia"."iIdDependencia"
-      JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
-      JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
-      JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-      LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';     
-      $whereCondition = 'WHERE'. ' "DetalleActividad"."iAnio" = '.$anio;
+      $whereCondition = 'WHERE "DetalleActividad"."iAnio" = '.$anio;
+
+      if(!empty($eje)){
+        $whereCondition = $whereCondition . ' AND "Actividad".iideje = '.$eje;
+      }
+      if(!empty($dep)){
+        $whereCondition = $whereCondition .' AND "Actividad"."iIdDependencia" = '.$dep;
+      }
+      if(!empty($pp)){
+        $whereCondition = $whereCondition .' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
+      }
 
       if(!empty($whereString)){
         $whereCondition = $whereCondition.' '. $whereString;

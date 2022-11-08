@@ -414,7 +414,7 @@ class M_reporteCombinado extends CI_Model
                            left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
                            LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
 
-    $where = ' WHERE "PED2019Eje"."iIdEje" = ' . $eje . ' AND "DetalleActividad"."iAnio" = ' . $anio;
+    $where = ' WHERE "PED2019Eje"."iIdEje" = ' . $eje . ' AND "DetalleActividad"."iAnio" = ' . $anio . ' AND "DetalleActividad"."iActivo" = 1 AND "Avance"."iActivo" = 1 ';
     if ($dep != '') {
       $weherDep = ' AND "Dependencia"."iIdDependencia" = ' . $dep;
       $where = $where . $weherDep;

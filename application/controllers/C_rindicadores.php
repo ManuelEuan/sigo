@@ -95,7 +95,7 @@ class C_rindicadores extends CI_Controller {
         $obtenerEje = $mrep->obtenerEje($eje);
         $proPre = $mrep->obtenerPPporId($pp);
         
-        $query = $mrep->reporte_pat($anio,$dep,$whereString, $pp);
+        $query = $mrep->reporte_pat($anio, $eje, $dep,$whereString, $pp);
         $fechaactual = date('m-d-Y h:i:s a');
 
         if($query->num_rows() > 0)
@@ -227,30 +227,30 @@ class C_rindicadores extends CI_Controller {
 
                 
                     if($trim == 1){
-                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
                     }else{
                         $cells[] = WriterEntityFactory::createCell('');
                     }
                     if($trim == 2){
-                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
                         
                     }else{
                         $cells[] = WriterEntityFactory::createCell('');
                     }
                     if($trim == 3){
-                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
                         
                     }else{
                         $cells[] = WriterEntityFactory::createCell('');
                     }
                     if($trim == 4){
-                        $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance);
+                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
                         
                     }else{
                         $cells[] = WriterEntityFactory::createCell('');
                     }
                     
-                    $cells[] = WriterEntityFactory::createCell((int)$rec->nAvance, $blueStyle);
+                    $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance, $blueStyle);
                      
                     
 
@@ -261,7 +261,6 @@ class C_rindicadores extends CI_Controller {
             }
 
             $cells = [
-                WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
