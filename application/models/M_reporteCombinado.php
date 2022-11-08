@@ -353,7 +353,7 @@ class M_reporteCombinado extends CI_Model
     $barra = "' | '";
     $mes = "'month'";
     $coma = "','";
-    $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, STRING_AGG ( DISTINCT operacion,' .$barra. ') as operacion,STRING_AGG (DISTINCT vvariable,' .$barra. ') as vvariable, STRING_AGG ( DISTINCT indicador,' .$barra. ') as indicador, STRING_AGG ( DISTINCT unidadmedida,' .$barra. ') as unidadmedida, STRING_AGG ( DISTINCT frecuencia,' .$barra. ') as frecuencia, sum(meta) as meta,
+    $select = 'select idact, nivel, resumennarrativo,tipo, dimension, accion, clave, STRING_AGG ( DISTINCT operacion,' .$barra. ') as operacion,STRING_AGG (DISTINCT vvariable,' .$barra. ') as vvariable, STRING_AGG ( DISTINCT indicador,' .$barra. ') as indicador, STRING_AGG ( DISTINCT unidadmedida,' .$barra. ') as unidadmedida, STRING_AGG ( DISTINCT frecuencia,' .$barra. ') as frecuencia, avg(meta) as meta,
     STRING_AGG ( DISTINCT formula,' .$barra. ') as formula, STRING_AGG( DISTINCT umedioverifica, ' .$barra. ') as umedioverifica,
    SUM (Enero) AS Enero, sum(Febrero) as Febrero,sum(Marzo) as Marzo,
    sum(Abril) as Abril, sum(Mayo) as Mayo,Sum(Junio) as Junio,sum(Julio) as Julio, sum(Agosto) as Agosto,
