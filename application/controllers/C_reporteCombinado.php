@@ -386,19 +386,19 @@ class C_reporteCombinado extends CI_Controller
                             WriterEntityFactory::createCell($rec->unidadmedida),
                             WriterEntityFactory::createCell($rec->formula),
                             WriterEntityFactory::createCell($rec->umedioverifica),
-                            WriterEntityFactory::createCell($rec->enero, $amaStyle),
-                            WriterEntityFactory::createCell($rec->febrero, $amaStyle),
-                            WriterEntityFactory::createCell($rec->marzo, $amaStyle),
-                            WriterEntityFactory::createCell($rec->abril, $amaStyle),
-                            WriterEntityFactory::createCell($rec->mayo, $amaStyle),
-                            WriterEntityFactory::createCell($rec->junio, $amaStyle),
-                            WriterEntityFactory::createCell($rec->julio, $amaStyle),
-                            WriterEntityFactory::createCell($rec->agosto, $amaStyle),
-                            WriterEntityFactory::createCell($rec->septiembre, $amaStyle),
-                            WriterEntityFactory::createCell($rec->octubre, $amaStyle),
-                            WriterEntityFactory::createCell($rec->noviembre, $amaStyle),
-                            WriterEntityFactory::createCell($rec->diciembre, $amaStyle),
-                            WriterEntityFactory::createCell($total, $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->enero,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->febrero,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->marzo,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->abril,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->mayo,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->junio,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->julio,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->agosto,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->septiembre,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->octubre,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->noviembre,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($rec->diciembre,2), $amaStyle),
+                            WriterEntityFactory::createCell(round($total,2), $amaStyle),
                         ];
                         $singleRow = WriterEntityFactory::createRow($cells);
                         $writer->addRow($singleRow);
@@ -927,8 +927,6 @@ class C_reporteCombinado extends CI_Controller
             echo 'we';
         }
     }
-
-
 
     public function eliminar()
     {
