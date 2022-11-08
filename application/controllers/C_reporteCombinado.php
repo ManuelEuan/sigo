@@ -330,121 +330,121 @@ class C_reporteCombinado extends CI_Controller
                     array_push($arrayaglomerados, (int)$value->iIdActividadHija);
                 }
             }
-                    foreach ($records as $rec) {
-                        if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
-                        $totalEne = 0;
-                        $totalFeb = 0;
-                        $totalMar = 0;
-                        $totalAbr = 0;
-                        $totalMay = 0;
-                        $totalJun = 0;
-                        $totalJul = 0;
-                        $totalAgo = 0;
-                        $totalSep = 0;
-                        $totalOct = 0;
-                        $totalNov = 0;
-                        $totalDic = 0;
-                        $totalAcumulado = 0;
-                        $hija = $mrep->obtenerIdHija($rec->idact);
-                        foreach ($hija as $rhija) {
-                            $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
-                            // var_dump($hijadatos);
-                            foreach ($hijadatos as $h) {
-                                if ($h->isactivo == 1) {
-                                    $totalEne = $totalEne + $h->enero;
-                                    $totalFeb = $totalFeb + $h->febrero;
-                                    $totalMar = $totalMar + $h->marzo;
-                                    $totalAbr = $totalAbr + $h->abril;
-                                    $totalMay = $totalMay + $h->mayo;
-                                    $totalJun = $totalJun + $h->junio;
-                                    $totalJul = $totalJul + $h->julio;
-                                    $totalAgo = $totalAgo + $h->agosto;
-                                    $totalSep = $totalSep + $h->septiembre;
-                                    $totalOct = $totalOct + $h->octubre;
-                                    $totalNov = $totalNov + $h->noviembre;
-                                    $totalDic = $totalDic + $h->diciembre;
-                                }
-                            }
-                            $totalAcumulado = $totalEne +
-                                $totalFeb  +  $totalMar + $totalAbr  + $totalMay + $totalJun  + $totalJul  + $totalAgo  + $totalSep + $totalOct  + $totalNov  + $totalDic;
-                        }
-                        $total = 0;
-                        $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
-                        // Obtenemos el ID de los primeros
-                        $cells = [
-                            WriterEntityFactory::createCell($rec->nivel),
-                            WriterEntityFactory::createCell($rec->resumennarrativo),
-                            WriterEntityFactory::createCell($rec->tipo),
-                            WriterEntityFactory::createCell($rec->dimension),
-                            WriterEntityFactory::createCell($rec->accion),
-                            WriterEntityFactory::createCell($rec->clave),
-                            WriterEntityFactory::createCell($rec->indicador),
-                            WriterEntityFactory::createCell($rec->meta),
-                            WriterEntityFactory::createCell($rec->frecuencia),
-                            WriterEntityFactory::createCell($rec->operacion),
-                            WriterEntityFactory::createCell($rec->vvariable),
-                            WriterEntityFactory::createCell($rec->unidadmedida),
-                            WriterEntityFactory::createCell($rec->formula),
-                            WriterEntityFactory::createCell($rec->umedioverifica),
-                            WriterEntityFactory::createCell(round($rec->enero,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->febrero,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->marzo,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->abril,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->mayo,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->junio,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->julio,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->agosto,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->septiembre,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->octubre,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->noviembre,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($rec->diciembre,2), $amaStyle),
-                            WriterEntityFactory::createCell(round($total,2), $amaStyle),
-                        ];
-                        $singleRow = WriterEntityFactory::createRow($cells);
-                        $writer->addRow($singleRow);
-        
-                        foreach ($hija as $rhija) {
-                            $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
-                            // var_dump($hijadatos);
-                            foreach ($hijadatos as $h) {
-                                if ($h->isactivo == 1 || $h->isactivo == ''  && $h->isentregable == 1) {
-                                    $totalMeses = $h->enero + $h->febrero + $h->marzo + $h->abril + $h->mayo + $h->junio + $h->julio + $h->agosto + $h->septiembre + $h->octubre + $h->noviembre + $h->diciembre;
-                                    $cells = [
-                                        WriterEntityFactory::createCell($rec->nivel),
-                                        WriterEntityFactory::createCell($rec->resumennarrativo),
-                                        WriterEntityFactory::createCell($rec->tipo),
-                                        WriterEntityFactory::createCell($rec->dimension),
-                                        WriterEntityFactory::createCell($h->accion),
-                                        WriterEntityFactory::createCell($h->clave),
-                                        WriterEntityFactory::createCell($h->indicador),
-                                        WriterEntityFactory::createCell($rec->meta),
-                                        WriterEntityFactory::createCell($rec->frecuencia),
-                                        WriterEntityFactory::createCell($rec->operacion),
-                                        WriterEntityFactory::createCell($rec->vvariable),
-                                        WriterEntityFactory::createCell($rec->unidadmedida),
-                                        WriterEntityFactory::createCell($rec->formula),
-                                        WriterEntityFactory::createCell($rec->umedioverifica),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->enero : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->febrero : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->marzo : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->abril : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->mayo : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->junio : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->julio : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->agosto : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->septiembre : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
-                                        WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
-                                        WriterEntityFactory::createCell($totalMeses),
-                                    ];
-                                    $singleRow = WriterEntityFactory::createRow($cells);
-                                    $writer->addRow($singleRow);
-                                }
+
+            foreach ($records as $rec) {
+                if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
+                    $totalEne = 0;
+                    $totalFeb = 0;
+                    $totalMar = 0;
+                    $totalAbr = 0;
+                    $totalMay = 0;
+                    $totalJun = 0;
+                    $totalJul = 0;
+                    $totalAgo = 0;
+                    $totalSep = 0;
+                    $totalOct = 0;
+                    $totalNov = 0;
+                    $totalDic = 0;
+                    $totalAcumulado = 0;
+                    $hija = $mrep->obtenerIdHija($rec->idact);
+                    foreach ($hija as $rhija) {
+                        $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
+                        // var_dump($hijadatos);
+                        foreach ($hijadatos as $h) {
+                            if ($h->isactivo == 1) {
+                                $totalEne = $totalEne + $h->enero;
+                                $totalFeb = $totalFeb + $h->febrero;
+                                $totalMar = $totalMar + $h->marzo;
+                                $totalAbr = $totalAbr + $h->abril;
+                                $totalMay = $totalMay + $h->mayo;
+                                $totalJun = $totalJun + $h->junio;
+                                $totalJul = $totalJul + $h->julio;
+                                $totalAgo = $totalAgo + $h->agosto;
+                                $totalSep = $totalSep + $h->septiembre;
+                                $totalOct = $totalOct + $h->octubre;
+                                $totalNov = $totalNov + $h->noviembre;
+                                $totalDic = $totalDic + $h->diciembre;
                             }
                         }
+                        $totalAcumulado = $totalEne +
+                            $totalFeb  +  $totalMar + $totalAbr  + $totalMay + $totalJun  + $totalJul  + $totalAgo  + $totalSep + $totalOct  + $totalNov  + $totalDic;
+                    }
+                    $total = 0;
+                    $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
+                    // Obtenemos el ID de los primeros
+                    $cells = [
+                        WriterEntityFactory::createCell($rec->nivel),
+                        WriterEntityFactory::createCell($rec->resumennarrativo),
+                        WriterEntityFactory::createCell($rec->tipo),
+                        WriterEntityFactory::createCell($rec->dimension),
+                        WriterEntityFactory::createCell($rec->accion),
+                        WriterEntityFactory::createCell($rec->clave),
+                        WriterEntityFactory::createCell($rec->indicador),
+                        WriterEntityFactory::createCell($rec->meta),
+                        WriterEntityFactory::createCell($rec->frecuencia),
+                        WriterEntityFactory::createCell($rec->operacion),
+                        WriterEntityFactory::createCell($rec->vvariable),
+                        WriterEntityFactory::createCell($rec->unidadmedida),
+                        WriterEntityFactory::createCell($rec->formula),
+                        WriterEntityFactory::createCell($rec->umedioverifica),
+                        WriterEntityFactory::createCell(round($rec->enero,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->febrero,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->marzo,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->abril,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->mayo,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->junio,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->julio,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->agosto,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->septiembre,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->octubre,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->noviembre,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($rec->diciembre,2), $amaStyle),
+                        WriterEntityFactory::createCell(round($total,2), $amaStyle),
+                    ];
+                    $singleRow = WriterEntityFactory::createRow($cells);
+                    $writer->addRow($singleRow);
+    
+                    foreach ($hija as $rhija) {
+                        $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
+                        // var_dump($hijadatos);
+                        foreach ($hijadatos as $h) {
+                            if ($h->isactivo == 1 || $h->isactivo == ''  && $h->isentregable == 1) {
+                                $totalMeses = $h->enero + $h->febrero + $h->marzo + $h->abril + $h->mayo + $h->junio + $h->julio + $h->agosto + $h->septiembre + $h->octubre + $h->noviembre + $h->diciembre;
+                                $cells = [
+                                    WriterEntityFactory::createCell($rec->nivel),
+                                    WriterEntityFactory::createCell($rec->resumennarrativo),
+                                    WriterEntityFactory::createCell($rec->tipo),
+                                    WriterEntityFactory::createCell($rec->dimension),
+                                    WriterEntityFactory::createCell($h->accion),
+                                    WriterEntityFactory::createCell($h->clave),
+                                    WriterEntityFactory::createCell($h->indicador),
+                                    WriterEntityFactory::createCell($rec->meta),
+                                    WriterEntityFactory::createCell($rec->frecuencia),
+                                    WriterEntityFactory::createCell($rec->operacion),
+                                    WriterEntityFactory::createCell($rec->vvariable),
+                                    WriterEntityFactory::createCell($rec->unidadmedida),
+                                    WriterEntityFactory::createCell($rec->formula),
+                                    WriterEntityFactory::createCell($rec->umedioverifica),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->enero : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->febrero : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->marzo : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->abril : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->mayo : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->junio : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->julio : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->agosto : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->septiembre : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
+                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
+                                    WriterEntityFactory::createCell($totalMeses),
+                                ];
+                                $singleRow = WriterEntityFactory::createRow($cells);
+                                $writer->addRow($singleRow);
+                            }
+                        }
+                    }
                 }
-            
             }
 
             $writer->close();
