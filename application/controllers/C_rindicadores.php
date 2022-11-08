@@ -67,14 +67,12 @@ class C_rindicadores extends CI_Controller {
     public function generarrepo()
     {
         ini_set('max_execution_time', 600); // 5 Minutos máximo
-        $anio = $this->input->post('anio',true);
-        $eje = $this->input->post('selEje',true);
-        $dep = $this->input->post('selDep',true);
-        $resp = array('resp' => false, 'error_message' => '', 'url' => '');
-        $tabla = array();
-        $pp = $this->input->post('selPP',true);
-
-	
+        $anio   = $this->input->post('anio',true);
+        $eje    = $this->input->post('selEje',true);
+        $dep    = $this->input->post('selDep',true);
+        $resp   = array('resp' => false, 'error_message' => '', 'url' => '');
+        $tabla  = array();
+        $pp     = $this->input->post('selPP',true);
 
         if(isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
         if(isset($_POST['ubp'])) $tabla['ubp'] = 1;
@@ -85,36 +83,32 @@ class C_rindicadores extends CI_Controller {
         if(isset($_POST['avances'])) $tabla['avances'] = 1;
         $group = $this->input->post('agrupar',true);
         $whereString = '';
-        if((int)$this->input->post('mes')  > 0){
-            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
-        }
-        
 
-        $mrep = new M_reporteindicadores();
+        if((int)$this->input->post('mes')  > 0)
+            $whereString = $whereString.'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")='. (int)$this->input->post('mes',true);
+
+        $mrep       = new M_reporteindicadores();
         $obtenerDep = $mrep->obtenerDep($dep);
         $obtenerEje = $mrep->obtenerEje($eje);
-        $proPre = $mrep->obtenerPPporId($pp);
+        $proPre     = $mrep->obtenerPPporId($pp);
         
         $query = $mrep->reporte_pat($anio, $eje, $dep,$whereString, $pp);
         $fechaactual = date('m-d-Y h:i:s a');
 
-        if($query->num_rows() > 0)
-        {
-
-            $records = $query->result(); 
-            $ruta = 'public/reportes/indicadores.xlsx';
-            $writer = WriterEntityFactory::createXLSXWriter();
+        if(sizeof($query) > 0) {
+            $ruta       = 'public/reportes/indicadores.xlsx';
+            $writer     = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);            
-			$blueStyle = (new StyleBuilder())
-            ->setBackgroundColor(Color::BLUE)
-            ->setFontColor(Color::WHITE)
-            ->setFontItalic()
-            ->build();
+			$blueStyle  = (new StyleBuilder())
+                                ->setBackgroundColor(Color::BLUE)
+                                ->setFontColor(Color::WHITE)
+                                ->setFontItalic()
+                                ->build();
             $tituloexcel = (new StyleBuilder())
-            ->setBackgroundColor(Color::WHITE)
-            ->setFontColor(Color::BLACK)
-            ->setFontSize(22)
-            ->build();
+                                ->setBackgroundColor(Color::WHITE)
+                                ->setFontColor(Color::BLACK)
+                                ->setFontSize(22)
+                                ->build();
             $cells =[
                 WriterEntityFactory::createCell('Organismo',$blueStyle),
                 WriterEntityFactory::createCell($obtenerDep->vDependencia),
@@ -182,82 +176,33 @@ class C_rindicadores extends CI_Controller {
 
             $toalMeta = 0;
 
-            foreach ($records as $rec){
-                $mes = date("m",strtotime($rec->dFecha));
-
-                $mestrim = is_null($mes) ? date('m') : $mes;
-                $trim=floor(($mestrim-1)/3)+1;
-
-                if($trim == 1){
-                    $totalAvanceTrim1 = $totalAvanceTrim1 + $rec->nAvance;
-                }
-                if($trim == 2){
-                    $totalAvanceTrim2 = $totalAvanceTrim2 + $rec->nAvance;
-                }
-                if($trim == 3){
-                    $totalAvanceTrim3 = $totalAvanceTrim2 + $rec->nAvance;
-                }
-                if($trim == 4){
-                    $totalAvanceTrim4 = $totalAvanceTrim4 + $rec->nAvance;
-                    
-                }
-                
-
+            foreach ($query as $rec) {
+                    $totalAvanceTrim1 = $totalAvanceTrim1 + $rec->trimestre1;
+                    $totalAvanceTrim2 = $totalAvanceTrim2 + $rec->trimestre2;
+                    $totalAvanceTrim3 = $totalAvanceTrim3 + $rec->trimestre3;
+                    $totalAvanceTrim4 = $totalAvanceTrim4 + $rec->trimestre4;
             }
-
             $toalMeta = $totalAvanceTrim1 + $totalAvanceTrim2 + $totalAvanceTrim3 + $totalAvanceTrim4;
 
-            foreach ($records as $rec)
-            {
-                $mes = date("m",strtotime($rec->dFecha));
-
-                $mestrim = is_null($mes) ? date('m') : $mes;
-                $trim=floor(($mestrim-1)/3)+1;
-
+            foreach ($query as $rec) {
                 $cells = [
-                   
                     WriterEntityFactory::createCell($rec->vNivelMIR),
                     WriterEntityFactory::createCell((int)$rec->iIdActividad),
                     WriterEntityFactory::createCell($rec->vresumennarrativo),
                     WriterEntityFactory::createCell($rec->ventregable),
                     WriterEntityFactory::createCell($rec->vFormula),
                     WriterEntityFactory::createCell($rec->vPeriodicidad),
-                    WriterEntityFactory::createCell((int)$rec->nMeta)
+                    WriterEntityFactory::createCell($rec->meta)
                 ];
 
-                
-                    if($trim == 1){
-                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
-                    }else{
-                        $cells[] = WriterEntityFactory::createCell('');
-                    }
-                    if($trim == 2){
-                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
-                        
-                    }else{
-                        $cells[] = WriterEntityFactory::createCell('');
-                    }
-                    if($trim == 3){
-                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
-                        
-                    }else{
-                        $cells[] = WriterEntityFactory::createCell('');
-                    }
-                    if($trim == 4){
-                        $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance);
-                        
-                    }else{
-                        $cells[] = WriterEntityFactory::createCell('');
-                    }
-                    
-                    $cells[] = WriterEntityFactory::createCell((float)$rec->nAvance, $blueStyle);
-                     
-                    
-
-                $singleRow = WriterEntityFactory::createRow($cells);
+                $cells[]    = WriterEntityFactory::createCell(round((float)$rec->trimestre1, 2));
+                $cells[]    = WriterEntityFactory::createCell(round((float)$rec->trimestre2, 2));
+                $cells[]    = WriterEntityFactory::createCell(round((float)$rec->trimestre3, 2));
+                $cells[]    = WriterEntityFactory::createCell(round((float)$rec->trimestre4, 2));
+                $total      = (float)$rec->trimestre1 + (float)$rec->trimestre2 + (float)$rec->trimestre3 + (float)$rec->trimestre4;
+                $cells[]    = WriterEntityFactory::createCell(round($total, 2), $blueStyle);
+                $singleRow  = WriterEntityFactory::createRow($cells);
                 $writer->addRow($singleRow);
-
-                
             }
 
             $cells = [
@@ -268,11 +213,11 @@ class C_rindicadores extends CI_Controller {
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell($totalAvanceTrim1, $blueStyle),
-                WriterEntityFactory::createCell($totalAvanceTrim2, $blueStyle),
-                WriterEntityFactory::createCell($totalAvanceTrim3, $blueStyle),
-                WriterEntityFactory::createCell($totalAvanceTrim4, $blueStyle),
-                WriterEntityFactory::createCell('Total Meta: '.$toalMeta, $blueStyle),
+                WriterEntityFactory::createCell(round($totalAvanceTrim1, 2), $blueStyle),
+                WriterEntityFactory::createCell(round($totalAvanceTrim2, 2), $blueStyle),
+                WriterEntityFactory::createCell(round($totalAvanceTrim3, 2), $blueStyle),
+                WriterEntityFactory::createCell(round($totalAvanceTrim4, 2), $blueStyle),
+                WriterEntityFactory::createCell('Total Meta: '.round($toalMeta, 2), $blueStyle),
                 
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
