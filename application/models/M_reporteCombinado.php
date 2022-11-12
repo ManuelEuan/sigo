@@ -612,6 +612,114 @@ group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave';
 
     return $query;
   }
+  // consulat de reporte por variables
+  public function reporte_pvariable($anio, $dep, $eje, $whereString, $mon, $pp)
+  {
+    $barra = "' | '";
+    $mes = "'month'";
+    $coma = "','";
+    $select='select idact, nivel, resumennarrativo,accion,STRING_AGG ( DISTINCT indicador,' .$barra. ') as indicador,lineabase,avg(meta) as meta, STRING_AGG ( DISTINCT frecuencia,' .$barra. ') as frecuencia,STRING_AGG ( DISTINCT formula,' .$barra. ') as formula, STRING_AGG( DISTINCT umedioverifica, ' .$barra. ') as umedioverifica,supuesto, vvariable as  vvariable,
+    
+    sum(iValortri1) as iValortri1,sum(iValortri2) as iValortri2,sum(iValortri3) as iValortri3,sum(iValortri4) as iValortri4,(SUM (tri1)* 100)/avg(meta) AS tri1, (sum(tri2)* 100)/avg(meta) as tri2,(sum(tri3)* 100)/avg(meta) as tri3,
+    (sum(tri4) * 100)/avg(meta) as tri4, ( sum(totalAvance) * 100)/avg(meta) as total,
+    
+    dimension,tipo, clave, STRING_AGG ( DISTINCT operacion,' .$barra. ') as operacion,  STRING_AGG ( DISTINCT unidadmedida,' .$barra. ') as unidadmedida
+    from 
+    (select idact, nivel,supuesto,lineabase, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
+            sum(case when (fecha=1) then avance when (fecha=2) then avance when (fecha=3) then avance end) as tri1,
+            sum(case when (fecha=4) then avance when (fecha=5) then avance  when (fecha=6) then avance end) as tri2,
+            sum(case when (fecha=7) then avance when (fecha=8) then avance when (fecha=9) then avance end) as tri3,
+            sum(case when (fecha=10) then avance when (fecha=11) then avance when (fecha=12) then avance end) as tri4
+         
+    ,sum(case when (fecha=1) then iValor when (fecha=2) then iValor when (fecha=3) then iValor end) as iValortri1,
+            sum(case when (fecha=4) then iValor when (fecha=5) then iValor  when (fecha=6) then iValor end) as iValortri2,
+            sum(case when (fecha=7) then iValor when (fecha=8) then iValor when (fecha=9) then iValor end) as iValortri3,
+            sum(case when (fecha=10) then iValor when (fecha=11) then iValor when (fecha=12) then iValor end) as iValortri4,
+       sum(avance) as totalAvance
+   
+   from
+    
+            (select idact,supuesto,lineabase, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+                    umedioverifica, fecha, sum(avance) as avance, dep, iideje, sum(iValor) as iValor  from
+                    (SELECT "NivelMIR"."vNivelMIR" as nivel,
+                            "Actividad"."iIdActividad" as idact,
+                            "ResumenNarrativo"."vNombreResumenNarrativo" as resumennarrativo,
+                            "Actividad"."vtipoactividad" as tipo,
+                            "DimensionIndicador"."vDescripcion" as dimension,
+                            "Actividad"."vActividad" as accion,
+                            "Actividad"."iIdActividad" as clave,
+                            "Entregable"."vEntregable" as indicador,
+                            "DetalleEntregable"."nMeta" as meta,
+                            "Periodicidad"."vPeriodicidad" as frecuencia,
+                            "FormaIndicador"."vDescripcion" as operacion,
+               "VariableIndicador"."vNombreVariable" as vvariable,
+                            "UnidadMedida"."vUnidadMedida" as unidadmedida,
+                            "Entregable"."vFormula" as formula,
+                            "Entregable"."vMedioVerifica" as umedioverifica,
+                            date_part('.$mes.',"Avance"."dFecha") as fecha,
+                            "Avance"."nAvance" as avance,
+                            "Dependencia"."iIdDependencia" as dep,
+                            "PED2019Eje"."iIdEje" as iideje,
+                            "DetalleEntregable"."iIdDetalleEntregable" as iiddetalleentregable,
+                            "Avance"."iIdAvance" as iidavance,
+               "VariablesAvance"."iValor" as iValor,
+               "Actividad"."vSupuesto" as supuesto,
+               "Entregable"."nLineaBase" as lineabase
+                            FROM "Actividad"
+           
+                            INNER JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
+                            INNER JOIN "DetalleActividad" ON  "Actividad"."iIdActividad" = "DetalleActividad"."iIdActividad"
+                            left JOIN "AreaResponsable" ON "Actividad"."vResponsable" = cast("AreaResponsable"."iIdAreaResponsable" as varchar)
+                            left JOIN "ResumenNarrativo" ON "Actividad"."vResumenNarrativo" = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)
+                            INNER JOIN "Dependencia" ON "Dependencia"."iIdDependencia" = "Actividad"."iIdDependencia"
+                            INNER JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
+                            inner join "Retos" on "Actividad"."iReto"="Retos"."iIdReto"
+                            inner join "ProgramaPresupuestario" on "Actividad"."iIdProgramaPresupuestario" = "ProgramaPresupuestario"."iIdProgramaPresupuestario"
+                            left join "DetalleEntregable" on "DetalleActividad"."iIdDetalleActividad"="DetalleEntregable"."iIdDetalleActividad"
+                            left join "Entregable" on "DetalleEntregable"."iIdEntregable"="Entregable"."iIdEntregable"
+                            LEFT JOIN "DimensionIndicador" ON "DimensionIndicador"."iIdDimensionInd" = "Entregable"."iIdDimensionInd"
+                            LEFT JOIN "Periodicidad" ON "Periodicidad"."iIdPeriodicidad" = "Entregable"."iIdPeriodicidad"
+                            LEFT JOIN "FormaIndicador" ON "FormaIndicador"."iIdFormaInd" = "Entregable"."iIdFormaInd"
+                            LEFT JOIN "VariableIndicador" ON "VariableIndicador"."iIdEntregable" = "Entregable"."iIdEntregable"
+               
+                            left join "Avance" on "DetalleEntregable"."iIdDetalleEntregable"="Avance"."iIdDetalleEntregable"
+                LEFT JOIN "VariablesAvance" ON "Avance"."iIdAvance" = "VariablesAvance"."iIdAvance" AND "VariablesAvance"."iVariable"="VariableIndicador"."iIdVariableIndicador"
+                            LEFT JOIN "UnidadMedida" ON "UnidadMedida"."iIdUnidadMedida" = "Entregable"."iIdUnidadMedida"';
+
+    $where = ' WHERE "PED2019Eje"."iIdEje" = ' . $eje . ' AND "Actividad"."iActivo" = 1  AND "DetalleActividad"."iAnio" = ' . $anio . ' AND "DetalleActividad"."iActivo" = 1 AND
+               "Avance"."iActivo" = 1  AND "Entregable"."iActivo" = 1  AND "DetalleEntregable"."iActivo" = 1  ';
+    if ($dep != '') {
+      $weherDep = ' AND "Dependencia"."iIdDependencia" = ' . $dep;
+      $where = $where . $weherDep;
+    }
+    if ($pp != '' && $pp != null) {
+      $wherePP = ' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = ' . $pp;
+      $where = $where . $wherePP;
+    }
+    //si se requiere hacer que se selccione por trimestre, descomentar las siguites lines de codigo y agregar el select con trimestres
+    //  if($mon==1){
+    //   $where = $where . ' AND (date_part('.$mes.',"Avance"."dFecha")=1 OR date_part('.$mes.',"Avance"."dFecha")=2 OR date_part('.$mes.',"Avance"."dFecha")=3)';
+    //  }
+    //  if($mon==2){
+    //   $where = $where . ' AND (date_part('.$mes.',"Avance"."dFecha")=4 OR date_part('.$mes.',"Avance"."dFecha")=5 OR date_part('.$mes.',"Avance"."dFecha")=6)';
+    //  }
+    //  if($mon==3){
+    //   $where = $where . ' AND (date_part('.$mes.',"Avance"."dFecha")=7 OR date_part('.$mes.',"Avance"."dFecha")=8 OR date_part('.$mes.',"Avance"."dFecha")=9)';
+    //  }
+    //  if($mon==4){
+    //   $where = $where . ' AND (date_part('.$mes.',"Avance"."dFecha")=10 OR date_part('.$mes.',"Avance"."dFecha")=11 OR date_part('.$mes.',"Avance"."dFecha")=12)';
+    //  }
+    // $where = $where . $whereString;
+    $gropuBy = ' GROUP BY "VariableIndicador"."vNombreVariable","Actividad"."vSupuesto" ,"Entregable"."nLineaBase",fecha, nivel, resumennarrativo, tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, unidadmedida, formula, umedioverifica, avance, dep, "PED2019Eje"."iIdEje",iiddetalleentregable,iidavance,"VariablesAvance"."iValor")  vistaRCombinado
+    group by supuesto,lineabase,idact, nivel,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula,
+    umedioverifica, fecha, dep, iideje) consulta
+              group by idact, nivel, supuesto,lineabase,resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,iValor) qry
+       group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave, vvariable,supuesto,lineabase';
+    $sql = $select . $where . $gropuBy;
+    $query =  $this->db->query($sql);
+    //$_SESSION['sql'] = $this->db->last_query();
+    return $query;
+  }
 }
 
 

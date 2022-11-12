@@ -220,6 +220,7 @@ class C_avances extends CI_Controller {
                 }
                 $result = false;
                 $table = 'Avance';
+                $table2 = 'VariablesAvance';
                 if(isset($_POST['municipios'])){
                     $arrMunicipios = $this->input->post('municipios',TRUE);
                     $dataNuevo['arrMunicipios'] = $arrMunicipios;
@@ -246,9 +247,27 @@ class C_avances extends CI_Controller {
                         $idInsertado = $this->ma->guardado_general($table,$data);
                         
 
-                        foreach($Valores as $key => $v){
-                            $this->ma->insertarVariableAvance('VariablesAvance', array('iVariable' => $Letras[$key], 'iValor' => $v, 'iIdAvance' => $idInsertado), $con);
-                        }
+                            foreach($Valores as $key => $v){
+                                //buscamos id 
+                                $datosDet=$this->ma->obtenerDats($data['iIdDetalleEntregable']);
+                                $id_Entregable=0;
+                                $id_variable=0;
+                                foreach ($datosDet as $datosDetalle)
+                                {
+                                    $id_Entregable = $datosDetalle->iIdEntregable;
+                                }
+                               // $iIdVariableIndicador=$data['iIdDetalleEntregable'];
+                                 $VariableIndicador=$this->ma->buscarVariableIndicador($id_Entregable,$Letras[$key]);
+                                foreach ($VariableIndicador as $VariablesIndicador)
+                                {
+                                    $id_variable = $VariablesIndicador->iIdVariableIndicador;
+                                }
+                                $dataV['iVariable']=$id_variable;
+                                $dataV['iValor']=$v;
+                                $dataV['iIdAvance']=$idInsertado;
+                                //$iIdVariableIndicador=$this->ma->buscarVariableIndicador($id_Entregable,$Letras[$key]);
+                                $this->ma->insertarVariableAvance($table2,$dataV);
+                            }
 
                         if($idInsertado){
                             $result = true;
@@ -298,9 +317,26 @@ class C_avances extends CI_Controller {
 
                     $idInsertado = $this->ma->guardado_general($table,$data);
 
-                    foreach($Valores as $key => $v){
-                        $this->ma->insertarVariableAvance('VariablesAvance', array('iVariable' => $Letras[$key], 'iValor' => $v, 'iIdAvance' => $idInsertado), $con);
-                    }
+                        foreach($Valores as $key => $v){
+                            $datosDet=$this->ma->obtenerDats($data['iIdDetalleEntregable']);
+                                $id_Entregable=0;
+                                $id_variable=0;
+                                foreach ($datosDet as $datosDetalle)
+                                {
+                                    $id_Entregable = $datosDetalle->iIdEntregable;
+                                }
+                               // $iIdVariableIndicador=$data['iIdDetalleEntregable'];
+                                 $VariableIndicador=$this->ma->buscarVariableIndicador($id_Entregable,$Letras[$key]);
+                                foreach ($VariableIndicador as $VariablesIndicador)
+                                {
+                                    $id_variable = $VariablesIndicador->iIdVariableIndicador;
+                                }
+                            $dataV['iVariable']=$id_variable;
+                            $dataV['iValor']=$v;
+                            $dataV['iIdAvance']=$idInsertado;
+                            
+                            $this->ma->insertarVariableAvance($table2,$dataV);
+                        }
 
                     if($idInsertado){
                         $result = true;
