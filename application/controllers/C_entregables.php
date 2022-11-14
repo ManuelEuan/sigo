@@ -14,459 +14,465 @@ class C_entregables extends CI_Controller
     }
 
     //Muestra la vista principal
-    public function index(){
+        public function index(){
 
-        if(isset($_POST['id'])){
-            $seg = new Class_seguridad();
-            $idActividad = isset($_POST['id']);
+            if(isset($_POST['id'])){
+                $seg = new Class_seguridad();
+                $idActividad = isset($_POST['id']);
+
+                $data['id_detact'] = $this->input->post('id',true);
+                $data['vActividad'] = $this->me->nombre_actividad($data['id_detact']);
+                $data['tabla'] = $this->vista_tabla_entregables($data['id_detact']);
+                $data['tabla_alineacion'] = $this->vista_tabla_alineacion($data['id_detact']);
+                $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
+                
+                $this->load->view('entregables/principal',$data);
+            }
+        }
+
+        //Muestra la vista para agregar
+        public function create(){
+            
+            $lib = new Class_options();
 
             $data['id_detact'] = $this->input->post('id',true);
-            $data['vActividad'] = $this->me->nombre_actividad($data['id_detact']);
-            $data['tabla'] = $this->vista_tabla_entregables($data['id_detact']);
-            $data['tabla_alineacion'] = $this->vista_tabla_alineacion($data['id_detact']);
-            $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);
+            $data['unidadmedida'] = $lib->options_tabla('unidades_medida');
+            $data['periodicidad'] = $lib->options_tabla('periodicidad');
+            $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado');
+            $data['compromiso'] = $lib->options_tabla('compromisos');
+            $data['compromisos'] = $this->me->mostrar_compromisos();
+
+            //Agregados Saul Tun
+            $data['FormaInd'] = $this->me->obtenerForma();
+            $data['dimension'] = $this->me->obtenerDimension();
+
+            $data['municipios'] = $lib->options_multiselect('municipios',[]);
+            $rsp = $this->me->tieneMIR($data['id_detact']);
+            $incluyeMIR = false;
+            if($rsp[0]->iIncluyeMIR == 1){
+                $incluyeMIR = true;
+            }
+            $data['incluyeMIR'] = $incluyeMIR;
+
+            $this->load->view('entregables/contenido_agregar',$data);
+        }
+
+        //Funcion para insertar
+        public function insert()
+        {
+            if(isset($_POST['entregable']) && isset($_POST['unidadmedida']) && isset($_POST['sujetoafectado']) 
+            && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_detalleactividad'])){
+
+                if($_POST['meta']){
+
+                    $data['vEntregable'] = $this->input->post('entregable',TRUE);
+                    $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
+                    $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
+
+                    if(isset($_POST['municipalizable'])){
+                        $municipalizacion = $this->input->post('municipalizable',TRUE);
+                    }else{
+                        $municipalizacion = 0;
+                    }
+
+                    if(isset($_POST['checkMismoBenef'])){
+                        $beneficios = $this->input->post('checkMismoBenef',TRUE);
+                    }else{
+                        $beneficios = 0;
+                    }
+
+                    $data['iMunicipalizacion'] = $municipalizacion;
+                    $data['iMismosBeneficiarios'] = $beneficios;
+                    $data['iIdDependencia'] = $_SESSION[PREFIJO.'_iddependencia'];
+                    $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
+                    $data['iActivo']= 1;
+
+                    //Agregado Saul Tun
+                    $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
+                    $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
+                    $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
+                    $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
+                    $data['vFormula'] = $this->input->post('areaCalculo',TRUE) ?? 'A';
+                    $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
+                    $data['iAutorizado'] = 1;
+                    $Variable = $this->input->post('Variable', true);
+                    $Letra = $this->input->post('Letra', true);
+
+
+                    $table = 'Entregable';
+
+                    $identregable = $this->me->guardado_general($table,$data);
+                    
+                    if($identregable > 0){
+                    //municipio entregable
+                    $municipios = $this->input->post('municipios',true);
+
+                    if(isset($_POST['municipios'])){
+                        foreach ($municipios as $value) {
+                        $muni['iIdEntregable'] = $identregable;
+                        $muni['iIdMunicipio'] = $value;
+
+                        $this->me->guardar_entregablemunicipio('EntregableMunicipio', $muni);
+                        }
+                    }
+
+                    //Agregado Saul Tun
+                    foreach($Variable as $key => $v){
+                        $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $identregable), $con);
+                    }
+
+                        $table2 = 'DetalleEntregable';
+
+                        $data2['iIdEntregable'] = $identregable;
+                        $data2['iIdDetalleActividad'] = $this->input->post('id_detalleactividad',TRUE);
+                        $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
+                        $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
+                        $data2['dFechaInicio'] = $this->input->post('fechainicio',true);
+                        $data2['dFechaFin'] = $this->input->post('fechafin',true);
+                        $data2['iAutorizado'] = 1;
+
+                        $cantidadEntregables = $this->validar_entregables($this->input->post('id_detalleactividad',TRUE));
+
+                        if($cantidadEntregables != null){
+
+                            $id_detalleentregable = $cantidadEntregables->iIdDetalleEntregable;
+
+                            $pond_alta = $cantidadEntregables->iPonderacion;
+
+                            $nueva_ponderacion = $pond_alta - 1;
+                            //$data2_1 = array();
+                            $data2_1['iPonderacion'] = $nueva_ponderacion;
+
+                            if($this->me->modificar_detalleentregable($id_detalleentregable,$data2_1)){
+                                $ponderacion = 1;
+                            }
+                        }else{
+                            $ponderacion = 100;
+                        }
+
+                        $data2['iPonderacion'] = $ponderacion;
+                        $data2['iActivo'] = 1;
+
+                        $id_detentregable = $this->me->guardado_general($table2,$data2);
+
+                        if($id_detentregable > 0){
+
+                            if(isset($_POST['compromiso']) && $_POST['compromiso'] != 0 && isset($_POST['componente']) && $_POST['componente'] != 0){
+
+                                $table3 = 'EntregableComponente';
+
+                                $data3['iIdEntregable'] = $identregable;
+                                $data3['iIdComponente'] = $this->input->post('componente',TRUE);
+
+                                $this->me->guardar_entregablecomponente($table3,$data3);
+                            }
+
+                            echo $id_detentregable;
+
+                        }else{                   
+                            echo 'error';
+                        }
+                    }
+                }else{
+                    echo 'error_meta';
+                }          
+            }else{
+                echo "error post";
+            }
+        }
+
+        //Muestra la pantalla de editar
+        public function edit(){
+
+            $lib = new Class_options();
+            $seg = new Class_seguridad();
+
+            $data = array();
+            $incluyeMIR = false;
+
+            $data['id_ent'] = $this->input->post('id',TRUE);
+            $data['id_detact'] = $this->input->post('id2',TRUE);
+
+            $data3['eje'] = $this->me->mostrarEje();
+            $data3['consulta1'] = $this->me->preparar_update($data['id_detact']);
             
-            $this->load->view('entregables/principal',$data);
+            $arrMunicipios = array();
+            $municipios = $this->me->mostrar_entregables_municipio($data['id_ent']);
+            foreach ($municipios as $row) {
+                $arrMunicipios[] = $row->iIdMunicipio;
+            }
+            $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
+
+            $data['consulta'] = $this->me->mostrar_entregable_actual($data['id_ent'], $data['id_detact']);
+            $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
+
+            if($componente != NULL){
+                $data['componente'] = $lib->options_tabla('componentes_compromiso',$componente->iIdComponente,'cp.iIdCompromiso = '.$componente->iIdCompromiso.'');
+                $data['compromiso'] = $lib->options_tabla('compromisos',$componente->iIdCompromiso);
+            }else{
+                $data['componente'] = '<option value="0">Seleccionar...</option>';
+                $data['compromiso'] = $lib->options_tabla('compromisos');
+            }
+            $data['unidadmedida'] = $lib->options_tabla('unidades_medida',$data['consulta']->iIdUnidadMedida);
+            $data['periodicidad'] = $lib->options_tabla('periodicidad',$data['consulta']->iIdPeriodicidad);
+            $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado',$data['consulta']->iIdSujetoAfectado);
+            $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
+            $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
+
+            //Agregados Saul
+            $data['formaIndicador'] = $this->me->obtenerForma();
+            $data['dimension'] = $this->me->obtenerDimension();
+            $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
+            
+            $data['baseIndicador'] = $data['consulta']->nLineaBase;
+            $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
+            $data['areaCalculo'] = $data['consulta']->vFormula;
+
+            $data['idForma'] = $data['consulta']->iIdFormaInd;
+            $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
+            $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
+            $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
+            $rsp = $this->me->tieneMIR($data['id_detact']);
+            if($rsp[0]->iIncluyeMIR == 1){
+                $incluyeMIR = true;
+            }
+            $data['incluyeMIR'] = $incluyeMIR;
+
+            if($all_edit > 1){
+                $data['candado'] = false;
+            } else {
+                $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
+            }
+            $new_array = array_merge($data,$data3);
+            $this->load->view('entregables/contenido_modificar', $new_array);
         }
-    }
 
-    //Muestra la vista para agregar
-    public function create(){
-        
-        $lib = new Class_options();
+        public function obtenerDatosAntiguos($idEnt, $idAct){
+            $lib = new Class_options();
+            $seg = new Class_seguridad();
 
-        $data['id_detact'] = $this->input->post('id',true);
-        $data['unidadmedida'] = $lib->options_tabla('unidades_medida');
-        $data['periodicidad'] = $lib->options_tabla('periodicidad');
-        $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado');
-        $data['compromiso'] = $lib->options_tabla('compromisos');
-        $data['compromisos'] = $this->me->mostrar_compromisos();
+            $data = array();
 
-        //Agregados Saul Tun
-        $data['FormaInd'] = $this->me->obtenerForma();
-        $data['dimension'] = $this->me->obtenerDimension();
+            $data['id_ent'] = $idEnt;//$this->input->post('id',TRUE);
+            $data['id_detact'] = $idAct;//$this->input->post('id2',TRUE);
 
-        $data['municipios'] = $lib->options_multiselect('municipios',[]);
-        $rsp = $this->me->tieneMIR($data['id_detact']);
-        $incluyeMIR = false;
-        if($rsp[0]->iIncluyeMIR == 1){
-            $incluyeMIR = true;
+            $data3['eje'] = $this->me->mostrarEje();
+            $data3['consulta1'] = $this->me->preparar_update($data['id_detact']);
+            
+            $arrMunicipios = array();
+            $municipios = $this->me->mostrar_entregables_municipio($data['id_ent']);
+            foreach ($municipios as $row) {
+                $arrMunicipios[] = $row->iIdMunicipio;
+            }
+            $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
+
+            $data['consulta'] = $this->me->obtenerAntes($data['id_ent'], $data['id_detact']);
+            $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
+
+            if($componente != NULL){
+                $data['componente'] = $lib->options_tabla('componentes_compromiso',$componente->iIdComponente,'cp.iIdCompromiso = '.$componente->iIdCompromiso.'');
+                $data['compromiso'] = $lib->options_tabla('compromisos',$componente->iIdCompromiso);
+            }else{
+                $data['componente'] = '<option value="0">Seleccionar...</option>';
+                $data['compromiso'] = $lib->options_tabla('compromisos');
+            }
+            $data['unidadmedida'] = $lib->options_tabla('unidades_medida',$data['consulta']->iIdUnidadMedida);
+            $data['periodicidad'] = $lib->options_tabla('periodicidad',$data['consulta']->iIdPeriodicidad);
+            $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado',$data['consulta']->iIdSujetoAfectado);
+            $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
+            $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
+
+            //Agregados Saul
+            $data['formaIndicador'] = $this->me->obtenerForma();
+            $data['dimension'] = $this->me->obtenerDimension();
+            $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
+            
+            $data['baseIndicador'] = $data['consulta']->nLineaBase;
+            $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
+            $data['areaCalculo'] = $data['consulta']->vFormula;
+
+            $data['idForma'] = $data['consulta']->iIdFormaInd;
+            $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
+            $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
+            $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
+
+            if($all_edit > 1){
+                $data['candado'] = false;
+            } else {
+                $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
+            }
+            $new_array = array_merge($data,$data3);
+            return $new_array;
         }
-        $data['incluyeMIR'] = $incluyeMIR;
 
-        $this->load->view('entregables/contenido_agregar',$data);
-    }
-
-    //Funcion para insertar
-    public function insert()
-    {
-        if(isset($_POST['entregable']) && isset($_POST['unidadmedida']) && isset($_POST['sujetoafectado']) 
-        && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_detalleactividad'])){
-
-            if($_POST['meta']){
-
+        //Funcion para editar
+        public function update(){
+            
+            if(isset($_POST['entregable']) && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_entregable']) && isset($_POST['id_detalleactividad']) && isset($_POST['metamodificada']))
+            {
+                
+                $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
+            
+                $datosCambiados = array();
+                $datosAntiguos = array();
+                $seg = new Class_seguridad();
+                $id_ent = $this->input->post('id_entregable');
+                // Para saber que campos no debemos actualizar
+                $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
+                
+                if($all_edit > 1){
+                    $candado = false;
+                } else {
+                    $candado = ($this->me->avances_capturados($id_ent) > 0) ? true:false;
+                }
+                
+                //
                 $data['vEntregable'] = $this->input->post('entregable',TRUE);
-                $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
+                
                 $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
-
-                if(isset($_POST['municipalizable'])){
-                    $municipalizacion = $this->input->post('municipalizable',TRUE);
-                }else{
-                    $municipalizacion = 0;
-                }
-
-                if(isset($_POST['checkMismoBenef'])){
-                    $beneficios = $this->input->post('checkMismoBenef',TRUE);
-                }else{
-                    $beneficios = 0;
-                }
-
-                $data['iMunicipalizacion'] = $municipalizacion;
-                $data['iMismosBeneficiarios'] = $beneficios;
-                $data['iIdDependencia'] = $_SESSION[PREFIJO.'_iddependencia'];
-                $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
-                $data['iActivo']= 1;
-
-                //Agregado Saul Tun
+                
+                $data['vNombreEntregable'] = '.';
+                //Agregado Saul
                 $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
+                
                 $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
+                
                 $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
+                
                 $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
+                
                 $data['vFormula'] = $this->input->post('areaCalculo',TRUE) ?? 'A';
+                
                 $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
-                $data['iAutorizado'] = 1;
+
+                $data['iAutorizado'] = 0;
+
+                //Actualizar tabla variables
+
                 $Variable = $this->input->post('Variable', true);
+                
                 $Letra = $this->input->post('Letra', true);
+                $idVariable = $this->input->post('idVariable', true);
+                // var_dump($id_ent) ;
+                // return "as";
 
+                foreach($Variable as $key => $v){
+                    if($idVariable[$key] == ''){
+                        $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent), $con);
+                    }else{
+                        $this->me->actualizarVariables($idVariable[$key], array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent));
+                    }   
+                }
+                if(!$candado)
+                {
+                    $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
+                    
+                    $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
+                    
+                    $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
+                    
+                    $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;
+                    
+                }else{
+                    $data['iIdSujetoAfectado'] = $datosViejos['consulta'][0]->iIdSujetoAfectado;
+                    
+                    $data['iIdUnidadMedida'] = $datosViejos['consulta'][0]->iIdUnidadMedida;
+                    
+                    $data['iMunicipalizacion']  = $datosViejos['consulta'][0]->iMunicipalizacion;
+                    
+                    $data['iMismosBeneficiarios'] = $datosViejos['consulta'][0]->iMismosBeneficiarios;
+                }
 
+                $where = "iIdEntregable =".$id_ent;
                 $table = 'Entregable';
 
-                $identregable = $this->me->guardado_general($table,$data);
-                
-                if($identregable > 0){
-                  //municipio entregable
-                $municipios = $this->input->post('municipios',true);
-
-                if(isset($_POST['municipios'])){
-                    foreach ($municipios as $value) {
-                      $muni['iIdEntregable'] = $identregable;
-                      $muni['iIdMunicipio'] = $value;
-
-                      $this->me->guardar_entregablemunicipio('EntregableMunicipio', $muni);
-                    }
-                }
-
-                //Agregado Saul Tun
-                foreach($Variable as $key => $v){
-                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $identregable), $con);
-                }
-
+                if($this->me->modificacion_general($where,$table,$data))
+                {                
+                    $where2 = array('iIdEntregable' => $id_ent, 'iIdDetalleActividad' => $this->input->post('id_detalleactividad',TRUE));
                     $table2 = 'DetalleEntregable';
-
-                    $data2['iIdEntregable'] = $identregable;
-                    $data2['iIdDetalleActividad'] = $this->input->post('id_detalleactividad',TRUE);
-                    $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
-                    $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
-                    $data2['dFechaInicio'] = $this->input->post('fechainicio',true);
-                    $data2['dFechaFin'] = $this->input->post('fechafin',true);
-                    $data2['iAutorizado'] = 1;
-
-                    $cantidadEntregables = $this->validar_entregables($this->input->post('id_detalleactividad',TRUE));
-
-                    if($cantidadEntregables != null){
-
-                        $id_detalleentregable = $cantidadEntregables->iIdDetalleEntregable;
-
-                        $pond_alta = $cantidadEntregables->iPonderacion;
-
-                        $nueva_ponderacion = $pond_alta - 1;
-                        //$data2_1 = array();
-                        $data2_1['iPonderacion'] = $nueva_ponderacion;
-
-                        if($this->me->modificar_detalleentregable($id_detalleentregable,$data2_1)){
-                            $ponderacion = 1;
-                        }
-                    }else{
-                        $ponderacion = 100;
-                    }
-
-                    $data2['iPonderacion'] = $ponderacion;
-                    $data2['iActivo'] = 1;
-
-                    $id_detentregable = $this->me->guardado_general($table2,$data2);
-
-                    if($id_detentregable > 0){
-
-                        if(isset($_POST['compromiso']) && $_POST['compromiso'] != 0 && isset($_POST['componente']) && $_POST['componente'] != 0){
-
-                            $table3 = 'EntregableComponente';
-
-                            $data3['iIdEntregable'] = $identregable;
-                            $data3['iIdComponente'] = $this->input->post('componente',TRUE);
-
-                            $this->me->guardar_entregablecomponente($table3,$data3);
-                        }
-
-                        echo $id_detentregable;
-
-                    }else{                   
-                        echo 'error';
-                    }
-                }
-            }else{
-                echo 'error_meta';
-            }          
-        }else{
-            echo "error post";
-        }
-    }
-
-    //Muestra la pantalla de editar
-    public function edit(){
-
-        $lib = new Class_options();
-        $seg = new Class_seguridad();
-
-        $data = array();
-        $incluyeMIR = false;
-
-        $data['id_ent'] = $this->input->post('id',TRUE);
-        $data['id_detact'] = $this->input->post('id2',TRUE);
-
-        $data3['eje'] = $this->me->mostrarEje();
-        $data3['consulta1'] = $this->me->preparar_update($data['id_detact']);
-        
-        $arrMunicipios = array();
-        $municipios = $this->me->mostrar_entregables_municipio($data['id_ent']);
-        foreach ($municipios as $row) {
-            $arrMunicipios[] = $row->iIdMunicipio;
-        }
-        $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
-
-        $data['consulta'] = $this->me->mostrar_entregable_actual($data['id_ent'], $data['id_detact']);
-        $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
-
-        if($componente != NULL){
-            $data['componente'] = $lib->options_tabla('componentes_compromiso',$componente->iIdComponente,'cp.iIdCompromiso = '.$componente->iIdCompromiso.'');
-            $data['compromiso'] = $lib->options_tabla('compromisos',$componente->iIdCompromiso);
-        }else{
-            $data['componente'] = '<option value="0">Seleccionar...</option>';
-            $data['compromiso'] = $lib->options_tabla('compromisos');
-        }
-        $data['unidadmedida'] = $lib->options_tabla('unidades_medida',$data['consulta']->iIdUnidadMedida);
-        $data['periodicidad'] = $lib->options_tabla('periodicidad',$data['consulta']->iIdPeriodicidad);
-        $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado',$data['consulta']->iIdSujetoAfectado);
-        $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
-        $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
-
-        //Agregados Saul
-        $data['formaIndicador'] = $this->me->obtenerForma();
-        $data['dimension'] = $this->me->obtenerDimension();
-        $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
-        
-        $data['baseIndicador'] = $data['consulta']->nLineaBase;
-        $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
-        $data['areaCalculo'] = $data['consulta']->vFormula;
-
-        $data['idForma'] = $data['consulta']->iIdFormaInd;
-        $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
-        $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
-        $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
-        $rsp = $this->me->tieneMIR($data['id_detact']);
-        if($rsp[0]->iIncluyeMIR == 1){
-            $incluyeMIR = true;
-        }
-        $data['incluyeMIR'] = $incluyeMIR;
-
-        if($all_edit > 1){
-            $data['candado'] = false;
-        } else {
-            $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
-        }
-        $new_array = array_merge($data,$data3);
-        $this->load->view('entregables/contenido_modificar', $new_array);
-    }
-
-    public function obtenerDatosAntiguos($idEnt, $idAct){
-        $lib = new Class_options();
-        $seg = new Class_seguridad();
-
-        $data = array();
-
-        $data['id_ent'] = $idEnt;//$this->input->post('id',TRUE);
-        $data['id_detact'] = $idAct;//$this->input->post('id2',TRUE);
-
-        $data3['eje'] = $this->me->mostrarEje();
-        $data3['consulta1'] = $this->me->preparar_update($data['id_detact']);
-        
-        $arrMunicipios = array();
-        $municipios = $this->me->mostrar_entregables_municipio($data['id_ent']);
-        foreach ($municipios as $row) {
-            $arrMunicipios[] = $row->iIdMunicipio;
-        }
-        $data['municipios'] = $lib->options_multiselect('municipios', $arrMunicipios);
-
-        $data['consulta'] = $this->me->obtenerAntes($data['id_ent'], $data['id_detact']);
-        $componente = $this->me->mostrar_componentescompromiso($data['id_ent']);
-
-        if($componente != NULL){
-            $data['componente'] = $lib->options_tabla('componentes_compromiso',$componente->iIdComponente,'cp.iIdCompromiso = '.$componente->iIdCompromiso.'');
-            $data['compromiso'] = $lib->options_tabla('compromisos',$componente->iIdCompromiso);
-        }else{
-            $data['componente'] = '<option value="0">Seleccionar...</option>';
-            $data['compromiso'] = $lib->options_tabla('compromisos');
-        }
-        $data['unidadmedida'] = $lib->options_tabla('unidades_medida',$data['consulta']->iIdUnidadMedida);
-        $data['periodicidad'] = $lib->options_tabla('periodicidad',$data['consulta']->iIdPeriodicidad);
-        $data['sujeto_afectado'] = $lib->options_tabla('sujeto_afectado',$data['consulta']->iIdSujetoAfectado);
-        $data['acceso'] = $seg->tipo_acceso(14,$_SESSION[PREFIJO.'_idusuario']);        
-        $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
-
-        //Agregados Saul
-        $data['formaIndicador'] = $this->me->obtenerForma();
-        $data['dimension'] = $this->me->obtenerDimension();
-        $data['Variables'] = $this->me->obtenerVariables($data['id_ent']);
-        
-        $data['baseIndicador'] = $data['consulta']->nLineaBase;
-        $data['medioVerificacion'] = $data['consulta']->vMedioVerifica;
-        $data['areaCalculo'] = $data['consulta']->vFormula;
-
-        $data['idForma'] = $data['consulta']->iIdFormaInd;
-        $data['idDiemension'] = $data['consulta']->iIdDimensionInd;
-        $data['iMismosBeneficiarios'] = $data['consulta']->iMismosBeneficiarios;
-        $data['iAcumulativo'] = $data['consulta']->iAcumulativo;
-
-        if($all_edit > 1){
-            $data['candado'] = false;
-        } else {
-            $data['candado'] = ($this->me->avances_capturados($data['id_ent']) > 0) ? true:false;
-        }
-        $new_array = array_merge($data,$data3);
-        return $new_array;
-    }
-
-    //Funcion para editar
-    public function update(){
-        
-        if(isset($_POST['entregable']) && isset($_POST['periodicidad']) && isset($_POST['meta']) && isset($_POST['id_entregable']) && isset($_POST['id_detalleactividad']) && isset($_POST['metamodificada']))
-        {
-            $datosViejos = $this->obtenerDatosAntiguos($this->input->post('id_entregable',TRUE), $this->input->post('id_detalleactividad',TRUE));
-            $datosCambiados = array();
-            $datosAntiguos = array();
-            $seg = new Class_seguridad();
-            $id_ent = $this->input->post('id_entregable');
-            // Para saber que campos no debemos actualizar
-            $all_edit = $seg->tipo_acceso(45,$_SESSION[PREFIJO.'_idusuario']);
-            if($all_edit > 1){
-                $candado = false;
-            } else {
-                $candado = ($this->me->avances_capturados($id_ent) > 0) ? true:false;
-            }
-            //
-            $data['vEntregable'] = $this->input->post('entregable',TRUE);
-            
-            $data['iIdPeriodicidad'] = $this->input->post('periodicidad',TRUE);
-            
-            $data['vNombreEntregable'] = '.';
-            //Agregado Saul
-            $data['iIdFormaInd'] = $this->input->post('formaIndicador',TRUE);
-            
-            $data['iIdDimensionInd'] = $this->input->post('selectDimension',TRUE);
-            
-            $data['nLineaBase'] = $this->input->post('baseIndicador',TRUE);
-            
-            $data['vMedioVerifica'] = $this->input->post('medioVerificacion',TRUE);
-            
-            $data['vFormula'] = $this->input->post('areaCalculo',TRUE) ?? 'A';
-            
-            $data['iAcumulativo'] =$this->input->post('tipoAlta',TRUE);
-
-            $data['iAutorizado'] = 0;
-
-            //Actualizar tabla variables
-
-            $Variable = $this->input->post('Variable', true);
-            
-            $Letra = $this->input->post('Letra', true);
-            $idVariable = $this->input->post('idVariable', true);
-
-            foreach($Variable as $key => $v){
-                if($idVariable[$key] == ''){
-                    $this->me->insertarVariablesIndicador('VariableIndicador', array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent), $con);
-                }else{
-                    $this->me->actualizarVariables($idVariable[$key], array('vVariableIndicador' => $Letra[$key], 'vNombreVariable' => $v, 'iIdEntregable' => $id_ent));
-                }   
-            }
-            if(!$candado)
-            {
-                $data['iIdSujetoAfectado'] = $this->input->post('sujetoafectado',TRUE);
-                
-                $data['iIdUnidadMedida'] = $this->input->post('unidadmedida',TRUE);
-                
-                $data['iMunicipalizacion']  = (isset($_POST['municipalizable'])) ? 1:0;
-                
-                $data['iMismosBeneficiarios'] = (isset($_POST['checkMismoBenef'])) ? 1:0;
-                
-            }else{
-                $data['iIdSujetoAfectado'] = $datosViejos['consulta'][0]->iIdSujetoAfectado;
-                
-                $data['iIdUnidadMedida'] = $datosViejos['consulta'][0]->iIdUnidadMedida;
-                
-                $data['iMunicipalizacion']  = $datosViejos['consulta'][0]->iMunicipalizacion;
-                
-                $data['iMismosBeneficiarios'] = $datosViejos['consulta'][0]->iMismosBeneficiarios;
-            }
-
-            $where = "iIdEntregable =".$id_ent;
-            $table = 'Entregable';
-
-            // if($this->me->modificacion_general($where,$table,$data))
-            // {                
-                $where2 = array('iIdEntregable' => $id_ent, 'iIdDetalleActividad' => $this->input->post('id_detalleactividad',TRUE));
-                $table2 = 'DetalleEntregable';
-                
-                $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
-
-                $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
-                
-                $data2['dFechaInicio'] = $this->input->post('fechainicio',TRUE);
-                
-                $data2['dFechaFin'] = $this->input->post('fechafin',TRUE);
-                
-                $data2['iAnexo'] = (isset($_POST['anexo'])) ? 1:0;
-
-                $data2['iAutorizado'] = 0;
-                
-                if($this->me->modificacion_general($where2,$table2,$data2)){
-
-                    $detalleentregable = $this->me->obtener_id_detallentregable($id_ent);
-                    $this->load->library('Class_mail');
-                    $correo =  $_SESSION[PREFIJO.'_correo'];
-                    $mail = new Class_mail();
-    
-                    $template = 'templates/entregable-actualizada.html';
-                    $mensaje = file_get_contents($template);
-                    // vActividad
-                    $nombre = htmlentities($this->input->post('entregable',TRUE), ENT_QUOTES, "UTF-8");
-                    // $url = base_url().'C_seguridad/confirmar_correo?id='.$idusuario.'&token='.$token;
-                    $mensaje = str_replace('{{var_nombre_dest}}', $this->input->post('entregable',TRUE), $mensaje);
-                    $mensaje = str_replace('{{var_url}}', $correo, $mensaje);
-    
-                    // $mensaje ="Hola mundo";
                     
-                    $asunto = utf8_decode('Se ha detectado una nueva actualización');
-    
-                    if($mail->enviar_correo($correo,$asunto,$mensaje)) echo '';		    			
-                    else echo 'No se ha podido enviar el correo';
-                    echo  $detalleentregable->iIdDetalleEntregable;
-                }
-            // }
+                    $data2['nMeta'] = EliminaComas($this->input->post('meta',TRUE));
 
-            if($this->me->eliminar_compromiso($id_ent)){
+                    $data2['nMetaModificada'] = EliminaComas($this->input->post('metamodificada',TRUE));
+                    
+                    $data2['dFechaInicio'] = $this->input->post('fechainicio',TRUE);
+                    
+                    $data2['dFechaFin'] = $this->input->post('fechafin',TRUE);
+                    
+                    $data2['iAnexo'] = (isset($_POST['anexo'])) ? 1:0;
 
-                if(isset($_POST['compromiso']) && $_POST['compromiso'] != 0 && isset($_POST['componente']) && $_POST['componente'] != 0){
+                    $data2['iAutorizado'] = 0;
+                    
+                    if($this->me->modificacion_general($where2,$table2,$data2)){
 
-                    $table3 = 'EntregableComponente';
-
-                    $data3['iIdEntregable'] = $id_ent;
-                    $data3['iIdComponente'] = $this->input->post('componente',TRUE);
-
-                    $this->me->guardar_entregablecomponente($table3,$data3);
-                }
-            }
-
-            if($this->me->eliminar_entregablemunicipios($id_ent)){
-                $municipios = $this->input->post('municipios',true);
-
-                if(isset($_POST['municipios'])){
-                    foreach ($municipios as $value) {
-                    $muni['iIdEntregable'] = $id_ent;
-                    $muni['iIdMunicipio'] = $value;
-
-                    $this->me->guardar_entregablemunicipio('EntregableMunicipio', $muni);
+                        $detalleentregable = $this->me->obtener_id_detallentregable($id_ent);
+                        $this->load->library('Class_mail');
+                        $correo =  $_SESSION[PREFIJO.'_correo'];
+                        $mail = new Class_mail();
+        
+                        $template = 'templates/entregable-actualizada.html';
+                        $mensaje = file_get_contents($template);
+                        // vActividad
+                        $nombre = htmlentities($this->input->post('entregable',TRUE), ENT_QUOTES, "UTF-8");
+                        // $url = base_url().'C_seguridad/confirmar_correo?id='.$idusuario.'&token='.$token;
+                        $mensaje = str_replace('{{var_nombre_dest}}', $this->input->post('entregable',TRUE), $mensaje);
+                        $mensaje = str_replace('{{var_url}}', $correo, $mensaje);
+        
+                        // $mensaje ="Hola mundo";
+                        
+                        $asunto = utf8_decode('Se ha detectado una nueva actualización');
+        
+                        if($mail->enviar_correo($correo,$asunto,$mensaje)) echo '';		    			
+                        else echo 'No se ha podido enviar el correo';
+                        echo  $detalleentregable->iIdDetalleEntregable;
                     }
                 }
+
+                if($this->me->eliminar_compromiso($id_ent)){
+
+                    if(isset($_POST['compromiso']) && $_POST['compromiso'] != 0 && isset($_POST['componente']) && $_POST['componente'] != 0){
+
+                        $table3 = 'EntregableComponente';
+
+                        $data3['iIdEntregable'] = $id_ent;
+                        $data3['iIdComponente'] = $this->input->post('componente',TRUE);
+
+                        $this->me->guardar_entregablecomponente($table3,$data3);
+                    }
+                }
+
+                if($this->me->eliminar_entregablemunicipios($id_ent)){
+                    $municipios = $this->input->post('municipios',true);
+
+                    if(isset($_POST['municipios'])){
+                        foreach ($municipios as $value) {
+                        $muni['iIdEntregable'] = $id_ent;
+                        $muni['iIdMunicipio'] = $value;
+
+                        $this->me->guardar_entregablemunicipio('EntregableMunicipio', $muni);
+                        }
+                    }
+                }
+
+                $hoy = date('Y-m-d H:i:s');
+                $merge = array_merge($data, $data2);
+                $resp = $this->me->insertCambio(array(
+                    'iTipoCambio' => 'Indicador',
+                    'iAntesCambio' => strval(json_encode($datosViejos['consulta'][0])),
+                    'iDespuesCambio' => strval(json_encode($merge)),
+                    'iFechaCambio' => $hoy,
+                    'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
+                    'iAprovacion' => 0,
+                    'vNombre' => $this->input->post('entregable',TRUE),
+                    'iIdCambio' => $id_ent,
+
+                ));
+
+            }else{
+                echo 'error';
             }
 
-            $hoy = date('Y-m-d H:i:s');
-            $merge = array_merge($data, $data2);
-            $resp = $this->me->insertCambio(array(
-                'iTipoCambio' => 'Indicador',
-                'iAntesCambio' => strval(json_encode($datosViejos['consulta'][0])),
-                'iDespuesCambio' => strval(json_encode($merge)),
-                'iFechaCambio' => $hoy,
-                'iIdUsuario' => $_SESSION[PREFIJO.'_idusuario'],
-                'iAprovacion' => 0,
-                'vNombre' => $this->input->post('entregable',TRUE),
-                'iIdCambio' => $id_ent,
-
-            ));
-
-        }else{
-            echo 'error';
         }
-
-    }
 
     //Muestra los componentes en base a un compromiso
     public function showcomponentes($id){

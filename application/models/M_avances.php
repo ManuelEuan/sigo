@@ -263,6 +263,25 @@ class M_avances extends CI_Model
 		$resultado = $query->row();
         return $resultado;
     }
+    public function obtenerDats($id){
+        $this->db->select();
+        $this->db->from('DetalleEntregable');
+        $this->db->where('iIdDetalleEntregable', $id);
+        $query =  $this->db->get();
+        $resultado = $query->result();
+        return $resultado;
+    }
+
+    function buscarVariableIndicador($idEntregable,$variable){
+        $this->db->select('iIdVariableIndicador');
+        $this->db->from('VariableIndicador');
+        $this->db->where('iIdEntregable', $idEntregable);
+        $this->db->where('vVariableIndicador', $variable);
+        
+        $query =  $this->db->get();
+		$resultado = $query->result();
+        return $resultado;
+    }
 
     function obtenerVariables($id){
 
@@ -288,11 +307,14 @@ class M_avances extends CI_Model
 
     }
 
-    public function insertarVariableAvance($tabla, $datos, $con=''){
-		if($con == '') $con = $this->db;
-		if($con->insert($tabla,$datos)) return true;
-		else return false;
-	}
+     public function insertarVariableAvance($tabla, $datos){
+       
+        return  $this->db->insert($tabla,$datos);;
+		//  if($con == '') $con = $this->db;
+		//  if($con->insert($tabla,$datos)) return true;
+		//  else return false;
+	 }
+     
 
     public function eliminarVariableAvance($id){
         $this->db->where('iIdAvance', $id);

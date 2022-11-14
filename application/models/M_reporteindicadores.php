@@ -303,54 +303,68 @@ class M_reporteindicadores extends CI_Model {
 
 
 
-    public function reporte_pat($anio, $eje, $dep, $whereString=null, $pp)
-    {
-      $select ='SELECT "Dependencia"."vDependencia",
-      "DetalleActividad"."iAnio",
-      "NivelMIR"."vNivelMIR",
-      "Actividad"."iIdActividad",
-      "ResumenNarrativo"."vNombreResumenNarrativo" AS vresumennarrativo,
-      "Actividad"."vDescripcion" AS ventregable,
-      "Entregable"."vFormula",
-      "Periodicidad"."vPeriodicidad",
-      "DetalleEntregable"."nMeta",
-      "Avance"."dFecha",
-      "Avance"."nAvance"
-      FROM "DetalleEntregable"
-      JOIN "Entregable" ON "DetalleEntregable"."iIdEntregable" = "Entregable"."iIdEntregable"
-      JOIN "DetalleActividad" ON "DetalleEntregable"."iIdDetalleActividad" = "DetalleActividad"."iIdDetalleActividad"
-      JOIN "Actividad" ON "DetalleActividad"."iIdActividad" = "Actividad"."iIdActividad"
-      JOIN "NivelMIR" ON "Actividad"."iIdNivelMIR" = "NivelMIR"."iIdNivelMIR"
-      JOIN "Dependencia" ON "Actividad"."iIdDependencia" = "Dependencia"."iIdDependencia"
-      JOIN "Periodicidad" ON "Entregable"."iIdPeriodicidad" = "Periodicidad"."iIdPeriodicidad"
-      JOIN "Avance" ON "DetalleEntregable"."iIdDetalleEntregable" = "Avance"."iIdDetalleEntregable"
-      JOIN "PED2019Eje" ON "Actividad".iideje = "PED2019Eje"."iIdEje"
-      LEFT JOIN "ProgramaPresupuestario" ON "ProgramaPresupuestario"."iIdProgramaPresupuestario" = "Actividad"."iIdProgramaPresupuestario"
-      LEFT JOIN "ResumenNarrativo" ON cast("Actividad"."vResumenNarrativo" as varchar) = cast("ResumenNarrativo"."iIdResumenNarrativo" as varchar)';
-      // $select = 'SELECT distinct eje."vEje" AS ejedependencia, dep."vDependencia", act."iIdActividad",act."iIdNivelMIR", dat."iIdDetalleActividad", act."vActividad", act."vDescripcion", act."vObjetivo" AS objetivoact, act."vPoblacionObjetivo", dat."iAnio", act."vResumenNarrativo", act."vSupuesto" ,dat."dInicio", dat."dFin", dat."nAvance", area."vAreaResponsable",mir."vNivelMIR", dat."iReactivarEconomia", dat."nPresupuestoModificado",program."vProgramaPresupuestario", entr."vEntregable", entr."vMedioVerifica",dat."nPresupuestoAutorizado" as pauth, "Reto"."vDescripcion" as vreto, act."vEstrategia" as estrategiaact, coalesce(ava."ejercido", 0) as ejercido,
-      $whereCondition = 'WHERE "DetalleActividad"."iAnio" = '.$anio;
+    public function reporte_pat($anio, $eje, $dep, $whereString=null, $pp) {
+        $query = 'select "vDependencia", "iAnio", "vNivelMIR", "vresumennarrativo", "ventregable", "vFormula", "vPeriodicidad", "iideje", "iIdDependencia", "iIdProgramaPresupuestario" ,"iIdActividad" from  vreporte_avanceindicadores WHERE "iAnio" = '.$anio;
+        $where = '';
 
-      if(!empty($eje)){
-        $whereCondition = $whereCondition . ' AND "Actividad".iideje = '.$eje;
-      }
-      if(!empty($dep)){
-        $whereCondition = $whereCondition .' AND "Actividad"."iIdDependencia" = '.$dep;
-      }
-      if(!empty($pp)){
-        $whereCondition = $whereCondition .' AND "ProgramaPresupuestario"."iIdProgramaPresupuestario" = '.$pp;
-      }
+        if(!empty($eje))
+            $where = $where. ' AND "iideje" = '.$eje;
+        if(!empty($dep))
+            $where = $where.' AND "iIdDependencia" = '.$dep;
+        if(!empty($pp))
+            $where = $where.' AND "iIdProgramaPresupuestario" = '.$pp;
 
-      if(!empty($whereString)){
-        $whereCondition = $whereCondition.' '. $whereString;
-      }
-      
-      $group_by = '';
-      
-      $sql = $select.$whereCondition.$group_by;
-      $query =  $this->db->query($sql);
-      //$_SESSION['sql'] = $this->db->last_query();
-      return $query;
+        $sql        = $query.$where.' GROUP BY  "vDependencia", "iAnio", "vNivelMIR", "vresumennarrativo", "ventregable", "vFormula", "vPeriodicidad", "iideje", "iIdDependencia", "iIdProgramaPresupuestario" ,"iIdActividad"' ;
+        $array      = $this->db->query($sql);
+        $registros  = $array->result();
+
+        //Recorro la vista para sacal el total de avance
+        $select = 'select * from  vreporte_avanceindicadores WHERE "iAnio" = '.$anio;
+        $where  = '';
+        if(!empty($eje))
+            $where = $where. ' AND "iideje" = '.$eje;
+        if(!empty($dep))
+            $where = $where.' AND "iIdDependencia" = '.$dep;
+        if(!empty($pp))
+            $where = $where.' AND "iIdProgramaPresupuestario" = '.$pp;
+
+        $sql    = $select.$where;
+        $filtro = $this->db->query($sql);
+        $all    = $filtro->result();
+
+        foreach($registros as $item){
+            $trimestre1 = 0;
+            $trimestre2 = 0;
+            $trimestre3 = 0;
+            $trimestre4 = 0;
+            $meta       = 0;
+
+            foreach($all as $value){
+                if($item->iIdActividad == $value->iIdActividad){
+                    if($value->trimestre == 1)
+                        $trimestre1 = $trimestre1 + $value->avance;
+                    elseif($value->trimestre == 2)
+                        $trimestre2 = $trimestre2 + $value->avance;
+                    elseif($value->trimestre == 3)
+                        $trimestre3 = $trimestre3 + $value->avance;
+                    elseif($value->trimestre == 4)
+                        $trimestre4 = $trimestre4 + $value->avance;
+                        
+                    $meta = $value->meta;
+                }
+            }
+
+            $item->trimestre1 = $trimestre1;
+            $item->trimestre2 = $trimestre2;
+            $item->trimestre3 = $trimestre3;
+            $item->trimestre4 = $trimestre4;
+            $item->meta       = $meta;
+        }
+
+       return $registros;
     }
+
+    
 
     function catalogos($tipo)
     {

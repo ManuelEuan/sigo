@@ -1,7 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 require_once APPPATH . "/third_party/Spout/Autoloader/autoload.php";
-
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Row;
@@ -9,14 +8,14 @@ use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Style\CellAlignment;
-
 require_once APPPATH . "/libraries/dompdf/autoload.inc.php";
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-class C_reporteCombinado extends CI_Controller
+class C_reportevariables extends CI_Controller
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -27,7 +26,14 @@ class C_reporteCombinado extends CI_Controller
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
     }
+   
 
+
+    // public function index()
+    // {
+    //     $datos['ejes'] = $this->M_reporteAct->ejes();
+    //     $this->load->view('reporte/reportevariables.php', $datos);
+    // }
     public function index()
     {
         $seg = new Class_seguridad();
@@ -49,7 +55,7 @@ class C_reporteCombinado extends CI_Controller
             $dep = $_SESSION[PREFIJO . '_iddependencia'];
         }
         $data['PP'] = $this->M_reporteCombinado->obtenerPP();
-        $this->load->view('reporte/reporteCombinado', $data);
+        $this->load->view('reporte/reportevariables', $data);
     }
 
     public function dependencias()
@@ -66,16 +72,18 @@ class C_reporteCombinado extends CI_Controller
         }
     }
 
+   
     public function generarrepo()
     {
         ini_set('max_execution_time', 600); // 5 Minutos máximo
         $anio = $this->input->post('anio', true);
         $eje = $this->input->post('selEje', true);
-        $mes = $this->input->post('mes', true);
+        // $mes = $this->input->post('mes', true);
         $dep = $this->input->post('selDep', true) ?: 0;
         $resp = array('resp' => false, 'error_message' => '', 'url' => '');
         $tabla = array();
         $pp = $this->input->post('selPP', true);
+        $trimestre=0;
 
         if (isset($_POST['fuentes'])) $tabla['fuentes'] = 1;
         if (isset($_POST['ubp'])) $tabla['ubp'] = 1;
@@ -85,10 +93,18 @@ class C_reporteCombinado extends CI_Controller
         if (isset($_POST['metasmun'])) $tabla['metasmun'] = 1;
         if (isset($_POST['avances'])) $tabla['avances'] = 1;
         $group = $this->input->post('agrupar', true);
-        $whereString = '';
-        if ((int)$this->input->post('mes')  > 0) {
-            $whereString = $whereString . 'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")=' . (int)$this->input->post('mes', true);
-        }
+        $whereString = ' ';
+        // if ((int)$this->input->post('mes')  == 1) {
+        //     $num=1;
+        //     $num2=2;
+        //     $num3=3;
+            // $mon = "'month'";
+            // $whereString = $whereString . 'AND EXTRACT(MONTH from "DetalleActividad"."dInicio")=' . (int)$num;
+            // $whereString = $whereString . ' AND (date_part('.$mon.',"Avance"."dFecha")=' . (int)$num
+            // .' OR date_part('.$mon.',"Avance"."dFecha")=' . (int)$num2.' 
+            // OR date_part('.$mon.',"Avance"."dFecha")=' . (int)$num3.')';
+            // $where = $where . 'AND date_part('.$mes.',"Avance"."dFecha")=3';
+        // }
 
 
         $mrep = new M_reporteCombinado();
@@ -97,9 +113,7 @@ class C_reporteCombinado extends CI_Controller
         } else {
             $ppFinal = $pp;
         }
-
-
-        $query = $mrep->reporte_pat($anio, $dep, $eje, $whereString, $mes, $ppFinal);
+        $query = $mrep->reporte_pvariable($anio, $dep, $eje, $whereString, $trimestre, $ppFinal);
         $proPre = $mrep->obtenerPPporId($pp);
 
         $fechaactual = date('m-d-Y h:i:s a');
@@ -108,7 +122,9 @@ class C_reporteCombinado extends CI_Controller
         if ($query->num_rows() > 0) {
 
             $records = $query->result();
-            $ruta = 'public/reportes/reporteCombinado.xlsx';
+            // var_dump($query->result());
+            // return "as";
+            $ruta = 'public/reportes/reporteVariables.xlsx';
             $writer = WriterEntityFactory::createXLSXWriter();
             $writer->openToFile($ruta);
 
@@ -238,7 +254,7 @@ class C_reporteCombinado extends CI_Controller
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
                 WriterEntityFactory::createCell(''),
-                WriterEntityFactory::createCell('Reporte Combinado', $tituloexcel),
+                WriterEntityFactory::createCell('Reporte Variables', $tituloexcel),
             ];
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
@@ -250,66 +266,25 @@ class C_reporteCombinado extends CI_Controller
             $writer->addRow($singleRow);
 
             $cells = [
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell('Elementos', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell('Avance', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-                WriterEntityFactory::createCell(' ', $azulStyle),
-            ];
-            $singleRow = WriterEntityFactory::createRow($cells, $rowStyle);
-            $writer->addRow($singleRow);
-
-
-            $cells = [
                 WriterEntityFactory::createCell('Nivel'),
-                WriterEntityFactory::createCell('Resumen Presupuestario'),
-                WriterEntityFactory::createCell('Tipo'),
-                WriterEntityFactory::createCell('Dimension'),
-                WriterEntityFactory::createCell('Accion'),
-                WriterEntityFactory::createCell('Clave'),
+                WriterEntityFactory::createCell('Resumen Narrativivo(PED)'),
+                WriterEntityFactory::createCell('Accion o Proyecto'),
                 WriterEntityFactory::createCell('Indicador'),
+                WriterEntityFactory::createCell('Linea Base'),
                 WriterEntityFactory::createCell('Meta'),
                 WriterEntityFactory::createCell('Frecuencia'),
-                WriterEntityFactory::createCell('Operacion'),
+                WriterEntityFactory::createCell('Medio de verificacion'),
+                WriterEntityFactory::createCell('Supuesto'),
                 WriterEntityFactory::createCell('Variable'),
-                WriterEntityFactory::createCell('Unidad de medida (Variable)'),
-                WriterEntityFactory::createCell('Formula'),
-                WriterEntityFactory::createCell('Medio Verificacion'),
-                WriterEntityFactory::createCell('ENE'),
-                WriterEntityFactory::createCell('FEB'),
-                WriterEntityFactory::createCell('MAR'),
-                WriterEntityFactory::createCell('ABR'),
-                WriterEntityFactory::createCell('MAY'),
-                WriterEntityFactory::createCell('JUN'),
-                WriterEntityFactory::createCell('JUL'),
-                WriterEntityFactory::createCell('AGO'),
-                WriterEntityFactory::createCell('SEP'),
-                WriterEntityFactory::createCell('OCT'),
-                WriterEntityFactory::createCell('NOV'),
-                WriterEntityFactory::createCell('DIC'),
-                WriterEntityFactory::createCell('Total acumulado'),
+                WriterEntityFactory::createCell('Dato de la variable 1er trimestre'),
+                WriterEntityFactory::createCell('Dato de la variable 2er trimestre'),
+                WriterEntityFactory::createCell('Dato de la variable 3er trimestre'),
+                WriterEntityFactory::createCell('Dato de la variable 4er trimestre'),
+                WriterEntityFactory::createCell('Avance 1er trimestre (%)'),
+                WriterEntityFactory::createCell('Avance 2er trimestre (%)'),
+                WriterEntityFactory::createCell('Avance 3er trimestre (%)'),
+                WriterEntityFactory::createCell('Avance 4er trimestre (%)'),
+                WriterEntityFactory::createCell('Total-Acumulado (%)'),
             ];
 
 
@@ -323,128 +298,31 @@ class C_reporteCombinado extends CI_Controller
             $writer->addRow($singleRow);
 
             $arrayaglomerados = array();
-            foreach ($records as $rec){
-                $resultado = $mrep->obtenerIdHija($rec->idact);
-            
-                foreach ($resultado as $key => $value) {
-                    array_push($arrayaglomerados, (int)$value->iIdActividadHija);
-                }
-            }
-
             foreach ($records as $rec) {
-                if(!in_array((int)$rec->iIdActividad, $arrayaglomerados)){
-                    $totalEne = 0;
-                    $totalFeb = 0;
-                    $totalMar = 0;
-                    $totalAbr = 0;
-                    $totalMay = 0;
-                    $totalJun = 0;
-                    $totalJul = 0;
-                    $totalAgo = 0;
-                    $totalSep = 0;
-                    $totalOct = 0;
-                    $totalNov = 0;
-                    $totalDic = 0;
-                    $totalAcumulado = 0;
-                    $hija = $mrep->obtenerIdHija($rec->idact);
-                    foreach ($hija as $rhija) {
-                        $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
-                        // var_dump($hijadatos);
-                        foreach ($hijadatos as $h) {
-                            if ($h->isactivo == 1) {
-                                $totalEne = $totalEne + $h->enero;
-                                $totalFeb = $totalFeb + $h->febrero;
-                                $totalMar = $totalMar + $h->marzo;
-                                $totalAbr = $totalAbr + $h->abril;
-                                $totalMay = $totalMay + $h->mayo;
-                                $totalJun = $totalJun + $h->junio;
-                                $totalJul = $totalJul + $h->julio;
-                                $totalAgo = $totalAgo + $h->agosto;
-                                $totalSep = $totalSep + $h->septiembre;
-                                $totalOct = $totalOct + $h->octubre;
-                                $totalNov = $totalNov + $h->noviembre;
-                                $totalDic = $totalDic + $h->diciembre;
-                            }
-                        }
-                        $totalAcumulado = $totalEne +
-                            $totalFeb  +  $totalMar + $totalAbr  + $totalMay + $totalJun  + $totalJul  + $totalAgo  + $totalSep + $totalOct  + $totalNov  + $totalDic;
-                    }
-                    $total = 0;
-                    $total = $rec->enero + $rec->febrero + $rec->marzo + $rec->abril + $rec->mayo + $rec->junio + $rec->julio + $rec->agosto + $rec->septiembre + $rec->octubre + $rec->noviembre + $rec->diciembre;
-                    // Obtenemos el ID de los primeros
                     $cells = [
                         WriterEntityFactory::createCell($rec->nivel),
                         WriterEntityFactory::createCell($rec->resumennarrativo),
-                        WriterEntityFactory::createCell($rec->tipo),
-                        WriterEntityFactory::createCell($rec->dimension),
                         WriterEntityFactory::createCell($rec->accion),
-                        WriterEntityFactory::createCell($rec->clave),
                         WriterEntityFactory::createCell($rec->indicador),
+                        WriterEntityFactory::createCell($rec->lineabase),
                         WriterEntityFactory::createCell($rec->meta),
                         WriterEntityFactory::createCell($rec->frecuencia),
-                        WriterEntityFactory::createCell($rec->operacion),
-                        WriterEntityFactory::createCell($rec->vvariable),
-                        WriterEntityFactory::createCell($rec->unidadmedida),
-                        WriterEntityFactory::createCell($rec->formula),
                         WriterEntityFactory::createCell($rec->umedioverifica),
-                        WriterEntityFactory::createCell(round($rec->enero,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->febrero,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->marzo,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->abril,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->mayo,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->junio,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->julio,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->agosto,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->septiembre,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->octubre,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->noviembre,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($rec->diciembre,2), $amaStyle),
-                        WriterEntityFactory::createCell(round($total,2), $amaStyle),
+                        WriterEntityFactory::createCell($rec->supuesto),
+                        WriterEntityFactory::createCell($rec->vvariable),
+                        WriterEntityFactory::createCell(round($rec->iValortri1,2)),
+                        WriterEntityFactory::createCell(round($rec->iValortri2,2)),
+                        WriterEntityFactory::createCell(round($rec->iValortri3,2)),
+                        WriterEntityFactory::createCell(round($rec->iValortri4,2)),
+                        WriterEntityFactory::createCell(round($rec->tri1,2)),
+                        WriterEntityFactory::createCell(round($rec->tri2,2)),
+                        WriterEntityFactory::createCell(round($rec->tri3,2)),
+                        WriterEntityFactory::createCell(round($rec->tri4,2)),
+                        WriterEntityFactory::createCell(round($rec->total,2)),
+
                     ];
                     $singleRow = WriterEntityFactory::createRow($cells);
                     $writer->addRow($singleRow);
-    
-                    foreach ($hija as $rhija) {
-                        $hijadatos = $mrep->reporteHija($rhija->iIdActividadHija);
-                        // var_dump($hijadatos);
-                        foreach ($hijadatos as $h) {
-                            if ($h->isactivo == 1 || $h->isactivo == ''  && $h->isentregable == 1) {
-                                $totalMeses = $h->enero + $h->febrero + $h->marzo + $h->abril + $h->mayo + $h->junio + $h->julio + $h->agosto + $h->septiembre + $h->octubre + $h->noviembre + $h->diciembre;
-                                $cells = [
-                                    WriterEntityFactory::createCell($rec->nivel),
-                                    WriterEntityFactory::createCell($rec->resumennarrativo),
-                                    WriterEntityFactory::createCell($rec->tipo),
-                                    WriterEntityFactory::createCell($rec->dimension),
-                                    WriterEntityFactory::createCell($h->accion),
-                                    WriterEntityFactory::createCell($h->clave),
-                                    WriterEntityFactory::createCell($h->indicador),
-                                    WriterEntityFactory::createCell($rec->meta),
-                                    WriterEntityFactory::createCell($rec->frecuencia),
-                                    WriterEntityFactory::createCell($rec->operacion),
-                                    WriterEntityFactory::createCell($rec->vvariable),
-                                    WriterEntityFactory::createCell($rec->unidadmedida),
-                                    WriterEntityFactory::createCell($rec->formula),
-                                    WriterEntityFactory::createCell($rec->umedioverifica),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->enero : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->febrero : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->marzo : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->abril : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->mayo : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->junio : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->julio : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->agosto : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->septiembre : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->octubre : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->noviembre : '', $simpleStyle),
-                                    WriterEntityFactory::createCell(($h->isactivo == 1) ? $h->diciembre : '', $simpleStyle),
-                                    WriterEntityFactory::createCell($totalMeses),
-                                ];
-                                $singleRow = WriterEntityFactory::createRow($cells);
-                                $writer->addRow($singleRow);
-                            }
-                        }
-                    }
-                }
             }
 
             $writer->close();
@@ -1178,4 +1056,177 @@ class C_reporteCombinado extends CI_Controller
             }
         }
     }
+
+    // public function temas()
+    // {
+    //     if ($_REQUEST['id']) {
+    //         $id = $this->input->post('id',true);
+    //         $respuesta = $this->M_reporteTri->temas($id);
+    //         echo $respuesta;
+    //     }
+    // }
+
+    // public function objetivos()
+    // {
+    //     if ($_REQUEST['id']) {
+    //         $id = $this->input->post('id',true);
+    //         $respuesta = $this->M_reporteTri->objetivos($id);
+    //         echo $respuesta;
+    //     }
+    // }
+
+    // public function estrategias()
+    // {
+    //     if ($_REQUEST['id']) {
+    //         $id = $this->input->post('id',true);
+    //         $respuesta = $this->M_reporteTri->estrategias($id);
+    //         echo $respuesta;
+    //     }
+    // }
+
+    // public function lineas()
+    // {
+    //     if ($_REQUEST['id']) {
+    //         $id = $this->input->post('id',true);
+    //         $respuesta = $this->M_reporteTri->lineas($id);
+    //         echo $respuesta;
+    //     }
+    // }
+    
+    // public function obtenerdatos()
+    // {
+    //     if ($_REQUEST['id']) {
+    //         $eje = $this->input->post('eje',true);
+    //         $tema = $this->input->post('tema',true);
+    //         $obj = $this->input->post('obj',true);
+    //         $est = $this->input->post('est',true);
+    //         $la = $this->input->post('la',true);
+    //         $tri = $this->input->post('tri',true);
+    //         $anio = $this->input->post('anio',true);
+    //         $dep = $this->input->post('dep',true);
+    //         $inactivas = $this->input->post('inactivas',true);
+    //         $trim = 'tInforme'.$tri;
+            
+    //         $response = $this->M_reporteTri->todoslin($anio, $trim, $eje, $tema, $obj, $est, $la, $dep,$inactivas);
+    //         $lin = 1;
+
+    //         echo $_SESSION['sql'];
+    //         if($response == 'No hay datos')
+    //         {
+    //             echo  0;
+    //         }
+    //         else
+    //         {
+                
+    //             $phpWord = new \PhpOffice\PhpWord\PhpWord();
+    //             $section = $phpWord->addSection();
+    //             $eje_ant = '';
+    //             $tema_ant = '';
+    //             $obj_ant = '';
+    //             $est_ant = '';
+    //             $la_ant = '';
+
+    //             $cobj = 1;
+    //             $cest = 1;
+    //             $cla = 1;
+
+    //             foreach ($response as $row)
+    //             {                   
+    //                 $fontStyle = new \PhpOffice\PhpWord\Style\Font();
+    //                 $fontStyle->setBold(true);
+    //                 $fontStyle->setName('Arial');
+    //                 $fontStyle->setSize(15);
+    //                 $fontStyle->setColor('17947f');
+                    
+    //                 if($tema_ant != $row['vTema']) {
+    //                     $cobj = 1;
+    //                     $myTextElement = $section->addText('EJE: '.$row['vEje']);
+    //                     $myTextElement2 = $section->addText('Tema: '.$row['vTema']);
+    //                     $myTextElement->setFontStyle($fontStyle);
+    //                     $myTextElement2->setFontStyle($fontStyle);
+
+    //                     $fontStyle2 = new \PhpOffice\PhpWord\Style\Font();
+    //                     $fontStyle2->setBold(false);
+    //                     $fontStyle2->setName('Arial');
+    //                     $fontStyle2->setSize(12);
+    //                     $fontStyle2->setColor('17947f');
+
+
+    //                     $tema_ant = $row['vTema'];
+    //                 }
+                    
+    //                 if($obj_ant != $row['vObjetivo']) {
+    //                     $cest = 1;
+    //                     $fontStyle2 = new \PhpOffice\PhpWord\Style\Font();
+    //                     $fontStyle2->setBold(false);
+    //                     $fontStyle2->setName('Arial');
+    //                     $fontStyle2->setSize(12);
+    //                     $fontStyle2->setColor('17947f');
+
+    //                     $myTextElement3 = $section->addText('Objetivo '.$cobj.': '.$row['vObjetivo']);
+    //                     $myTextElement3->setFontStyle($fontStyle2);
+
+
+    //                     $cobj++;
+    //                     $obj_ant = $row['vObjetivo'];
+    //                 }
+
+    //                 if($est_ant != $row['vEstrategia']) {
+    //                     $cla = 1;
+    //                     $myTextElement4 = $section->addText('Estrategia '.$cest.': '.$row['vEstrategia']);
+    //                     $myTextElement4->setFontStyle($fontStyle2);
+
+    //                     $myTextElementx = $section->addText('Linea de accion '.$cla.': '. $row['vLineaAccion'] .'');
+    //                     $myTextElementx->setFontStyle($fontStyle2);
+
+    //                     $cest++;
+    //                     $cla++;
+    //                     $est_ant = $row['vEstrategia'];
+    //                 }
+    //                 elseif($la_ant != $row['vLineaAccion']) {
+    //                     $myTextElementx = $section->addText('Linea de accion '.$cla.': '. $row['vLineaAccion'] .'');
+    //                     $myTextElementx->setFontStyle($fontStyle2);
+    //                     $cla++;
+    //                     $la_ant = $row['vLineaAccion'];
+    //                 }
+
+    //                 $fontStyle3 = new \PhpOffice\PhpWord\Style\Font();
+    //                 $fontStyle3->setBold(true);
+    //                 $fontStyle3->setName('Arial');
+    //                 $fontStyle3->setSize(10.5);
+    //                 //$myTextElement5 = $section->addText($row['vLineaAccion']);
+    //                 $lin++;
+    //                 $myTextElement6 = $section->addText($row['vActividad']);
+    //                 //$myTextElement5->setFontStyle($fontStyle3);
+    //                 $myTextElement6->setFontStyle($fontStyle3);
+
+    //                 $fontStyle4 = new \PhpOffice\PhpWord\Style\Font();
+    //                 $fontStyle4->setBold(false);
+    //                 $fontStyle4->setName('Arial');
+    //                 $fontStyle4->setSize(11);
+                    
+    //                 //Quitamos Tags, convertimos los valores HTML y dejamos los & como una entidad HTML (para corregir BUG)
+    //                 $row['tInforme'] = str_replace('&', '&amp;',html_entity_decode(strip_tags($row['tInforme'])));                        
+    //                 $myTextElement7 = $section->addText($row['tInforme']);
+                   
+                      
+    //             }
+
+              
+    //             $ruta = 'public/reportes/trimestrales.docx';
+
+    //             $file = 'trimestrales.docx';
+    //             error_reporting(0);
+    //             /*header("Content-Description: File Transfer");
+    //             header('Content-Disposition: attachment; filename="' . $file . '"');
+    //             header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    //             header('Content-Transfer-Encoding: binary');
+    //             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    //             header('Expires: 0');*/
+    //             $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+    //             $xmlWriter->save($ruta);
+    //         }
+        // }
+    // }
 }
+?>
