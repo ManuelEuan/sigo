@@ -1,11 +1,18 @@
+
+  <div class="col-1 circle"><img src="<?=base_url().$value['icono']?>" width="200px;" style="background:#<?=$value['color']?>;"></div>
+  <div class="col-1"></div>
+  <div class="col-10"><h5 style="color:#<?=$d->vColorDesca?>;font-weight: bold;" ><a style="cursor: pointer"><?=$value['eje']?></a></h5></div>                                
+
+
 <div class="card d-flex">
   <div class="card-body">
     <div class="row">
         <div class="col-12 text-right mb-4">
+        <div class="col-10"><h5 style="color:#<?=$d->vColorDesca?>;font-weight: bold;" ><a style="cursor: pointer"><?=$value['eje']?></a></h5></div>                                
             <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
         </div>
     </div>
-
+ 
     <div class="row">
       <div class="col-12">
         <table class="table table-bordered table-striped" id="tabla">
@@ -60,7 +67,10 @@
     </div>
   </div>
 </div>
-
+<hr>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/polyfills.umd.js"></script>
+<script type="text/javascript" src="<?=base_url();?>assets/mapacalor.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#tabla").dataTable();
@@ -82,4 +92,17 @@
       }
       cargar('<?= base_url(); ?>index.php/C_dash2/main_sectores', '#datos', 'POST', variables);
     }
+    function verEje(id){
+        cargar('<?=base_url();?>index.php/C_dash/ficha_eje','#datos','POST','id='+id+'&anio=<?=$anio?>');
+    }
+
+    function listarDeps(eje){
+        var variables = {
+            anio: <?=$anio?>,
+            eje: eje
+        }
+        cargar('<?= base_url(); ?>index.php/C_dash/deps_anio_eje', '#datos', 'POST', variables);
+    }
+    
+
 </script>
