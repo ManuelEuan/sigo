@@ -155,9 +155,9 @@
                 else
                 {   ?>
                     <div class="col-xs-12 col-md-4">
-                        <div onclick="listarDeps(<?=$key?>);" class="card d-flex" style="cursor: pointer; min-height: 200px; !important;">
+
+                        <div onclick="listarDeps(<?=$key?>, '<?=preg_replace('[\n|\r|\n\r]', '', $value['eje']);?>');" class="card d-flex" style="cursor: pointer; min-height: 200px; !important;">
                             <div class="card-body">
-                         
                                 <div class="row">
                                     <div class="col-1 circle"><img src="<?=base_url().$value['icono']?>" width="200px;" ></div>
                                     <div class="col-1"></div>
@@ -410,10 +410,11 @@
         cargar('<?=base_url();?>index.php/C_dash/ficha_eje','#datos','POST','id='+id+'&anio=<?=$anio?>');
     }
 
-    function listarDeps(eje){
+    function listarDeps(eje, name){
         var variables = {
             anio: <?=$anio?>,
-            eje: eje
+            eje: eje,
+            name: name,
         }
         cargar('<?= base_url(); ?>index.php/C_dash/deps_anio_eje', '#datos', 'POST', variables);
     }
