@@ -628,15 +628,14 @@ group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave';
     (
  
  select idact, nivel,supuesto,lineabase, resumennarrativo,tipo, dimension, accion, clave, indicador, meta, frecuencia, operacion, vvariable, unidadmedida, formula, umedioverifica,
-            sum(case when (fecha=1) then avance when (fecha=2) then avance when (fecha=3) then avance end) as tri1,
-            sum(case when (fecha=4) then avance when (fecha=5) then avance  when (fecha=6) then avance end) as tri2,
-            sum(case when (fecha=7) then avance when (fecha=8) then avance when (fecha=9) then avance end) as tri3,
-            sum(case when (fecha=10) then avance when (fecha=11) then avance when (fecha=12) then avance end) as tri4
-         
-    ,sum(case when (fecha=1) then iValor when (fecha=2) then iValor when (fecha=3) then iValor end) as iValortri1,
-            sum(case when (fecha=4) then iValor when (fecha=5) then iValor  when (fecha=6) then iValor end) as iValortri2,
-            sum(case when (fecha=7) then iValor when (fecha=8) then iValor when (fecha=9) then iValor end) as iValortri3,
-            sum(case when (fecha=10) then iValor when (fecha=11) then iValor when (fecha=12) then iValor end) as iValortri4,
+ COALESCE (sum(case when (fecha=1) then avance when (fecha=2) then avance when (fecha=3) then avance end),0) as tri1,
+ COALESCE (sum(case when (fecha=4) then avance when (fecha=5) then avance  when (fecha=6) then avance end),0) as tri2,
+ COALESCE (sum(case when (fecha=7) then avance when (fecha=8) then avance when (fecha=9) then avance end),0) as tri3,
+ COALESCE (sum(case when (fecha=10) then avance when (fecha=11) then avance when (fecha=12) then avance end) ,0)as tri4,
+ COALESCE (sum(case when (fecha=1) then iValor when (fecha=2) then iValor when (fecha=3) then iValor end),0) as iValortri1,
+ COALESCE (sum(case when (fecha=4) then iValor when (fecha=5) then iValor  when (fecha=6) then iValor end),0) as iValortri2,
+ COALESCE (sum(case when (fecha=7) then iValor when (fecha=8) then iValor when (fecha=9) then iValor end),0) as iValortri3,
+ COALESCE (sum(case when (fecha=10) then iValor when (fecha=11) then iValor when (fecha=12) then iValor end),0) as iValortri4,
        sum(avance) as totalAvance
    
    from
@@ -726,7 +725,7 @@ umedioverifica, fecha, dep, iideje
 
 ) qry
 
-group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave, vvariable,supuesto,lineabase';
+group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave, vvariable,supuesto,lineabase order by iValortri1 DESC';
     $sql = $select . $where . $gropuBy;
     $query =  $this->db->query($sql);
     //$_SESSION['sql'] = $this->db->last_query();
