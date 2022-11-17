@@ -1,7 +1,10 @@
+<style>
+    .pointer{cursor:pointer;}
+</style>
 <div class="row" id="divbusqueda">
         <div class="col-md-12">
             <div class="card card-body">
-                <h1 class="card-title">Logs</h1>
+                <h1 class="card-title">Validar cambios</h1>
                 <hr class="m-t-0">
                 <div class="form-body">
                     <div class="card-body">
@@ -57,7 +60,9 @@
                                 <tr>
                                     
                                     <td><?= $p->iTipoCambio ?></td>
-                                    <td><button class="btn btn-success" onclick="verDetalles(<?= $p->iIdLog ?>);"> <?= ($p->vNombre != '') ? $p->vNombre : 'Ver' ?> </button></td>
+                                    <td><p onmouseover="this.style.color='blue'" onmouseout="this.style.color='black'"
+                                        <a class="pointer" onclick="verDetalles(<?= $p->iIdLog ?>);"><?= ($p->vNombre !='')? $p->vNombre:'Ver' ?></a>
+                                    </p></td>
                                     <td><?= $p->iFechaCambio ?></td>
                                     <td><?= $p->iAprovacion ?></td>
                                     <td><?= $p->uNombre .' '.$p->vPrimerApellido.' '. $p->vSegundoApellido?></td>
@@ -70,7 +75,7 @@
                                     <?php 
                                         }else{
                                     ?>
-                                            <td><button class="btn btn-success" disable>Cambios aprobados</button></td>
+                                            <td><label>Cambios aprobados</label></td>
                                             
                                     <?php 
                                         }
@@ -90,6 +95,7 @@
 <script>
     $(document).ready(function() {
         table = $('#grid').DataTable({
+            "autoWidth": false,
             "displayStart":parseInt($('#start').val()),
             "pageLength": parseInt($('#length').val()),
             "order": [[ 2, "DESC" ]]
