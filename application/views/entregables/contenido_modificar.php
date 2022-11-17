@@ -24,7 +24,8 @@
                     <?php if($incluyeMIR){ ?>
                     <div class="col-md-2 mb-3">
                         <label for="validationCustom04">Forma Indicador<span class="text-danger">*</span></label>
-                        <select id="formaIndicador" name="formaIndicador" required class="form-control">
+                       
+                        <select id="formaIndicador" name="formaIndicador" required class="form-control" >
                             <option value="">Seleccionar...</option>
                             <?php foreach($formaIndicador as $f){ ?>
 
@@ -66,7 +67,7 @@
                                 <?php if($key == 0){ ?>
                                     <label>Variable <?= $v->vVariableIndicador ?><span class="text-danger">*</span>
                                     <?php if($incluyeMIR){ ?>
-                                        <button type="button" onclick="agregarVariable();" style="border: none;">+</button>
+                                        <button type="button" class="add" onclick="agregarVariable();" style="border: none;">+</button>
                                     <?php } ?>
                                 </label>
                                 <?php } else {?>
@@ -122,7 +123,7 @@
                     <?php } ?>
                     <?php if($incluyeMIR){ ?>
                     <div class="col-md-8 mb-3">
-                        <label>Area para calculo de variable<span class="text-danger">*</span></label>
+                        <label>Area para calculo de variable  <?= $areaCalculo?><span class="text-danger">*</span></label>
                         <textarea class="form-control alphaonly" id="areaCalculo" name="areaCalculo" aria-invalid="false" required="" placeholder="" onkeypress="sinEspacios(event);"><?= $areaCalculo?></textarea>
                         <div class="invalid-feedback">
                             Este campo no puede estar vacio.
@@ -382,7 +383,7 @@
                 cambiosA += '/' + ArrAntiguo[indice];
             }
         });*/
-
+        bloqueInputs(false);
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_entregables/update", //Nombre del controlador
@@ -443,6 +444,60 @@
                 } 
             });
 
+    }
+    ///default porcentjes
+    $( document ).ready(function() {
+        porcentajeRule();
+    });
+
+    $( "#formaIndicador" ).change(function() {
+        porcentajeRule();
+    });
+    function porcentajeRule(){
+        var valor = $( "#formaIndicador" ).val();
+        if(valor == 3){
+            console.log(areaReponsableArray.length);
+
+            switch(areaReponsableArray.length) {
+                case 0:
+                    agregarVariable();
+                    // code block
+                    break;
+                case 1:
+                    // code block
+                    break;
+                default:
+                    eliminaVariablesDefault(areaReponsableArray.length);
+                    // code block
+            }
+            insertDefault();
+            bloqueInputs(true);
+        }else{
+            bloqueInputs(false);
+        }
+    }
+    function bloqueInputs(bloqueo){
+        if(bloqueo){
+            $( '[name="Variable[]"]' ).prop( "disabled", true );
+            $( "#areaCalculo" ).prop( "disabled", true );
+            $( '.remover' ).prop( "disabled", true );
+            $( '.add' ).prop( "disabled", true );
+        }else{
+            $( '[name="Variable[]"]' ).prop( "disabled", false );
+            $( "#areaCalculo" ).prop( "disabled", false );
+            $( '.remover' ).prop( "disabled", false );
+            $( '.add' ).prop( "disabled", false );
+        }
+    }
+    function insertDefault(){
+        $( '[name="Variable[]"]' )[0].value = 'A';
+        $( '[name="Variable[]"]' )[1].value = 'B';
+        $( "#areaCalculo" ).val('(A/B)*100');
+    }
+    function eliminaVariablesDefault(contador){
+        for(contador; contador>1; contador--){
+            remover(contador);
+        }
     }
 
 </script>

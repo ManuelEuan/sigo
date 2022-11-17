@@ -65,7 +65,7 @@
                     <div class="col-md-3 mb-3">
                         <label>Variable A<span class="text-danger">*</span>
                         <?php if($incluyeMIR){ ?>
-                        <button type="button" onclick="agregarVariable();" style="border: none;">+</button>
+                        <button type="button" class="add" onclick="agregarVariable();" style="border: none;">+</button>
                         <?php } ?>
                         </label>
                         <input type="text" id="A" name="Letra[]" class="form-control" required="required" value="A" hidden>
@@ -256,6 +256,55 @@
 <script>
 $(".alphaonly").attr("maxlength", 350);
 $(".only_number").attr("maxlength", 11);
+$( "#formaIndicador" ).change(function() {
+    porcentajeRule();
+});
+function porcentajeRule(){
+    var valor = $( "#formaIndicador" ).val();
+    if(valor == 3){
+        console.log(areaReponsableArray.length);
+
+        switch(areaReponsableArray.length) {
+            case 0:
+                agregarVariable();
+                // code block
+                break;
+            case 1:
+                // code block
+                break;
+            default:
+                eliminaVariablesDefault(areaReponsableArray.length);
+                // code block
+        }
+        insertDefault();
+        bloqueInputs(true);
+    }else{
+        bloqueInputs(false);
+    }
+}
+function bloqueInputs(bloqueo){
+    if(bloqueo){
+        $( '[name="Variable[]"]' ).prop( "disabled", true );
+        $( "#areaCalculo" ).prop( "disabled", true );
+        $( '.remover' ).prop( "disabled", true );
+        $( '.add' ).prop( "disabled", true );
+    }else{
+        $( '[name="Variable[]"]' ).prop( "disabled", false );
+        $( "#areaCalculo" ).prop( "disabled", false );
+        $( '.remover' ).prop( "disabled", false );
+        $( '.add' ).prop( "disabled", false );
+    }
+}
+function insertDefault(){
+    $( '[name="Variable[]"]' )[0].value = 'A';
+    $( '[name="Variable[]"]' )[1].value = 'B';
+    $( "#areaCalculo" ).val('(A/B)*100');
+}
+function eliminaVariablesDefault(contador){
+    for(contador; contador>1; contador--){
+        remover(contador);
+    }
+}
 </script>
 
 <script>
@@ -328,7 +377,7 @@ $(".only_number").attr("maxlength", 11);
 
     function guardarEntregables(f, e) {
         e.preventDefault();
-
+        bloqueInputs(false);
         $.ajax({
             type: "POST",
             url: "<?= base_url() ?>C_entregables/insert", //Nombre del controlador

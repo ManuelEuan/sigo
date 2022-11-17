@@ -423,23 +423,31 @@
     }
 
     function changeInput(){
+        debugger;
         const full  = document.getElementsByClassName('full');
         const arr   = [...full].map(input => input.value);
-        var formula = '<?= $vFormula ?: '' ?>'
+        var formula = '<?= $vFormula ?: '' ?>';
         var estructuraFinal = '';
         contadorValores     = 0;
 
-        for(i = 0; i <= formula.length; i++){
-            if(formula[i] != undefined){
-                if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')' && formula[i] != ' '){
-                    estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], arr[contadorValores]))
-                    contadorValores = contadorValores + 1
-                }else{
-                    estructuraFinal = estructuraFinal.concat(formula[i])
+        if(formula == '(A/B)*100'){
+            var A = $( '[name="valores[]"]' )[0].value;
+            var B = $( '[name="valores[]"]' )[1].value;
+            estructuraFinal = '('+A+'/'+B+')*100';
+        }else{
+            for(i = 0; i <= formula.length; i++){
+                if(formula[i] != undefined){
+                    if(formula[i] != '+' && formula[i] != '*' && formula[i] != '/' && formula[i] != '-' && formula[i] != '(' && formula[i] != ')' && formula[i] != ' '){
+                        estructuraFinal = estructuraFinal.concat(formula[i].replace(formula[i], arr[contadorValores]))
+                        contadorValores = contadorValores + 1
+                    }else{
+                        estructuraFinal = estructuraFinal.concat(formula[i]);
+                    }
+                
                 }
-            
             }
         }
+        
         total =  eval(estructuraFinal);
         document.getElementById("avance").value = total;
     }
