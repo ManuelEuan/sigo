@@ -782,8 +782,9 @@ class C_dash extends CI_Controller {
         $anio = $datos['anio'] = $this->input->post('anio');
         $datos['row_eje'] = $this->M_dash->nombre_eje($iIdEje);
         $datos['total_actividades'] = 0;
-        $datos['total_dependencias'] = $this->M_dash->num_dependencias_eje($iIdEje,$anio);
-        $datos['ult_fecha'] = $this->M_dash->fecha_ult_avance_eje($iIdEje,$anio);
+     
+     
+
 
         for ($i=1; $i < 5 ; $i++)
         { 
@@ -947,6 +948,7 @@ class C_dash extends CI_Controller {
         $model          = new M_dash();
         $data['anio']   = $this->input->post('anio',true);
         $data['eje']    = $this->input->post('eje',true);
+        $name    = $this->input->post('name',true);
         $data['query']  = $model->deps_anio_eje($data['anio'],$data['eje']);
         $this->load->model('M_dash2');
         
@@ -976,6 +978,8 @@ class C_dash extends CI_Controller {
             $montoAutor     = $autorizado[0]->autorizado == '' ? 0 : $autorizado[0]->autorizado;
             
             $query->presupuesto =  $montoAutor == 0 ? 0 : round(($pagado * 100)/$montoAutor, 2);
+            $query->cadena =  $name;
+   
         }
         $this->load->view('dash/list_deps',$data);
     }

@@ -1,15 +1,19 @@
 
-  <div class="col-1 circle"><img src="<?=base_url().$value['icono']?>" width="200px;" style="background:#<?=$value['color']?>;"></div>
-  <div class="col-1"></div>
-  <div class="col-10"><h5 style="color:#<?=$d->vColorDesca?>;font-weight: bold;" ><a style="cursor: pointer"><?=$value['eje']?></a></h5></div>                                
 
 
-<div class="card d-flex">
-  <div class="card-body">
-    <div class="row">
+
+       
+        </div>
+        <div class="col-12 text-left mb-4">
+        <label><?php print($query[0]->cadena) ?></label>
+        </div>
+          
+        </div>  
+        <div class="card d-flex">
+        <div class="card-body">
+        <div class="row">
         <div class="col-12 text-right mb-4">
-        <div class="col-10"><h5 style="color:#<?=$d->vColorDesca?>;font-weight: bold;" ><a style="cursor: pointer"><?=$value['eje']?></a></h5></div>                                
-            <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
+        <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
         </div>
     </div>
  
@@ -96,10 +100,12 @@
         cargar('<?=base_url();?>index.php/C_dash/ficha_eje','#datos','POST','id='+id+'&anio=<?=$anio?>');
     }
 
-    function listarDeps(eje){
+  
+    function listarDeps(eje, name){
         var variables = {
             anio: <?=$anio?>,
-            eje: eje
+            eje: eje,
+            name: name
         }
         cargar('<?= base_url(); ?>index.php/C_dash/deps_anio_eje', '#datos', 'POST', variables);
     }

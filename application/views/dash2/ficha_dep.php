@@ -147,6 +147,7 @@
                     {
                         echo '<table class="table table-bordered table-striped" id="tabla-actividades">
                               <thead>
+                                  <th>Eje Rector</th>
                                   <th>Acciones</th>
                                   <th>Total de beneficiarios</th>
                                   <th>Presupuesto Ejercido</th>
@@ -171,6 +172,7 @@
                                 $classPre = 'warning';
 
                             echo '<tr title="Haga clic para ver más información" style="cursor:pointer;" onclick="irActividad('.$row->iIdActividad.')">
+                                    <td>'.$row->vEje.'</td>
                                     <td>'.$row->vActividad.'</td>
                                     <td>'.$row->beneficiario.'</td>
                                     <td>
