@@ -729,7 +729,8 @@ group by	idact, nivel, resumennarrativo,tipo, dimension, accion, indicador, clav
     $sql = $select . $where . $gropuBy;
     $query =  $this->db->query($sql);
     //$_SESSION['sql'] = $this->db->last_query();, 
-
+  }
+}
 
 
 /*
