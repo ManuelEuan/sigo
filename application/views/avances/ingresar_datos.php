@@ -49,7 +49,7 @@
                     <div class="col-md-3 mb-3">
                         <label for=""><?= $v->vNombreVariable ?></label>
                         <input class="form-control" type="text" id="letra" name="letra[]" value="<?= $v->vVariableIndicador ?>" hidden>
-                        <input class="form-control full" type="number" id="valores" name="valores[]" placeholder="0" required>
+                        <input class="form-control full" type="number" step="0.10" id="valores" name="valores[]" placeholder="0" required>
                     </div>
                 <?php } ?>
             </div>
@@ -66,7 +66,7 @@
                 </div>
                 <div class="col-md-3 mb-3">
                 <label>Beneficiarios Totales</label>
-                <input type="number" class="form-control" id="txtTotal" name="txtTotal" placeholder="0">
+                <input type="number" step="0.10" class="form-control" id="txtTotal" name="txtTotal" placeholder="0">
                 <div class="invalid-feedback">
                     Este campo no puede estar vacio.
                 </div>
@@ -423,7 +423,6 @@
     }
 
     function changeInput(){
-        debugger;
         const full  = document.getElementsByClassName('full');
         const arr   = [...full].map(input => input.value);
         var formula = '<?= $vFormula ?: '' ?>';
@@ -449,7 +448,7 @@
         }
         
         total =  eval(estructuraFinal);
-        document.getElementById("avance").value = total;
+        document.getElementById("avance").value = total.toFixed(2);
     }
 
     function ValidarBeneficiariosM(){
