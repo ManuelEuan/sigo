@@ -725,14 +725,12 @@ umedioverifica, fecha, dep, iideje
 
 ) qry
 
-group by	idact, nivel, resumennarrativo,tipo, dimension, accion, indicador, clave, vvariable,supuesto,lineabase order by iValortri1 DESC, iValortri2 DESC, iValortri3 DESC';
+group by	idact, nivel, resumennarrativo,tipo, dimension, accion, indicador, clave, vvariable,supuesto,lineabase order by iValortri1 DESC, iValortri2 DESC, iValortri3 DESC, iValortri4 DESC';
     $sql = $select . $where . $gropuBy;
     $query =  $this->db->query($sql);
-    //$_SESSION['sql'] = $this->db->last_query();
-    return $query;
+    //$_SESSION['sql'] = $this->db->last_query();, 
   }
 }
-
 
 
 /*
