@@ -618,7 +618,7 @@ group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave';
     $barra = "' | '";
     $mes = "'month'";
     $coma = "','";
-    $select='select idact, nivel, resumennarrativo,accion,STRING_AGG ( DISTINCT indicador,' .$barra. ') as indicador,lineabase,avg(meta) as meta, STRING_AGG ( DISTINCT frecuencia,'  .$barra. ') as frecuencia,STRING_AGG ( DISTINCT formula,'  .$barra. ') as formula, STRING_AGG( DISTINCT umedioverifica, '  .$barra. ') as umedioverifica,supuesto, vvariable as  vvariable,
+    $select='select idact, nivel, resumennarrativo,accion, indicador as indicador,lineabase,avg(meta) as meta, STRING_AGG ( DISTINCT frecuencia,'  .$barra. ') as frecuencia,STRING_AGG ( DISTINCT formula,'  .$barra. ') as formula, STRING_AGG( DISTINCT umedioverifica, '  .$barra. ') as umedioverifica,supuesto, vvariable as  vvariable,
     
     sum(iValortri1) as iValortri1,sum(iValortri2) as iValortri2,sum(iValortri3) as iValortri3,sum(iValortri4) as iValortri4,(SUM (tri1)* 100)/avg(meta) AS tri1, (sum(tri2)* 100)/avg(meta) as tri2,(sum(tri3)* 100)/avg(meta) as tri3,
     (sum(tri4) * 100)/avg(meta) as tri4, ( sum(totalAvance) * 100)/avg(meta) as Total,
@@ -725,7 +725,7 @@ umedioverifica, fecha, dep, iideje
 
 ) qry
 
-group by	idact, nivel, resumennarrativo,tipo, dimension, accion, clave, vvariable,supuesto,lineabase order by iValortri1 DESC';
+group by	idact, nivel, resumennarrativo,tipo, dimension, accion, indicador, clave, vvariable,supuesto,lineabase order by iValortri1 DESC';
     $sql = $select . $where . $gropuBy;
     $query =  $this->db->query($sql);
     //$_SESSION['sql'] = $this->db->last_query();
