@@ -1,11 +1,15 @@
-<!--<div class="form-group">
-    <div class="col-md-2 text-right">
-        <button title="Ir a la pantalla anterior" class="btn waves-effect waves-light btn-outline-info" type="submit" onclick="buscar(event)"><i class="mdi mdi-arrow-left"></i>Regresar</button>
-    </div>
-</div>*/-->
+ 
 
 <div class="card card-body">
     <div class="container">
+    <div>
+        <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
+        </div>
+        <p>
+    <div>
+
+    </div>
+   </button>   
         <!-- <h1><?= $cambios ?></h1> -->
         <table class="table table-striped table-bordered display" style="width:100%">
             <thead>
@@ -23,4 +27,8 @@
 
 <script>
 
+function regresar() {
+            cargar('<?= base_url() ?>C_ubps/regresar', '#contenido_modulo');
+}
+     
 </script>

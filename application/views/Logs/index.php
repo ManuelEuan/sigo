@@ -13,6 +13,8 @@
                             <input type="hidden" id="length" value="10">
                                 <div class="col">
                                     <div class="form-group">
+                                        <div class="form-group">
+  
                                         <!--<button type="submit" class="btn waves-effect waves-light btn-light" style="margin-top:30px" id="btn_buscar">Buscar</button>-->
                                         <?php if($acceso > 1) { ?>
                                         <button type="button" class="btn waves-effect waves-light btn-primary" style="margin-top:30px" onclick="agregarAct();">+ Nueva</button>
@@ -27,17 +29,20 @@
                                         <button type="button" class="btn waves-effect waves-light btn-outline-info" style="margin-top:30px" onclick="actualizarNuevos();">
                                             <i class="fa-solid fa-arrows-rotate"></i>&nbsp;Alineación con Picaso 
                                         </button>
-                                    
-                                    </div>
+                                             </div>
                                 </div>
+
                             </div>
                         </form>
                     </div>
+                  
                 </div>
             </div>
-        </div>
+ 
+       
     </div>
 </div>
+
 <div class="row" id="contenedor">
     <div class="col-12">
         <div class="card">
@@ -172,5 +177,12 @@
         // });
 
         }
+        function regresar(){
+      var variables = {
+            anio: $('#anio').val(),
+            eje: 0
+      }
+      cargar('<?= base_url(); ?>index.php/C_dash/buscar', '#datos', 'POST', variables);
+    }
 
 </script>

@@ -2,7 +2,7 @@
   <div class="card-body">
     <div class="row">
         <div class="col-12 text-right mb-4">
-            <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
+            <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick=";"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
         </div>
     </div>
 
