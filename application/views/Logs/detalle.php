@@ -3,7 +3,7 @@
 <div class="card card-body">
     <div class="container">
     <div>
-        <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="regresar();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
+        <button title="Regresar" type="button" class="btn waves-effect waves-light btn-outline-info" onclick="index();"><i class="mdi mdi-arrow-left"></i>&nbsp;Regresar</button>
         </div>
         <p>
     <div>
@@ -27,8 +27,8 @@
 
 <script>
 
-function regresar() {
-            cargar('<?= base_url() ?>C_ubps/regresar', '#contenido_modulo');
-}
-     
-</script>
+function index(idLog){
+        cargar('<?= base_url() ?>C_logs/index', '#contenido', 'POST', 'id=' + idLog);
+    }
+    
+    </script>

@@ -57,11 +57,13 @@
         cargar('<?= base_url(); ?>index.php/C_dash/list_acts', '#datos', 'POST', variables);
     }
 
+
     function regresar(){
       var variables = {
             anio: $('#anio').val(),
             eje: 0
       }
-      cargar('<?= base_url(); ?>index.php/C_dash/buscar', '#datos', 'POST', variables);
+      cargar('<?= base_url(); ?>index.php/C_dash2/main_sectores', '#datos', 'POST', variables);
     }
+
 </script>
