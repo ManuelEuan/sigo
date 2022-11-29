@@ -14,6 +14,7 @@ class C_pat extends CI_Controller
         $this->load->model('M_seguridad', 'mseg');
         $this->load->library('Class_seguridad');
         $this->load->library('Class_options');
+        $this->load->model('M_notis','notis');
 
         //Parametros para la conexion al sistema de finanzas
         $this->urlFinanzas    = "https://picaso.queretaro.gob.mx:8080/wsSigo/API/";
@@ -837,6 +838,14 @@ class C_pat extends CI_Controller
             } else {
                 echo 'Error';
             }
+
+            $data = array(
+                'comment_subject' => "Tienes una nueva ",
+                'comment_text' => "Solicitud de cambio",
+                'comment_status' => 0
+            );
+            $this->notis->agregarNoti($data);
+
         }
         
     }
