@@ -842,7 +842,8 @@ class C_pat extends CI_Controller
             $data = array(
                 'comment_subject' => "Tienes una nueva ",
                 'comment_text' => "Solicitud de cambio",
-                'comment_status' => 0
+                'comment_status' => 0,
+                'fecha_enviado' => $hoy
             );
             $this->notis->agregarNoti($data);
 

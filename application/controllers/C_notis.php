@@ -9,10 +9,11 @@ class C_notis extends CI_Controller
        // session_start();
         $this->load->helper('url');
         $this->load->model('M_notis','notis');
+        $this->load->model('M_logs', 'ml');
        // $this->load->library('Class_options');
         //$this->load->library('Class_seguridad');
     }
-
+    
     public function agregarNoti()
     {
         //$sesion = $_SESSION[PREFIJO.'_iddependencia'];
@@ -26,8 +27,6 @@ class C_notis extends CI_Controller
             $Id_comment = $this->notis->agregarNoti($data);
             //$data1['iIdActividad'] = $this->pat->agregarAct($data);
             //$this->pat->agregarDetAct($data1);
-            
-        
           
     }
 
@@ -42,6 +41,23 @@ class C_notis extends CI_Controller
         
     }
 
+    public function NotisVistas(){
+        $this->notis->actualizarNotis();
+    }
 
+    public function ActNotiIndv(){
+        $id_noti    = $this->input->post('id_noti',true);
+        $this->notis->actNoitIndvidual($id_noti);
+        echo($id_noti);
+        
+        /*try{
+            $id_noti    = $this->input->post('id_noti',true);
+            $this->notis->actNoitIndvidual($id_noti);
+        }
+        catch(Exception $e){
+            var_dump($e);
+        }*/
+        
+    }
 }
 ?>

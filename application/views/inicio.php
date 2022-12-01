@@ -48,6 +48,31 @@
     #contenido {
           min-height:calc(100vh - 168px) !important;
         }
+
+.buttonDePrueba{background-color: dodgerblue;}
+
+.buttonBorrar{
+    border: 1px solid #933434;
+    border-radius: 25px;
+    padding: 5px;
+    margin:5px;
+    background-color:#933434;
+    color: #FFFFFF;
+    font-weight: normal;
+    opacity: 1;
+    transition: 1.3s;
+}
+.buttonAceptar{
+    border: 1px solid #272293;
+    border-radius: 25px;
+    padding: 5px;
+    margin:5px;
+    background-color:#272293;
+    color: #FFFFFF;
+    font-weight: normal;
+    opacity: 1;
+    transition: 1.3s;
+}
 </style>
 </head>
 
@@ -105,7 +130,6 @@
                 <!-- ============================================================== -->
                 <div class="navbar-collapse collapse" id="navbarNotiffication">
                     <ul class="navbar-nav float-left mr-auto">
-
                     </ul>
                     <svg style="width:24px;height:24px" viewBox="0 0 24 24">
                         <path fill="currentColor"
@@ -407,9 +431,30 @@
             //e.which = (!isNum && !dotOK && isNS) ? 0 : key;
             return (isNum || dotOK || isDel || isEnter || isNeg);
         }
+            function cargar_Notis (view=''){
+                $.ajax({
+                    url:'C_notis/Prueba',
+                    method:"POST",
+                    data:{view:0},
+                    success:function(data)
+                    {
+                        $('#notifica').html(data);
+                    }
+                });
+            }
 
+            function actNotis (view=''){
+                $.ajax({
+                    url:'C_notis/NotisVistas',
+                    method:"POST",
+                    data:{view:0},
+                    success:function(data){
+                        $('#notifica').html(data);
+                    }
+                });
+            }
 
-        function preubaNotificacion() {
+            function preubaNotificacion() {
                 var html = '<div class="d-flex no-block align-items-center p-15 bg-primary text-white m-b-10">';
                 html +='<div class="">';
                 html +='<svg style="width:24px;height:24px" viewBox="0 0 24 24">';
@@ -421,24 +466,24 @@
                 $('#notifica').html(html);
             }
 
-            function cargar_Notis (view=''){
+            function actUnaNoti(id_noti){
                 $.ajax({
-                    url:'C_notis/Prueba',
-                    method:"POST",
-                    data:{view:0},
-                    
-                    success:function(data)
-
-                    {
-                        $('#notifica').html(data);
-
-                        if (data.unseen_notification > 0){
-                            $('.count').html(data.unseen_notification);
-                        }
+                    url:'C_notis/ActNotiIndv',
+                    type:"POST",
+                    data:{id_noti:id_noti},
+                    success:function(data){
+                        //$('#notifica').html(data);
+                        console.log(data);
+                    },
+                    error: function(XMLHHttRequest, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                        console.log(textStatus);
                     }
-
                 });
             }
+                function index(idLog) {
+                    cargar('<?= base_url() ?>C_logs/index', '#contenido', 'POST', 'id=' + idLog);
+                }
     </script>
 </body>
 </html>
