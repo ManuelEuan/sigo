@@ -41,20 +41,271 @@ class C_logs extends CI_Controller
             $datosAntes = $this->ml->obtenerAntesIndicador($cambios->iIdCambio);
         }
         if($tipo == 'Acción'){
-            $datosAntes = $this->ml->obtenerAntesAccion($cambios->iIdCambio);
+            $datosDespues = $this->ml->obtenerAntesAccion($cambios->iIdCambio);
         }
         $antes = json_decode($cambios->iAntesCambio);
         $despues = json_decode($cambios->iDespuesCambio);
         $result ='';
         $arrayAntes = array();
+        $key = array();
         $arraySoloValores = array();
         $arraySoloLlaves = array();
         $valorFinal = array();
-
+        $antes ->  datosAntes = $datosAntes;
+        $despues ->  datosDespues = $datosDespues;
+        
+       
         if($tipo == 'Acción'){
+            //dependencia antes
+            if(!empty($despues->iIdDependencia))
+            {
+                $dep = $this->ml->obtenerDependencia($antes->iIdDependencia);
+                $antes->depen = $dep[0]->vDependencia;
+               
+            }else{
+                $antes->depen = 'sin cambios'; 
+            }
+            //dependencia despues
+            if(!empty($antes->iIdDependencia))
+            {
+                $dep = $this->ml->obtenerDependencia($despues->iIdDependencia);
+                $despues->depen1 = $dep[0]->vDependencia;
+              
+            }else{
+                $antes->depen1 = 'sin cambios'; 
+            }
 
-            foreach($despues as $key => $d){
+
+            //dependencia despues
+            if(!empty($despues->iIdProyectoPrioritario))
+            {
+                $proypri = $this->ml->obtenerProyPri($despues->iIdProyectoPrioritario);
+                $despues->prioritario = $proypri[0]->vProyectoPrioritario;
+            }else{
+                $despues->prioritario = '----'; 
+                //dependencia antes
+            }
+            if(!empty($antes->iIdProyectoPrioritario))
+            {
+                $proypri = $this->ml->obtenerProyPri($antes->iIdProyectoPrioritario);
+                $antes->prioritario = $proypri[0]->vProyectoPrioritario;
+            }else{
+                $antes->prioritario = '----'; 
+            }
+          
+          
+            
+            
+            if(!empty($despues->vResumenNarrativo) && $despues->vResumenNarrativo != '.'){
+            $vRN = $this->ml->obtenerResumenNarrativo($despues->vResumenNarrativo);
+            $antes-> resumen =  $vRN[0]->vNombreResumenNarrativo;
+             }else{
+            $antes->resumen = 'sin cambios'; 
+            }
+            if(!empty($antes->vResumenNarrativo) && $antes->vResumenNarrativo != '.'){
+                $vRN = $this->ml->obtenerResumenNarrativo($antes->vResumenNarrativo);
+                $despues-> resumen =  $vRN[0]->vNombreResumenNarrativo;
+                 }else{
+                $despues->resumen = 'sin cambios'; 
+                }
+           
+            if(!empty($despues->iIdNivelMIR)){
+                $mir = $this->ml->obtenerMIR($despues->iIdNivelMIR);
+                $antes->mir =  $mir[0]->vNivelMIR;
+            }else{
+                $antes->mir = 'sin cambios'; 
+            }
+            if(!empty($antes->iIdNivelMIR)){
+                $mir = $this->ml->obtenerMIR($antes->iIdNivelMIR);
+                $despues->mir =  $mir[0]->vNivelMIR;
+            }else{
+                $despues->mir = 'sin cambios'; 
+            }
+
+
+            if(!empty($despues->iideje)){
+                $eje = $this->ml->obtenerEje($despues->iideje);
+                $antes->ejes =  $eje[0]->vEje;
+            }else{
+                $antes->ejes = 'sin cambios'; 
+            }
+            if(!empty($antes->iideje)){
+                $eje = $this->ml->obtenerEje($antes->iideje);
+                $despues->ejes =  $eje[0]->vEje;
+            }else{
+                $despues->ejes = 'sin cambios'; 
+            }
+
+
+            if(!empty($despues->iReto)){
+                $reto = $this->ml->obtenerReto($despues->iReto);
+                $antes->reto =  $reto[0]->vDescripcion;
+            }else{
+                $antes->reto = 'sin cambios'; 
+            }
+            if(!empty($antes->iReto)){
+                $reto = $this->ml->obtenerReto($antes->iReto);
+                $despues->reto =  $reto[0]->vDescripcion;
+            }else{
+                $despues->reto = 'sin cambios'; 
+            }
+
+
+            if(!empty($despues->vResponsable) && $despues->vResponsable != '.'){
+                $arearesp = $this->ml->obtenerAreaResp($despues->vResponsable);
+                $antes->resp =  $arearesp[0]->vAreaResponsable;
+            }else{
+                $antes->resp = 'sin cambios'; 
+            }
+            if(!empty($antes->vResponsable) && $antes->vResponsable != '.'){
+                $arearesp = $this->ml->obtenerAreaResp($despues->vResponsable);
+                $despues->resp =  $arearesp[0]->vAreaResponsable;
+            }else{
+                $despues->resp = 'sin cambios'; 
+            }
+
+
+            if(!empty($despues->iODS)){
+                $ods = $this->ml->obternerODS($despues->iODS);
+                $antes->ods =  $ods[0]->vOds;
+            }else{
+                $antes->ods = 'sin cambios'; 
+            }
+            if(!empty($antes->iODS)){
+                $ods = $this->ml->obternerODS($antes->iODS);
+                $despues->ods =  $ods[0]->vOds;
+            }else{
+                $despues->ods = 'sin cambios'; 
+            }
+
+    }
+    if($tipo == 'Indicador'){
+    
+            
+        if(!empty($antes->iIdPeriodicidad)){
+            $rsp = $this->ml->obtenerPeriodicidad($antes->iIdPeriodicidad);
+            $antes->Periodicidad =  $rsp[0]->vPeriodicidad;
+        }else{
+            $antes->Periodicidad = 'sin cambios'; 
+        }
+        if(!empty($antes->iIdProgramaPresupuestario)){
+            $progpres = $this->ml->obtenerProgramaPresu($antes->iIdProgramaPresupuestario);
+            $antes->presu =  $progpres[0]->vProgramaPresupuestario;
+        }else{
+            $antes->presu = 'sin cambios'; 
+        }
+        if(!empty($antes->iIdFormaInd)){
+            $rsp = $this->ml->obtenerFormaInd($antes->iIdFormaInd);
+            $antes->fomaind = $rsp[0]->vDescripcion;
+        }else{
+            $antes->fomaind = 'sin cambios'; 
+        }
+        if(!empty($antes->iIdDimensionInd)){
+            $rsp = $this->ml->obtenerDimenInd($antes->iIdDimensionInd);
+            $antes->dimenind= $rsp[0]->vDescripcion;
+        }else{
+            $antes->dimenind= 'sin cambios'; 
+        }
+        if(!empty($antes->iIdUnidadMedida)){
+            $rsp = $this->ml->obtenerUnidadMedida($antes->iIdUnidadMedida);
+            $antes->Unidadmedida= $rsp[0]->vUnidadMedida;
+        }else{
+            $antes->Unidadmedida= 'sin cambios'; 
+        }
+        if(!empty($antes->iAcumulativo) && $antes->iAcumulativo == 1){
+            $antes->Acumulativo =  'Acumulativo';
+        }elseif(!empty($antes->iAcumulativo) && $antes->iAcumulativo == 2){
+            $antes->Puntual =  'Puntual';
+        }
+        else{
+            $antes-> Acumulativo= 'sin cambios'; 
+            $antes-> Puntual= 'sin cambios'; 
+        }
+        if(!empty($antes->vResumenNarrativo) && $antes->vResumenNarrativo != '.'){
+            $vRN = $this->ml->obtenerResumenNarrativo($antes->vResumenNarrativo);
+            $antes->ResumenNarrativo =  $vRN[0]->vNombreResumenNarrativo;
+        }else{
+            $antes-> ResumenNarrativo = 'sin cambios'; 
+        }
+        
+    }
+  
+     //Datos Antes
+    array_push($arraySoloValores, $antes->vActividad);
+    array_push($arraySoloValores, $antes->vDescripcion);
+    array_push($arraySoloValores, $antes->prioritario);
+    array_push($arraySoloValores, $antes->dInicio);
+    array_push($arraySoloValores, $antes->dFin);
+    array_push($arraySoloValores, $antes->ejes);
+    array_push($arraySoloValores, $antes->depen);
+    array_push($arraySoloValores, $antes->ods);
+    array_push($arraySoloValores, $antes->reto);
+    array_push($arraySoloValores, $antes->resp);
+    array_push($arraySoloValores, $antes->vObjetivo);
+    array_push($arraySoloValores, $antes->vEstrategia);
+    array_push($arraySoloValores, $antes->vtipoactividad);
+    array_push($arraySoloValores, $antes->iAutorizado);
+    array_push($arraySoloValores, $antes->iIncluyeMIR);
+    array_push($arraySoloValores, $antes->mir);
+    array_push($arraySoloValores, $antes->iAglomeraMIR);
+    array_push($arraySoloValores, $antes->programapresu);
+    array_push($arraySoloValores, $antes->resumen);
+    array_push($arraySoloValores, $antes->vSupuesto);
+    array_push($arraySoloValores, $antes->vJustificaCambio);
+
+    //Datos Despúes 
+    array_push($valorFinal, $despues->vActividad);
+    array_push($valorFinal, $despues->vDescripcion);
+    array_push($valorFinal, $despues->prioritario);
+    array_push($valorFinal, $despues->dInicio);
+    array_push($valorFinal, $despues->dFin);
+    array_push($valorFinal, $despues->ejes);
+    array_push($valorFinal, $despues->depen1);
+    array_push($valorFinal, $despues->ods);
+    array_push($valorFinal, $despues->reto);
+    array_push($valorFinal, $despues->resp);
+    array_push($valorFinal, $despues->vObjetivo);
+    array_push($valorFinal, $despues->vEstrategia);
+    array_push($valorFinal, $despues->vtipoactividad);
+    array_push($valorFinal, $despues->iAutorizado);
+    array_push($valorFinal, $despues->iIncluyeMIR);
+    array_push($valorFinal, $despues->mir);
+    array_push($valorFinal, $despues->iAglomeraMIR);
+    array_push($valorFinal, $despues->presu);
+    array_push($valorFinal, $despues->resumen);
+    array_push($valorFinal, $despues->vSupuesto);
+    array_push($valorFinal, $despues->vJustificaCambio);
+
+    array_push($arraySoloLlaves, 'Nombre de la acción');
+    array_push($arraySoloLlaves, 'Descripción');
+    array_push($arraySoloLlaves, 'proyecto prioritario');
+    array_push($arraySoloLlaves,'Fecha de inicio');
+    array_push($arraySoloLlaves, 'Fecha Fin');
+    array_push($arraySoloLlaves, 'eje rector');
+    array_push($arraySoloLlaves, 'Dependencia');
+    array_push($arraySoloLlaves, 'ODS');
+    array_push($arraySoloLlaves, 'Reto');
+    array_push($arraySoloLlaves, 'Area Responsable');
+    array_push($arraySoloLlaves, 'Objetivo Anual');
+    array_push($arraySoloLlaves, 'Estrategia');
+    array_push($arraySoloLlaves, 'Tipo de Acción');
+    array_push($arraySoloLlaves, 'Monto Autorizado');
+    array_push($arraySoloLlaves, 'Incluye MIR');
+    array_push($arraySoloLlaves, 'Nivel MIR');
+    array_push($arraySoloLlaves, 'tiene aglomeración');
+    array_push($arraySoloLlaves, 'Programa Presupuestario');
+    array_push($arraySoloLlaves, 'Resumen Narrativo');
+    array_push($arraySoloLlaves, 'Supuesto');
+    array_push($arraySoloLlaves, 'Justificación del Cambio');
+    
+   
+
+       /* if($tipo == 'Acción'){
+
+            foreach($antes as $key => $d)
+           { 
                 switch ($key) {
+                    
                     case 'iIdDependencia':
                         if(!empty($despues->iIdDependencia)){
                             $dep = $this->ml->obtenerDependencia($despues->iIdDependencia);
@@ -142,31 +393,40 @@ class C_logs extends CI_Controller
                 }
             }
 
-            foreach($datosAntes[0] as $key => $k){
+            foreach($datosDespues[0] as $key => $k){
                 array_push($arraySoloLlaves, $key);
+            
             }
     
             foreach($arraySoloLlaves as $key => $llave){
                 $valorFinal[$llave] = $arraySoloValores[$key];
+           
             }
         }
 
         if($tipo == 'Indicador'){
 
-            foreach($despues as $key => $d){
+            foreach($valorFinal as $key => $d){
                 switch ($key) {
                     case 'iIdPeriodicidad':
-                        if(!empty($despues->iIdPeriodicidad)){
-                            $rsp = $this->ml->obtenerPeriodicidad($despues->iIdPeriodicidad);
+                        if(!empty($antes->iIdPeriodicidad)){
+                            $rsp = $this->ml->obtenerPeriodicidad($antes->iIdPeriodicidad);
                             array_push($arraySoloValores, $rsp[0]->vPeriodicidad);
                         }else{
                             array_push($arraySoloValores, $d);
                         }
                         break;
-
+                        case 'iIdProgramaPresupuestario':
+                            if(!empty($antes->iIdProgramaPresupuestario)){
+                                $progpres = $this->ml->obtenerProgramaPresu($antes->iIdProgramaPresupuestario);
+                                array_push($arraySoloValores, $progpres[0]->vProgramaPresupuestario);
+                            }else{
+                                array_push($arraySoloValores, $d);
+                            }
+                            break;
                     case 'iIdFormaInd':
-                        if(!empty($despues->iIdFormaInd)){
-                            $rsp = $this->ml->obtenerFormaInd($despues->iIdFormaInd);
+                        if(!empty($antes->iIdFormaInd)){
+                            $rsp = $this->ml->obtenerFormaInd($antes->iIdFormaInd);
                             array_push($arraySoloValores, $rsp[0]->vDescripcion);
                         }else{
                             array_push($arraySoloValores, $d);
@@ -174,8 +434,8 @@ class C_logs extends CI_Controller
                         break;
 
                     case 'iIdDimensionInd':
-                        if(!empty($despues->iIdDimensionInd)){
-                            $rsp = $this->ml->obtenerDimenInd($despues->iIdDimensionInd);
+                        if(!empty($antes->iIdDimensionInd)){
+                            $rsp = $this->ml->obtenerDimenInd($antes->iIdDimensionInd);
                             array_push($arraySoloValores, $rsp[0]->vDescripcion);
                         }else{
                             array_push($arraySoloValores, $d);
@@ -183,23 +443,31 @@ class C_logs extends CI_Controller
                         break;
                     
                     case 'iIdUnidadMedida':
-                        if(!empty($despues->iIdUnidadMedida)){
-                            $rsp = $this->ml->obtenerUnidadMedida($despues->iIdUnidadMedida);
+                        if(!empty($antes->iIdUnidadMedida)){
+                            $rsp = $this->ml->obtenerUnidadMedida($antes->iIdUnidadMedida);
                             array_push($arraySoloValores, $rsp[0]->vUnidadMedida);
                         }else{
                             array_push($arraySoloValores, $d);
                         }
                         break;
                     case 'iAcumulativo':
-                        if(!empty($despues->iAcumulativo) && $despues->iAcumulativo == 1){
+                        if(!empty($antes->iAcumulativo) && $antes->iAcumulativo == 1){
                             array_push($arraySoloValores, 'Acumulativo');
-                        }elseif(!empty($despues->iAcumulativo) && $despues->iAcumulativo == 2){
+                        }elseif(!empty($antes->iAcumulativo) && $antes->iAcumulativo == 2){
                             array_push($arraySoloValores, 'Puntual');
                         }
                         else{
                             array_push($arraySoloValores, $d);
                         }
                         break;
+                        case 'vResumenNarrativo':
+                            if(!empty($antes->vResumenNarrativo) && $antes->vResumenNarrativo != '.'){
+                                $vRN = $this->ml->obtenerResumenNarrativo($antes->vResumenNarrativo);
+                                array_push($arraySoloValores, $vRN[0]->vNombreResumenNarrativo);
+                            }else{
+                                array_push($arraySoloValores, $d);
+                            }
+                            break;
 
                     default:
                         array_push($arraySoloValores, $d);
@@ -212,41 +480,38 @@ class C_logs extends CI_Controller
     
             foreach($arraySoloLlaves as $key => $llave){
                 $valorFinal[$llave] = $arraySoloValores[$key];
+             
             }
             
-        }
+        }*/
 
-        switch ($tipo) {
+       switch ($tipo) {
             case 'Indicador':
                 # code...
-                foreach($datosAntes[0] as $key => $value ){
-
-                    // $result =$antes[$key];
-                
-                    if($value != $valorFinal[$key]){
+                for($i=0; $i<count($arraySoloValores); $i++){
+                    if($arraySoloValores[$i] != $valorFinal[$i]){
                         $result .= '
                                 <tr>
-                                <td ><p >'.$key.'</p></td>
-                                <td ><p style="background-color: rgba(46,160,67,0.4);">'.$value.'</p></td>
-                                <td><p style="background-color: rgba(248,81,73,0.4);">'.$valorFinal[$key].'</p></td>
+                                <td ><p>'.$arraySoloLlaves[$i].'</p></td>
+                                <td ><p style="background-color: rgba(248,81,73,0.4);">'.$arraySoloValores[$i].'</p></td>
+                                <td><p style="background-color: rgba(46,160,67,0.4);">'.$valorFinal[$i].'</p></td>
                                 </tr>';
                     }else{
                         $result .= '
                             <tr> 
-                            <td ><p >'.$key.'</p></td>
-                            <td>'.$value.'</td>
-                            <td>'.$valorFinal[$key].'</td></tr>';
+                            <td ><p >'.$arraySoloLlaves[$i].'</p></td> 
+                            <td>'.$arraySoloValores[$i].'</td>
+                            <td>'.$valorFinal[$i].'</td></tr>';
                     }
-                    // var_dump($despues);
-                    // var_dump($antes);
-
                 }
+            
+
                 break;
             
             case 'Acción':
                 # code...
 
-                foreach($datosAntes[0] as $key => $value ){
+                /*foreach($datosDespues[0] as $key => $value ){
 
                     // $result =$antes[$key];
                 
@@ -267,7 +532,25 @@ class C_logs extends CI_Controller
                     // var_dump($despues);
                     // var_dump($antes);
 
+                }*/
+              
+                for($i=0; $i<count($arraySoloValores); $i++){
+                    if($arraySoloValores[$i] != $valorFinal[$i]){
+                        $result .= '
+                                <tr>
+                                <td ><p>'.$arraySoloLlaves[$i].'</p></td>
+                                <td ><p style="background-color: rgba(248,81,73,0.4);">'.$arraySoloValores[$i].'</p></td>
+                                <td><p style="background-color: rgba(46,160,67,0.4);">'.$valorFinal[$i].'</p></td>
+                                </tr>';
+                    }else{
+                        $result .= '
+                            <tr> 
+                            <td ><p >'.$arraySoloLlaves[$i].'</p></td>
+                            <td>'.$arraySoloValores[$i].'</td>
+                            <td>'.$valorFinal[$i].'</td></tr>';
+                    }
                 }
+            
 
                 break;
             
@@ -275,8 +558,10 @@ class C_logs extends CI_Controller
                 # code...
                 break;
         }
-
+        $data['tipo'] = $tipo;
         $data['cambios'] = $result;
+        $data['antes'] = $arraySoloValores;
+        $data['key'] = $key;
         $this->load->view('Logs/detalle', $data);
     }
     public function aprobarCambios(){
@@ -288,7 +573,7 @@ class C_logs extends CI_Controller
          * Aqui va todo
          */
         $tipo = $cambios->iTipoCambio;
-
+ 
 
         $antes = json_decode($cambios->iAntesCambio);
         $despues = json_decode($cambios->iDespuesCambio);
