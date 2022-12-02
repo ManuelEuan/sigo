@@ -165,17 +165,30 @@ class C_logs extends CI_Controller
             }
 
 
+            if(!empty($despues->iIdProgramaPresupuestario)){
+                $progpres = $this->ml->obtenerProgramaPresu($despues->iIdProgramaPresupuestario);
+                $antes->presu =  $progpres[0]->vProgramaPresupuestario;
+            }else{
+                $antes->presu = 'sin cambios'; 
+            }
+            if(!empty($antes->iIdProgramaPresupuestario)){
+                $progpres = $this->ml->obtenerProgramaPresu($antes->iIdProgramaPresupuestario);
+                $despues->presu =  $progpres[0]->vProgramaPresupuestario;
+            }else{
+                $despues->presu = 'sin cambios'; 
+            }
+
             if(!empty($despues->iODS)){
                 $ods = $this->ml->obternerODS($despues->iODS);
-                $antes->ods =  $ods[0]->vOds;
-            }else{
-                $antes->ods = 'sin cambios'; 
-            }
-            if(!empty($antes->iODS)){
-                $ods = $this->ml->obternerODS($antes->iODS);
                 $despues->ods =  $ods[0]->vOds;
             }else{
                 $despues->ods = 'sin cambios'; 
+            }
+            if(!empty($antes->iODS)){
+                $ods = $this->ml->obternerODS($antes->iODS);
+                $antes->ods =  $ods[0]->vOds;
+            }else{
+                $antes->ods = 'sin cambios'; 
             }
              //Datos Antes
             array_push($arraySoloValores, $antes->vActividad);
@@ -192,10 +205,10 @@ class C_logs extends CI_Controller
             array_push($arraySoloValores, $antes->vEstrategia);
             array_push($arraySoloValores, $antes->vtipoactividad);
             array_push($arraySoloValores, $antes->iAutorizado);
-            array_push($arraySoloValores, $antes->iIncluyeMIR);
+            //array_push($arraySoloValores, $antes->iIncluyeMIR);
             array_push($arraySoloValores, $antes->mir);
             array_push($arraySoloValores, $antes->iAglomeraMIR);
-            array_push($arraySoloValores, $antes->programapresu);
+            array_push($arraySoloValores, $antes->presu);
             array_push($arraySoloValores, $antes->resumen);
             array_push($arraySoloValores, $antes->vSupuesto);
             array_push($arraySoloValores, $antes->vJustificaCambio);
@@ -215,7 +228,7 @@ class C_logs extends CI_Controller
             array_push($valorFinal, $despues->vEstrategia);
             array_push($valorFinal, $despues->vtipoactividad);
             array_push($valorFinal, $despues->iAutorizado);
-            array_push($valorFinal, $despues->iIncluyeMIR);
+            //array_push($valorFinal, $despues->iIncluyeMIR);
             array_push($valorFinal, $despues->mir);
             array_push($valorFinal, $despues->iAglomeraMIR);
             array_push($valorFinal, $despues->presu);
@@ -238,7 +251,7 @@ class C_logs extends CI_Controller
             array_push($arraySoloLlaves, 'Estrategia');
             array_push($arraySoloLlaves, 'Tipo de Acción');
             array_push($arraySoloLlaves, 'Monto Autorizado');
-            array_push($arraySoloLlaves, 'Incluye MIR');
+           // array_push($arraySoloLlaves, 'Incluye MIR');
             array_push($arraySoloLlaves, 'Nivel MIR');
             array_push($arraySoloLlaves, 'tiene aglomeración');
             array_push($arraySoloLlaves, 'Programa Presupuestario');
