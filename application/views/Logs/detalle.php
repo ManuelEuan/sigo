@@ -22,13 +22,7 @@
 
             </tbody>
         </table>
-        <p>
-        <?php var_dump($antes); ?>
-        <br><br><br><br><br><br>
-        <?php var_dump($despues); ?>
-        <br><br><br><br><br><br>
-        <?php var_dump($key); ?>
-        </p>
+
     </div>
 </div>
 
