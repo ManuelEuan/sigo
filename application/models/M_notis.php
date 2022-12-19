@@ -1,4 +1,5 @@
 <?php
+use LDAP\Result;
 
 class M_notis extends CI_Model
 {
@@ -60,6 +61,7 @@ class M_notis extends CI_Model
 		return $ret;
 	}
 
+	
 }
 
 ?>

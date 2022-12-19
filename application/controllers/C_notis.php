@@ -30,6 +30,7 @@ class C_notis extends CI_Controller
           
     }
 
+
     public function Prueba(){
         try{
             $this->notis->PruebaX();

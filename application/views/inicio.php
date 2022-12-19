@@ -129,9 +129,9 @@
                 <!-- End Logo -->
                 <!-- ============================================================== -->
                 <div class="navbar-collapse collapse" id="navbarNotiffication">
-                    <ul class="navbar-nav float-left mr-auto">
+                    <ul class="navbar-nav float-left mr-auto" id="ulOppp">
                     </ul>
-                    <svg style="width:24px;height:24px" viewBox="0 0 24 24">
+                    <svg id="campana" style="width:24px;height:24px" viewBox="0 0 24 24">
                         <path fill="currentColor"
                             d="M10 21H14C14 22.1 13.1 23 12 23S10 22.1 10 21M21 19V20H3V19L5 17V11C5 7.9 7 5.2 10 4.3V4C10 2.9 10.9 2 12 2S14 2.9 14 4V4.3C17 5.2 19 7.9 19 11V17L21 19M17 11C17 8.2 14.8 6 12 6S7 8.2 7 11V18H17V11Z" />
                     </svg>
@@ -433,12 +433,19 @@
         }
             function cargar_Notis (view=''){
                 $.ajax({
-                    url:'C_notis/Prueba',
+                    url:'C_notis/Prueba', 
                     method:"POST",
                     data:{view:0},
                     success:function(data)
                     {
+                        if(data == null || data == ''){
+
+                        }
+                        else{
+                            $('#campana').html('<path fill="currentColor" d="M21 6.5C21 8.43 19.43 10 17.5 10S14 8.43 14 6.5 15.57 3 17.5 3 21 4.57 21 6.5M19 11.79C18.5 11.92 18 12 17.5 12C14.47 12 12 9.53 12 6.5C12 5.03 12.58 3.7 13.5 2.71C13.15 2.28 12.61 2 12 2C10.9 2 10 2.9 10 4V4.29C7.03 5.17 5 7.9 5 11V17L3 19V20H21V19L19 17V11.79M12 23C13.11 23 14 22.11 14 21H10C10 22.11 10.9 23 12 23Z" />');
+                        }
                         $('#notifica').html(data);
+
                     }
                 });
             }
@@ -466,6 +473,7 @@
                 $('#notifica').html(html);
             }
 
+
             function actUnaNoti(id_noti){
                 $.ajax({
                     url:'C_notis/ActNotiIndv',
@@ -481,7 +489,7 @@
                     }
                 });
             }
-                function index(idLog) {
+            function index(idLog) {
                     cargar('<?= base_url() ?>C_logs/index', '#contenido', 'POST', 'id=' + idLog);
                 }
     </script>
